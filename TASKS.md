@@ -22,7 +22,7 @@ odontogram, save it as a dental-core tooth-state `Observation` in Aidbox.
   (`tooth-presence`, `restoration-type`, `restoration-material`, surfaces as the
   `tooth-surface` extension).
 - Listen with `onStateChange` and read the chart with `getStatusChart()` from
-  `react-advanced-odontogram` (the chart is already editable in `OdontogramView.tsx`).
+  `@cognovis/react-odontogram` (the chart is already editable in `OdontogramView.tsx`).
 - Write a new Observation per changed tooth (new `effectiveDateTime`) rather than overwriting:
   the old chart is history.
 - Done when: you mark tooth 46 as missing in the app, reload, and it is still missing; the new

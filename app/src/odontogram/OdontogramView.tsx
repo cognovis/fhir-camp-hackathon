@@ -1,11 +1,11 @@
 // INTEGRATION POINT: the chart component. See chartAdapter.ts for the contract.
 //
-// Renders the upstream MIT odontogram (react-advanced-odontogram) and pushes a chart payload
+// Renders the MIT odontogram (@cognovis/react-odontogram) and pushes a chart payload
 // into it. The upstream engine is a module-level singleton driven by imperative functions, so
 // only one chart can be mounted at a time.
 
 import { useEffect } from 'react'
-import { OdontogramShell, importStatus, setChartMode } from 'react-advanced-odontogram'
+import { OdontogramShell, importStatus, setChartMode } from '@cognovis/react-odontogram'
 import { PAYLOAD_VERSION, type ChartTeeth } from './chartAdapter'
 
 export interface OdontogramViewProps {

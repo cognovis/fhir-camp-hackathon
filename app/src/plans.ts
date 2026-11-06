@@ -3,7 +3,7 @@ import { t } from './i18n.ts'
 // /fhir proxy, either blank or as a copy of another alternative. A copy gets its cost plan
 // (Account and planned ChargeItems) from billing/charges-from-plan.mjs on the dev server.
 
-import type { CarePlan, ChargeItem, Patient } from './fhir'
+import { fhirRequest, type CarePlan, type ChargeItem, type Patient } from './fhir.ts'
 
 const HTEST = { system: 'http://terminology.hl7.org/CodeSystem/v3-ActReason', code: 'HTEST', display: 'test health data' }
 const DENTAL_CARE_PLAN = 'https://fhir.cognovis.de/dental/StructureDefinition/dental-care-plan'
@@ -54,13 +54,8 @@ export function buildCarePlan(patient: Patient, carePlans: CarePlan[], source?: 
 }
 
 async function fhir<T>(method: string, path: string, body?: unknown): Promise<T> {
-  const response = await fetch(`/fhir/${path}`, {
-    method,
-    headers: { accept: 'application/fhir+json', ...(body ? { 'content-type': 'application/fhir+json' } : {}) },
-    ...(body ? { body: JSON.stringify(body) } : {}),
-  })
-  const json = await response.json().catch(() => undefined)
-  if (!response.ok && json?.resourceType !== 'OperationOutcome') throw new Error(`${method} /fhir/${path}: HTTP ${response.status}`)
+  const { status, body: json } = await fhirRequest<T & { resourceType?: string }>(method, path, body)
+  if (status >= 400 && json?.resourceType !== 'OperationOutcome') throw new Error(`${method} /fhir/${path}: HTTP ${status}`)
   return json as T
 }
 
@@ -123,35 +118,33 @@ export async function createPlan(patient: Patient, carePlans: CarePlan[], charge
 // plan chosen in another session after the check is not deleted. `npm run setup` restores the
 // seeded alternatives.
 export async function deletePlan(loaded: CarePlan, chargeItems: ChargeItem[]): Promise<void> {
-  const fresh = await fetch(`/fhir/CarePlan/${encodeURIComponent(loaded.id)}`, { headers: { accept: 'application/fhir+json' } })
-  if (!fresh.ok) throw new Error(`GET CarePlan/${loaded.id}: HTTP ${fresh.status}`)
-  const carePlan = (await fresh.json()) as CarePlan
+  const fresh = await fhirRequest<CarePlan>('GET', `CarePlan/${encodeURIComponent(loaded.id)}`)
+  if (fresh.status >= 400 || !fresh.body) throw new Error(`GET CarePlan/${loaded.id}: HTTP ${fresh.status}`)
+  const carePlan = fresh.body
   if (carePlan.intent === 'plan') throw new Error(t('chosenDeleteError', { name: carePlan.title ?? carePlan.id }))
   const version = carePlan.meta?.versionId
   if (!version) throw new Error(t('noVersion', { id: carePlan.id }))
   // The loaded ChargeItems plus the ones charges-from-plan wrote since, read fresh by their Account.
   const generatedAccount = `Account/${carePlan.id}-cost-plan`
-  const search = await fetch(`/fhir/ChargeItem?account=${encodeURIComponent(generatedAccount)}&_count=1000`, { headers: { accept: 'application/fhir+json' } })
-  if (!search.ok) throw new Error(`GET ChargeItem?account=${generatedAccount}: HTTP ${search.status}`)
-  const found = (((await search.json()) as { entry?: { resource: ChargeItem }[] }).entry ?? []).map((e) => e.resource)
+  const search = await fhirRequest<{ entry?: { resource: ChargeItem }[] }>('GET', `ChargeItem?account=${encodeURIComponent(generatedAccount)}&_count=1000`)
+  if (search.status >= 400 || !search.body) throw new Error(`GET ChargeItem?account=${generatedAccount}: HTTP ${search.status}`)
+  const found = (search.body.entry ?? []).map((e) => e.resource)
   const byId = new Map([...chargeItems, ...found].map((c) => [c.id, c]))
   const charges = [...byId.values()].filter((c) =>
     c.supportingInformation?.some((r) => r.reference === `CarePlan/${carePlan.id}`) || c.account?.some((r) => r.reference === generatedAccount))
   const accounts = new Set(charges.flatMap((c) => c.account ?? []).map((r) => r.reference).filter((r): r is string => !!r?.startsWith('Account/')))
   // A plan without services can still have its generated (empty) Account.
-  const generated = await fetch(`/fhir/${generatedAccount}`, { headers: { accept: 'application/fhir+json' } })
-  if (generated.ok) accounts.add(generatedAccount)
+  const generated = await fhirRequest('GET', generatedAccount)
+  if (generated.status < 400) accounts.add(generatedAccount)
   const requests = [
     ...[...charges.map((c) => `ChargeItem/${c.id}`), ...accounts].map((url) => ({ method: 'DELETE', url })),
     { method: 'DELETE', url: `CarePlan/${carePlan.id}`, ifMatch: `W/"${version}"` },
   ]
-  const response = await fetch('/fhir', {
-    method: 'POST',
-    headers: { 'content-type': 'application/fhir+json', accept: 'application/fhir+json' },
-    body: JSON.stringify({ resourceType: 'Bundle', type: 'transaction', entry: requests.map((request) => ({ request })) }),
+  const response = await fhirRequest<OperationOutcome>('POST', '', {
+    resourceType: 'Bundle', type: 'transaction', entry: requests.map((request) => ({ request })),
   })
-  if (!response.ok) {
-    const outcome = await response.json().catch(() => undefined)
-    throw new Error(t('deleteError', { id: carePlan.id, detail: `HTTP ${response.status} ${outcome?.issue?.map((i: { diagnostics?: string }) => i.diagnostics).join('; ') ?? ''}`.trim() }))
+  if (response.status >= 400) {
+    const outcome = response.body
+    throw new Error(t('deleteError', { id: carePlan.id, detail: `HTTP ${response.status} ${outcome?.issue?.map((i) => i.diagnostics).join('; ') ?? ''}`.trim() }))
   }
 }

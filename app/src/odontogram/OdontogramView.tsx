@@ -6,14 +6,16 @@ import { language } from '../i18n.ts'
 // into it. The upstream engine is a module-level singleton driven by imperative functions, so
 // only one chart can be mounted at a time.
 
-import { useEffect } from 'react'
-import { OdontogramShell, importStatus, setChartMode, setImportAsBaseline, setPlanChart } from '@cognovis/react-odontogram'
+import { useEffect, type KeyboardEvent, type MouseEvent } from 'react'
+import { OdontogramShell, getSelectedTeeth, importStatus, setChartMode, setImportAsBaseline, setPlanChart } from '@cognovis/react-odontogram'
 import { PAYLOAD_VERSION, type ChartTeeth } from './chartAdapter'
 
 export interface OdontogramViewProps {
   status: ChartTeeth
   plan?: ChartTeeth
   mode: 'status' | 'plan'
+  /** Called with the FDI number after a click selects exactly one tooth (the FHIR panel uses it). */
+  onToothSelect?: (tooth: string) => void
 }
 
 // The upstream shell builds its tooth grid asynchronously after mount (it loads the tooth SVG
@@ -31,7 +33,7 @@ function whenGridReady(callback: () => void): () => void {
   return () => { cancelled = true; cancelAnimationFrame(frame) }
 }
 
-export function OdontogramView({ status, plan, mode }: OdontogramViewProps) {
+export function OdontogramView({ status, plan, mode, onToothSelect }: OdontogramViewProps) {
   useTranslation()
   useEffect(() => whenGridReady(() => {
     // The chart only displays what FHIR holds. By default the library files every import as the
@@ -53,5 +55,26 @@ export function OdontogramView({ status, plan, mode }: OdontogramViewProps) {
   // written back as FHIR Observations (TASKS.md, task 1: subscribe with onStateChange and read
   // the chart with getStatusChart). Selecting another patient or plan reloads the chart from FHIR.
   // The app owns the Status/Plan switch and the plan tabs; styles.css hides the chart's own.
-  return <OdontogramShell language={language()} numberingSystem="FDI" />
+  // The upstream engine has no selection callback (onStateChange does not fire for a selection),
+  // so read the selection after a click on a tooth, or Enter/Space in the tooth grid, has been
+  // handled. Clicks on the toolbar or empty space are ignored.
+  const reportSelection = () => {
+    if (!onToothSelect) return
+    requestAnimationFrame(() => {
+      const selected = getSelectedTeeth()
+      if (selected.length === 1) onToothSelect(String(selected[0]))
+    })
+  }
+  const handleClick = (event: MouseEvent) => {
+    if ((event.target as Element).closest('#toothGrid :is([data-tooth], .tooth-label-cell)')) reportSelection()
+  }
+  const handleKeyUp = (event: KeyboardEvent) => {
+    if ((event.key === 'Enter' || event.key === ' ') && (event.target as Element).closest('#toothGrid')) reportSelection()
+  }
+
+  return (
+    <div onClick={handleClick} onKeyUp={handleKeyUp}>
+      <OdontogramShell language={language()} numberingSystem="FDI" />
+    </div>
+  )
 }

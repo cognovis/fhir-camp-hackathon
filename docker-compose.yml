@@ -101,6 +101,7 @@ services:
         condition: service_completed_successfully
     environment:
       AIDBOX_URL: http://aidbox:8080
+      AIDBOX_BROWSER_URL: http://${AIDBOX_HOST:-localhost}:${AIDBOX_PORT:-8080}
     ports:
       - "${APP_PORT:-5173}:5173"
     volumes:

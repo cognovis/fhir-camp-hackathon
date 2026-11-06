@@ -2,7 +2,7 @@ import { t, number, type TranslationKey } from './i18n.ts'
 // Cost plans priced by the Billing SDK. The dev server runs billing/cost-plan.mjs and serves its
 // JSON at /api/cost-plan (see vite.config.ts); the SDK does not run in the browser.
 
-import type { ChargeItem } from './fhir'
+import { fhirRequest, type ChargeItem } from './fhir.ts'
 
 export interface CostPlanLine {
   id: string // the ChargeItem id
@@ -48,19 +48,15 @@ export async function loadCostPlans(patientId: string): Promise<CostPlan[]> {
 // the rest of the resource, including its HTEST tag and any coded reasons, as it is. The
 // justification is the one text-only reason; saving again replaces it.
 export async function saveJustification(chargeItemId: string, text: string): Promise<ChargeItem> {
-  const url = `/fhir/ChargeItem/${encodeURIComponent(chargeItemId)}`
-  const current = await fetch(url, { headers: { accept: 'application/fhir+json' } })
-  if (!current.ok) throw new Error(`GET ChargeItem/${chargeItemId}: HTTP ${current.status}`)
-  const item = (await current.json()) as ChargeItem
+  const path = `ChargeItem/${encodeURIComponent(chargeItemId)}`
+  const current = await fhirRequest<ChargeItem>('GET', path)
+  if (current.status >= 400 || !current.body) throw new Error(`GET ChargeItem/${chargeItemId}: HTTP ${current.status}`)
+  const item = current.body
   const coded = (item.reason ?? []).filter((reason) => reason.coding?.length)
   const updated: ChargeItem = { ...item, reason: [...coded, { text: text.trim() }] }
-  const response = await fetch(url, {
-    method: 'PUT',
-    headers: { 'content-type': 'application/fhir+json', accept: 'application/fhir+json' },
-    body: JSON.stringify(updated),
-  })
-  if (!response.ok) throw new Error(`PUT ChargeItem/${chargeItemId}: HTTP ${response.status}`)
-  return (await response.json()) as ChargeItem
+  const response = await fhirRequest<ChargeItem>('PUT', path, updated)
+  if (response.status >= 400 || !response.body) throw new Error(`PUT ChargeItem/${chargeItemId}: HTTP ${response.status}`)
+  return response.body
 }
 
 export const DECISIONS: Record<string, { label: TranslationKey; tone: 'ok' | 'review' | 'bad' }> = {

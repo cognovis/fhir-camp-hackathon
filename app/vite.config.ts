@@ -57,12 +57,17 @@ function billingEndpoints(): Plugin {
           let raw = ''
           req.on('data', (chunk) => { raw += chunk; if (raw.length > 10_000) req.destroy() })
           req.on('end', () => {
-            let body: { carePlan?: unknown; factors?: Record<string, unknown> }
+            let body: unknown
             try { body = JSON.parse(raw) } catch { return send(400, { error: 'JSON body expected' }) }
+            const isObject = (value: unknown): value is Record<string, unknown> =>
+              typeof value === 'object' && value !== null && !Array.isArray(value)
+            if (!isObject(body)) return send(400, { error: 'JSON object expected' })
             const carePlan = typeof body.carePlan === 'string' ? body.carePlan : ''
             if (!FHIR_ID.test(carePlan)) return send(400, { error: 'carePlan must be a FHIR id' })
+            const factors = body.factors === undefined ? {} : body.factors
+            if (!isObject(factors)) return send(400, { error: 'factors must be an object of GOZ number to multiplier' })
             const factorArgs: string[] = []
-            for (const [code, factor] of Object.entries(body.factors ?? {})) {
+            for (const [code, factor] of Object.entries(factors)) {
               if (!/^[0-9]{4}[a-z]?$/.test(code) || typeof factor !== 'number' || !(factor > 0 && factor <= 10)) {
                 return send(400, { error: `factor ${code}: expected a GOZ number and a multiplier` })
               }

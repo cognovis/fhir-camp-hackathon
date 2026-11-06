@@ -37,6 +37,8 @@ export function buildCarePlan(patient: Patient, carePlans: CarePlan[], source?: 
             { coding: [{ system: 'https://fhir.cognovis.de/dental/CodeSystem/dental-care-plan-type', code: 'hkp' }] },
           ],
           subject: { reference: `Patient/${patient.id}` },
+          // charges-from-plan.mjs dates the cost plan by period.start once services are added.
+          period: { start: today },
         }),
     resourceType: 'CarePlan',
     id,
@@ -101,19 +103,36 @@ export async function createPlan(patient: Patient, carePlans: CarePlan[], charge
 // Deletes one alternative with its cost plan: the CarePlan, the Accounts of its planned
 // ChargeItems (and the `<id>-cost-plan` Account charges-from-plan writes) and those ChargeItems,
 // in one transaction, so nothing is left half deleted. The chosen alternative (intent = plan) is
-// refused. `npm run setup` restores the seeded alternatives.
-export async function deletePlan(carePlan: CarePlan, chargeItems: ChargeItem[]): Promise<void> {
+// refused. The check reads the CarePlan fresh and the delete carries its version (If-Match), so a
+// plan chosen in another session after the check is not deleted. `npm run setup` restores the
+// seeded alternatives.
+export async function deletePlan(loaded: CarePlan, chargeItems: ChargeItem[]): Promise<void> {
+  const fresh = await fetch(`/fhir/CarePlan/${encodeURIComponent(loaded.id)}`, { headers: { accept: 'application/fhir+json' } })
+  if (!fresh.ok) throw new Error(`GET CarePlan/${loaded.id}: HTTP ${fresh.status}`)
+  const carePlan = (await fresh.json()) as CarePlan
   if (carePlan.intent === 'plan') throw new Error(`${carePlan.title ?? carePlan.id} is the chosen alternative and cannot be deleted.`)
-  const charges = chargeItems.filter((c) => c.supportingInformation?.some((r) => r.reference === `CarePlan/${carePlan.id}`))
+  const version = carePlan.meta?.versionId
+  if (!version) throw new Error(`CarePlan/${carePlan.id} has no versionId; refusing to delete it without If-Match.`)
+  // The loaded ChargeItems plus the ones charges-from-plan wrote since, read fresh by their Account.
+  const generatedAccount = `Account/${carePlan.id}-cost-plan`
+  const search = await fetch(`/fhir/ChargeItem?account=${encodeURIComponent(generatedAccount)}&_count=1000`, { headers: { accept: 'application/fhir+json' } })
+  if (!search.ok) throw new Error(`GET ChargeItem?account=${generatedAccount}: HTTP ${search.status}`)
+  const found = (((await search.json()) as { entry?: { resource: ChargeItem }[] }).entry ?? []).map((e) => e.resource)
+  const byId = new Map([...chargeItems, ...found].map((c) => [c.id, c]))
+  const charges = [...byId.values()].filter((c) =>
+    c.supportingInformation?.some((r) => r.reference === `CarePlan/${carePlan.id}`) || c.account?.some((r) => r.reference === generatedAccount))
   const accounts = new Set(charges.flatMap((c) => c.account ?? []).map((r) => r.reference).filter((r): r is string => !!r?.startsWith('Account/')))
   // A plan without services can still have its generated (empty) Account.
-  const generated = await fetch(`/fhir/Account/${encodeURIComponent(`${carePlan.id}-cost-plan`)}`, { headers: { accept: 'application/fhir+json' } })
-  if (generated.ok) accounts.add(`Account/${carePlan.id}-cost-plan`)
-  const urls = [...charges.map((c) => `ChargeItem/${c.id}`), ...accounts, `CarePlan/${carePlan.id}`]
+  const generated = await fetch(`/fhir/${generatedAccount}`, { headers: { accept: 'application/fhir+json' } })
+  if (generated.ok) accounts.add(generatedAccount)
+  const requests = [
+    ...[...charges.map((c) => `ChargeItem/${c.id}`), ...accounts].map((url) => ({ method: 'DELETE', url })),
+    { method: 'DELETE', url: `CarePlan/${carePlan.id}`, ifMatch: `W/"${version}"` },
+  ]
   const response = await fetch('/fhir', {
     method: 'POST',
     headers: { 'content-type': 'application/fhir+json', accept: 'application/fhir+json' },
-    body: JSON.stringify({ resourceType: 'Bundle', type: 'transaction', entry: urls.map((url) => ({ request: { method: 'DELETE', url } })) }),
+    body: JSON.stringify({ resourceType: 'Bundle', type: 'transaction', entry: requests.map((request) => ({ request })) }),
   })
   if (!response.ok) {
     const outcome = await response.json().catch(() => undefined)

@@ -63,7 +63,7 @@ export function OdontogramView({ status, plan, mode, onToothSelect }: Odontogram
     })
   }
   const handleClick = (event: MouseEvent) => {
-    if ((event.target as Element).closest('#toothGrid [data-tooth]')) reportSelection()
+    if ((event.target as Element).closest('#toothGrid :is([data-tooth], .tooth-label-cell)')) reportSelection()
   }
   const handleKeyUp = (event: KeyboardEvent) => {
     if ((event.key === 'Enter' || event.key === ' ') && (event.target as Element).closest('#toothGrid')) reportSelection()

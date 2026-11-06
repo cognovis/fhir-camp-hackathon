@@ -3,6 +3,7 @@
 // panel looks and reads like the Aidbox console:
 // - "Resource": the resource you clicked in the app as FHIR JSON, its profiles, a $validate
 //   button with the OperationOutcome, and a link to the same resource in the Aidbox UI.
+// - "Profile": the profile the resource claims, as the element tree the Aidbox UI shows.
 // - "Requests": every FHIR request the app sent (fhirRequest in fhir.ts) with its response.
 
 import { useEffect, useState } from 'react'
@@ -22,6 +23,7 @@ import {
   Tag,
 } from '@health-samurai/react-components'
 import { clearFhirLog, subscribeFhirLog, validateResource, type FhirLogEntry, type OperationOutcome, type Resource } from '../fhir'
+import { ProfileView } from './ProfileView'
 
 declare const __AIDBOX_BROWSER_URL__: string
 
@@ -39,15 +41,15 @@ export interface FhirPanelProps {
 
 export function FhirPanel({ open, onOpenChange, resource, inspection }: FhirPanelProps) {
   const [tab, setTab] = useState('resource')
-  // Every inspection brings the resource tab to the front.
-  useEffect(() => { if (inspection > 0) setTab('resource') }, [inspection])
+  // An inspection brings the resource to the front; the Profile tab stays and follows it.
+  useEffect(() => { if (inspection > 0) setTab((current) => (current === 'profile' ? current : 'resource')) }, [inspection])
 
   return (
     // Not modal: the app stays usable while the panel is open, so every click shows its FHIR.
     <Sheet open={open} onOpenChange={onOpenChange} modal={false}>
       <SheetContent
         side="right"
-        className="fhir-panel"
+        className={tab === 'profile' ? 'fhir-panel wide' : 'fhir-panel'}
         onInteractOutside={(e) => e.preventDefault()}
         // Keep the focus in the app: the panel follows the app and should not take the focus from it.
         onOpenAutoFocus={(e) => e.preventDefault()}
@@ -59,11 +61,18 @@ export function FhirPanel({ open, onOpenChange, resource, inspection }: FhirPane
         <Tabs value={tab} onValueChange={setTab} className="fhir-panel-tabs">
           <TabsList className="fhir-panel-tablist">
             <TabsTrigger value="resource">Resource</TabsTrigger>
+            <TabsTrigger value="profile">Profile</TabsTrigger>
             <TabsTrigger value="requests">Requests</TabsTrigger>
           </TabsList>
           <TabsContent value="resource" className="fhir-panel-tab">
-            {resource ? <ResourceView key={`${resource.resourceType}/${resource.id}`} resource={resource} /> : (
+            {/* The version is part of the key: a saved change starts without the old $validate result. */}
+            {resource ? <ResourceView key={`${resource.resourceType}/${resource.id}/${resource.meta?.versionId ?? ''}`} resource={resource} /> : (
               <p className="fhir-panel-empty">Click "View FHIR", a GOZ number in a cost plan, or a tooth in the chart.</p>
+            )}
+          </TabsContent>
+          <TabsContent value="profile" className="fhir-panel-tab">
+            {resource ? <ProfileView key={`${resource.resourceType}/${resource.id}`} resource={resource} /> : (
+              <p className="fhir-panel-empty">Open a resource first; this tab shows the profile it claims.</p>
             )}
           </TabsContent>
           <TabsContent value="requests" className="fhir-panel-tab">

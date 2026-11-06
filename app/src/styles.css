@@ -17,6 +17,7 @@ body { margin: 0; font-family: Inter, system-ui, sans-serif; color: var(--text);
 .app-page button:disabled:not(.app-chart *) { cursor: not-allowed; opacity: .6; }
 .app-page :is(button, input, select, textarea):focus-visible:not(.app-chart *) { outline: 2px solid var(--accent); outline-offset: 2px; }
 .app-page code:not(.app-chart *) { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .92em; }
+.app-page :is(h1, h2, h3, h4):not(.app-chart *) { font-weight: 700; }
 .app-page h2:not(.app-chart *) { font-size: 17px; margin: 0; }
 .app-page h3:not(.app-chart *) { font-size: 16px; margin: 0; }
 
@@ -194,3 +195,7 @@ button.code-link { border: 0; background: none; padding: 0; color: var(--accent-
 .fhir-panel-log button:hover { background: var(--surface-2); }
 .fhir-panel-log button.selected { background: var(--accent-soft); }
 .fhir-panel-url { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: ui-monospace, monospace; }
+.fhir-panel.wide { width: min(980px, 100vw); }
+.fhir-panel-structure { flex: 1; min-height: 0; overflow: auto; border: 1px solid var(--line); border-radius: 6px; }
+.fhir-panel-structure > div { min-width: 860px; }
+.fhir-panel-select { height: 32px; border: 1px solid var(--input); border-radius: 8px; padding: 0 8px; background: #fff; }

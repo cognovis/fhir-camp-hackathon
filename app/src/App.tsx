@@ -33,7 +33,9 @@ export function App() {
     setPanelOpen(true)
   }, [])
   // Follow the app (plan tabs, chart, writes) only while the panel is open.
-  const follow = useCallback((resource: Resource | undefined) => { if (resource && panelOpen) inspect(resource) }, [panelOpen, inspect])
+  const panelOpenRef = useRef(panelOpen)
+  panelOpenRef.current = panelOpen
+  const follow = useCallback((resource: Resource | undefined) => { if (resource && panelOpenRef.current) inspect(resource) }, [inspect])
 
   useEffect(() => {
     search<Patient>(`Patient?identifier=${encodeURIComponent(`${DENTAL_PATIENT}|`)}&_sort=_id&_count=50`)

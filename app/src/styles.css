@@ -17,6 +17,7 @@ body { margin: 0; font-family: Inter, system-ui, sans-serif; color: var(--text);
 .app-page button:disabled:not(.app-chart *) { cursor: not-allowed; opacity: .6; }
 .app-page :is(button, input, select, textarea):focus-visible:not(.app-chart *) { outline: 2px solid var(--accent); outline-offset: 2px; }
 .app-page code:not(.app-chart *) { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .92em; }
+.app-page :is(h1, h2, h3, h4):not(.app-chart *) { font-weight: 700; }
 .app-page h2:not(.app-chart *) { font-size: 17px; margin: 0; }
 .app-page h3:not(.app-chart *) { font-size: 16px; margin: 0; }
 
@@ -169,3 +170,32 @@ button.with-icon { display: flex; align-items: center; gap: 8px; padding: 0 16px
 button.danger { color: var(--bad-fg); border-color: #f3b4b4; }
 button.danger:hover:not(:disabled) { background: var(--bad-bg); }
 button.icon-only { width: 40px; padding: 0; display: flex; align-items: center; justify-content: center; flex: 0 0 auto !important; }
+
+/* FHIR panel (app/src/inspector/FhirPanel.tsx), built from @health-samurai/react-components.
+   Its Tailwind CSS sits in cascade layers, so these unlayered rules win over it. */
+.fhir-toggle[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
+button.code-link { border: 0; background: none; padding: 0; color: var(--accent-strong); text-decoration: underline dotted; text-underline-offset: 3px; }
+@media (min-width: 1200px) { .app-page.with-fhir-panel { margin-right: min(640px, 100vw); } }
+.fhir-panel { width: min(640px, 100vw); max-width: none; gap: 0; }
+.fhir-panel-header { border-bottom: 1px solid var(--line); }
+.fhir-panel-tabs { min-height: 0; flex: 1; }
+.fhir-panel-tablist { width: 100%; border-bottom: 1px solid var(--line); }
+.fhir-panel-tab { min-height: 0; flex: 1; display: flex; flex-direction: column; }
+.fhir-panel-body { display: flex; flex-direction: column; gap: 8px; padding: 12px; min-height: 0; flex: 1; }
+.fhir-panel-toolbar { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.fhir-panel-ref { font-size: 13px; font-weight: 600; margin-right: auto; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+.fhir-panel-profiles { display: flex; gap: 4px; flex-wrap: wrap; }
+.fhir-panel-muted { font-size: 12px; color: var(--muted); }
+.fhir-panel-empty { padding: 12px; color: var(--muted); font-size: 13px; }
+.fhir-panel-ok { margin: 0; padding: 6px 8px; border-radius: 6px; background: var(--ok-bg); color: var(--ok-fg); font-size: 13px; }
+.fhir-panel-error { margin: 0; color: #b42318; font-size: 13px; }
+.fhir-panel-editor { flex: 1; min-height: 200px; border: 1px solid var(--line); border-radius: 6px; overflow: auto; }
+.fhir-panel-log { list-style: none; margin: 0; padding: 0; max-height: 35vh; overflow: auto; border: 1px solid var(--line); border-radius: 6px; }
+.fhir-panel-log button { display: flex; align-items: center; gap: 6px; width: 100%; padding: 4px 6px; border: 0; border-bottom: 1px solid var(--line-soft); background: none; text-align: left; font-size: 12px; cursor: pointer; }
+.fhir-panel-log button:hover { background: var(--surface-2); }
+.fhir-panel-log button.selected { background: var(--accent-soft); }
+.fhir-panel-url { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: ui-monospace, monospace; }
+.fhir-panel.wide { width: min(980px, 100vw); }
+.fhir-panel-structure { flex: 1; min-height: 0; overflow: auto; border: 1px solid var(--line); border-radius: 6px; }
+.fhir-panel-structure > div { min-width: 860px; }
+.fhir-panel-select { height: 32px; border: 1px solid var(--input); border-radius: 8px; padding: 0 8px; background: #fff; }

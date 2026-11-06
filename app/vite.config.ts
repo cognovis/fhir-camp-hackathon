@@ -15,6 +15,9 @@ if (existsSync(envFile)) process.loadEnvFile?.(envFile)
 const aidbox = (process.env.AIDBOX_URL ?? `http://localhost:${process.env.AIDBOX_PORT ?? '8080'}`).replace(/\/$/, '')
 const client = process.env.AIDBOX_CLIENT ?? 'root'
 const secret = process.env.AIDBOX_SECRET ?? 'hackathon'
+// Where the browser opens the Aidbox UI (the FHIR panel links each resource there). Not a secret.
+const aidboxBrowser = (process.env.AIDBOX_BROWSER_URL
+  ?? `http://${process.env.AIDBOX_HOST ?? 'localhost'}:${process.env.AIDBOX_PORT ?? '8080'}`).replace(/\/$/, '')
 
 // Billing scripts the dev server runs for the app, so the Billing SDK and the Aidbox credentials
 // stay out of the browser (TASKS.md, tasks 4 and 5):
@@ -93,6 +96,7 @@ function billingEndpoints(): Plugin {
 
 export default defineConfig({
   plugins: [react(), billingEndpoints()],
+  define: { __AIDBOX_BROWSER_URL__: JSON.stringify(aidboxBrowser) },
   server: {
     port: Number(process.env.APP_PORT ?? 5173),
     proxy: {

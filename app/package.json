@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@cognovis/react-odontogram": "5.2.6",
+    "@health-samurai/react-components": "0.0.0-alpha.21",
     "react": "^19.2.0",
     "react-dom": "^19.2.0"
   },

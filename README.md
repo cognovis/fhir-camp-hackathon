@@ -2,6 +2,8 @@
 
 A FHIR Camp hackathon project. One team, one day, one live demo.
 
+Pitch slides: [`docs/slides.html`](docs/slides.html) (open in a browser, arrow keys to move).
+
 ## The idea
 
 Before a crown or a bridge, every dental practice in Germany writes a

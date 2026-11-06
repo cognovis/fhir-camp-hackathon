@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>From tooth chart to bill: a dental treatment and cost plan on FHIR</title>
+<style>
+  :root {
+    --bg: #0f1a24;
+    --fg: #eef3f7;
+    --muted: #9fb2c2;
+    --accent: #4fc3a1;
+    --accent-2: #f2b75b;
+    --card: #182736;
+    --line: #2a3d4f;
+    --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: var(--bg); color: var(--fg);
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+  .deck { height: 100%; }
+  .slide { display: none; height: 100vh; padding: 6vh 7vw; flex-direction: column; justify-content: center; gap: 3vh; }
+  .slide.active { display: flex; }
+  h1 { font-size: clamp(2rem, 4.6vw, 4rem); line-height: 1.1; margin: 0; }
+  h2 { font-size: clamp(1.6rem, 3.2vw, 2.8rem); margin: 0; color: var(--accent); }
+  p, li { font-size: clamp(1rem, 1.7vw, 1.5rem); line-height: 1.45; }
+  ul { margin: 0; padding-left: 1.2em; }
+  li { margin: 0.35em 0; }
+  .muted { color: var(--muted); }
+  .kicker { text-transform: uppercase; letter-spacing: 0.15em; color: var(--accent-2); font-size: clamp(0.8rem, 1.2vw, 1rem); }
+  code, .mono { font-family: var(--mono); font-size: 0.9em; background: var(--card); padding: 0.1em 0.35em; border-radius: 4px; }
+  .chain { display: grid; grid-template-columns: 1fr auto 1fr; gap: 1.2vh 2vw; align-items: center; max-width: 1100px; }
+  .chain .step { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 1.4vh 1.2vw; font-size: clamp(0.95rem, 1.5vw, 1.35rem); }
+  .chain .arrow { color: var(--muted); font-size: 1.4em; text-align: center; }
+  .chain .res { font-family: var(--mono); color: var(--accent); font-size: clamp(0.85rem, 1.3vw, 1.15rem); }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 2vh 2vw; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 2vh 1.5vw; }
+  .card h3 { margin: 0 0 0.6vh; font-size: clamp(1.05rem, 1.6vw, 1.4rem); color: var(--accent-2); }
+  .card p { margin: 0; font-size: clamp(0.9rem, 1.3vw, 1.15rem); color: var(--muted); }
+  table { border-collapse: collapse; font-size: clamp(0.9rem, 1.4vw, 1.25rem); max-width: 1100px; }
+  th, td { text-align: left; padding: 0.6vh 1.2vw; border-bottom: 1px solid var(--line); }
+  th { color: var(--muted); font-weight: 600; }
+  td.num { text-align: right; font-family: var(--mono); }
+  pre { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 2vh 1.5vw;
+    font-family: var(--mono); font-size: clamp(0.85rem, 1.4vw, 1.2rem); line-height: 1.6; margin: 0; max-width: 1000px; overflow-x: auto; }
+  .tag { display: inline-block; font-family: var(--mono); font-size: 0.75em; color: var(--bg); background: var(--accent); border-radius: 4px; padding: 0.05em 0.4em; margin-left: 0.4em; vertical-align: middle; }
+  .footer { position: fixed; bottom: 2vh; left: 7vw; right: 7vw; display: flex; justify-content: space-between; color: var(--muted); font-size: 0.85rem; pointer-events: none; }
+  .progress { position: fixed; top: 0; left: 0; height: 4px; background: var(--accent); transition: width 0.2s; }
+  @media print {
+    @page { size: 1280px 720px; margin: 0; }
+    .slide { display: flex !important; height: 720px; width: 1280px; page-break-after: always; }
+    .footer, .progress { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<main class="deck">
+
+  <section class="slide">
+    <div class="kicker">FHIR Camp hackathon</div>
+    <h1>From tooth chart to bill</h1>
+    <p class="muted">A dental treatment and cost plan on FHIR. One team, one day, one live demo.</p>
+    <p class="muted mono" style="background:none;padding:0">github.com/cognovis/fhir-camp-hackathon</p>
+  </section>
+
+  <section class="slide">
+    <h2>The problem</h2>
+    <ul>
+      <li>Before a crown or a bridge, every dental practice in Germany writes a <strong>treatment and cost plan</strong> (HKP, <em>Heil- und Kostenplan</em>).</li>
+      <li>It is a tooth chart with the findings, the planned treatment, a few alternatives for the patient, and what each one costs.</li>
+      <li>Today it lives in closed practice software.</li>
+      <li>The same shape exists in many countries: chart, plan, alternatives, cost, approval by the insurer.</li>
+    </ul>
+  </section>
+
+  <section class="slide">
+    <h2>The chain we build on FHIR</h2>
+    <div class="chain">
+      <div class="step">Findings on an odontogram</div><div class="arrow">&rarr;</div><div class="res">Observation, Condition</div>
+      <div class="step">Treatment alternatives</div><div class="arrow">&rarr;</div><div class="res">CarePlan (intent option / plan)</div>
+      <div class="step">Planned charges</div><div class="arrow">&rarr;</div><div class="res">ChargeItem (status planned)</div>
+      <div class="step">Priced from a fee catalog</div><div class="arrow">&rarr;</div><div class="res">ChargeItemDefinition (GOZ)</div>
+      <div class="step">A cost plan per alternative</div><div class="arrow">&rarr;</div><div class="res">Account</div>
+      <div class="step">Pre-authorization</div><div class="arrow">&rarr;</div><div class="res">Claim, ClaimResponse</div>
+    </div>
+    <p class="muted">Running on Aidbox. Every step visible as FHIR resources.</p>
+  </section>
+
+  <section class="slide">
+    <h2>Demo goal</h2>
+    <p>Chart the findings, plan a bridge across three teeth, compare the alternatives by cost, choose one, and send it for pre-authorization.</p>
+    <table>
+      <tr><th>Example patient</th><td>Greta Palmried, <code>Patient/dent-051</code> (synthetic)</td></tr>
+      <tr><th>Finding</th><td>Tooth 36 missing, 37 with a filling</td></tr>
+      <tr><th>Alternative A</th><td>Bridge 35-37, veneered <span class="muted">(chosen)</span></td></tr>
+      <tr><th>Alternative B</th><td>Bridge 35-37, full cast gold</td></tr>
+      <tr><th>Alternative C</th><td>Single implant 36 with crown</td></tr>
+    </table>
+  </section>
+
+  <section class="slide">
+    <h2>What is ready when we start</h2>
+    <div class="grid">
+      <div class="card"><h3>Aidbox</h3><p>Docker Compose, dental FHIR packages installed, one command: <code>npm run setup</code>.</p></div>
+      <div class="card"><h3>Synthetic patients</h3><p>Four patients with full tooth charts; DENT-051 with the complete planning chain.</p></div>
+      <div class="card"><h3>GOZ catalog as FHIR</h3><p>The German dental fee schedule as ChargeItemDefinitions, generated from the statutory text.</p></div>
+      <div class="card"><h3>Billing check</h3><p>cognovis Billing SDK: rules as a FHIR Library, evaluated over ChargeItems, also offline on bundles.</p></div>
+      <div class="card"><h3>Starter app</h3><p>React + Vite, odontogram (react-advanced-odontogram, MIT) on FHIR data, status and planned chart.</p></div>
+      <div class="card"><h3>Seven tasks</h3><p><code>TASKS.md</code>: each stands alone and ends with something visible.</p></div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <h2>The billing check today</h2>
+    <table>
+      <tr><th>Cost plan</th><th>Total</th><th>Decision</th></tr>
+      <tr><td>A: bridge, veneered</td><td class="num">549.26 EUR</td><td>allow</td></tr>
+      <tr><td>B: bridge, full cast</td><td class="num">428.44 EUR</td><td>allow</td></tr>
+      <tr><td>C: implant with crown</td><td class="num">673.59 EUR</td><td>needs review: multiplier 3.0 without justification</td></tr>
+    </table>
+    <p class="muted">A broken example bundle shows the blocking rules: quantity cap, mutual exclusion, multiplier out of bounds.</p>
+  </section>
+
+  <section class="slide">
+    <h2>Tasks: pick one</h2>
+    <table>
+      <tr><th>#</th><th>Task</th><th>Size</th></tr>
+      <tr><td>1</td><td>Chart to FHIR: write findings back from the odontogram</td><td>M</td></tr>
+      <tr><td>2</td><td>Plan alternatives: create and choose a treatment alternative</td><td>M</td></tr>
+      <tr><td>3</td><td>Charges from plan activities</td><td>S-M</td></tr>
+      <tr><td>4</td><td>Rules as FHIR: write a new billing rule</td><td>S-M</td></tr>
+      <tr><td>5</td><td>Cost plan view in the app</td><td>M</td></tr>
+      <tr><td>6</td><td>Pre-authorization: Claim and ClaimResponse</td><td>M</td></tr>
+      <tr><td>7</td><td>The demo path</td><td>S</td></tr>
+    </table>
+  </section>
+
+  <section class="slide">
+    <h2>Getting started</h2>
+<pre>git clone https://github.com/cognovis/fhir-camp-hackathon
+cd fhir-camp-hackathon
+cp .env.example .env      # Aidbox licence, or activate in the browser
+docker compose up -d      # pulls about 1.1 GB
+npm install
+npm run setup             # packages, data, validation
+npm run app               # starter app on localhost:5173
+npm run billing:check</pre>
+    <p class="muted">Aidbox UI on <code>localhost:8080</code>. All data is synthetic.</p>
+  </section>
+
+  <section class="slide">
+    <h2>Who we are looking for</h2>
+    <ul>
+      <li>Frontend developers</li>
+      <li>FHIR modellers</li>
+      <li>Anyone who knows billing or claims, in any country</li>
+      <li>Dental people, if you are here</li>
+    </ul>
+    <p class="muted">No dental knowledge required.</p>
+  </section>
+
+</main>
+<div class="footer"><span>FHIR Camp: tooth chart to bill</span><span id="counter"></span></div>
+<script>
+  const slides = [...document.querySelectorAll('.slide')]
+  let current = Math.min(Math.max(parseInt(location.hash.slice(1), 10) - 1 || 0, 0), slides.length - 1)
+  function show(index) {
+    current = Math.min(Math.max(index, 0), slides.length - 1)
+    slides.forEach((s, i) => s.classList.toggle('active', i === current))
+    document.getElementById('counter').textContent = `${current + 1} / ${slides.length}`
+    document.getElementById('progress').style.width = `${((current + 1) / slides.length) * 100}%`
+    history.replaceState(null, '', `#${current + 1}`)
+  }
+  document.addEventListener('keydown', (e) => {
+    if (['ArrowRight', 'PageDown', ' ', 'Enter'].includes(e.key)) { e.preventDefault(); show(current + 1) }
+    if (['ArrowLeft', 'PageUp', 'Backspace'].includes(e.key)) { e.preventDefault(); show(current - 1) }
+    if (e.key === 'Home') show(0)
+    if (e.key === 'End') show(slides.length - 1)
+  })
+  document.addEventListener('click', (e) => { if (!e.target.closest('a')) show(current + (e.clientX < innerWidth / 3 ? -1 : 1)) })
+  show(current)
+</script>
+</body>
+</html>

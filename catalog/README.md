@@ -6,7 +6,7 @@ patients. Check every number against the statutory text before relying on it.
 | File | What it is |
 |---|---|
 | `goz-catalog.bundle.json` | The catalog the kit loads: a FHIR R4 transaction Bundle with 215 GOZ `ChargeItemDefinition`s, the GOZ `CodeSystem`, the hackathon rule set and the catalog edition (both `Library`). `npm run setup` loads it into Aidbox; the billing check reads it as a file. |
-| `source/goz-adapter-output.json` | The unchanged output of one run of the cognovis GOZ converter, wrapped in a collection Bundle. Kept so the conversion step below can be followed and repeated. |
+| `source/goz-adapter-output.json` | The output of one run of the cognovis GOZ converter, wrapped in a collection Bundle; only the internal `meta.source` and tag system identifiers were renamed to `urn:cognovis:*`. Kept so the conversion step below can be followed and repeated. |
 
 ## Where the data comes from
 

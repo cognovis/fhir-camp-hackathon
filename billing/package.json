@@ -11,8 +11,8 @@
     "cost-plan": "node cost-plan.mjs"
   },
   "dependencies": {
-    "@cognovis/fhir-billing-rules": "0.35.0",
-    "@cognovis/fhir-billing-sdk": "0.35.0",
+    "@cognovis/fhir-billing-rules": "0.40.0",
+    "@cognovis/fhir-billing-sdk": "0.42.1",
     "@cognovis/fhir-sdk": "0.23.3"
   }
 }

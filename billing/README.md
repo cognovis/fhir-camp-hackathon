@@ -3,7 +3,7 @@
 **Synthetic rules, generated for the hackathon, not billing-grade.**
 
 This folder evaluates planned `ChargeItem`s against the GOZ catalog (`../catalog`) and a
-small hand-written rule set, with `@cognovis/fhir-billing-sdk` 0.35.0 (Apache-2.0). It runs
+small hand-written rule set, with `@cognovis/fhir-billing-sdk` 0.42.1 (Apache-2.0). It runs
 offline on FHIR bundles; no server is needed.
 
 ```sh

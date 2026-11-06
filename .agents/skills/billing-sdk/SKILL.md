@@ -14,12 +14,16 @@ login (`.npmrc` sets the `@cognovis` scope):
 
 | Package | Version | Use here |
 | --- | --- | --- |
-| `@cognovis/fhir-billing-sdk` | 0.35.0 | `fhir-billing-check` CLI, `evaluateBillingAccount` |
-| `@cognovis/fhir-billing-rules` | 0.35.0 | `BILLING_RULE_CLASS_DEFINITIONS`, the rule classes |
+| `@cognovis/fhir-billing-sdk` | 0.37.1 | `fhir-billing-check` CLI, `evaluateBillingAccount` |
+| `@cognovis/fhir-billing-rules` | 0.37.0 | `BILLING_RULE_CLASS_DEFINITIONS`, the rule classes |
 | `@cognovis/fhir-sdk` | 0.23.3 | `defineProfile` for the profile bindings |
 
 Source of the billing engine: https://github.com/cognovis/fhir-billing-core (public).
-Keep these versions; the kit is tested with exactly them.
+Keep these versions; the kit is tested with exactly them. Newer packages exist (engine,
+rules and types 0.41.1, `fhir-sdk` 0.24.0), but `fhir-billing-sdk` 0.37.1 requires engine,
+rules and types `^0.37.0` and `fhir-sdk` `^0.23.3`. Do not add the 0.41 packages next to it:
+the SDK would keep using 0.37, and rule classes read from 0.41 may not match what it checks.
+The packages are not on npmjs.org.
 
 ## Run it
 

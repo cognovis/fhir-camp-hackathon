@@ -6,7 +6,7 @@ export interface CodeableConcept { coding?: Coding[]; text?: string }
 export interface Reference { reference?: string; display?: string }
 export interface Extension { url: string; valueCoding?: Coding; valueString?: string }
 
-export interface Resource { resourceType: string; id: string; meta?: { profile?: string[]; versionId?: string } }
+export interface Resource { resourceType: string; id: string; meta?: { profile?: string[]; versionId?: string; tag?: Coding[] } }
 
 export interface Patient extends Resource {
   resourceType: 'Patient'
@@ -24,8 +24,11 @@ export interface ObservationComponent {
 export interface Observation extends Resource {
   resourceType: 'Observation'
   status: string
+  category?: CodeableConcept[]
   code: CodeableConcept
+  subject?: Reference
   effectiveDateTime?: string
+  performer?: Reference[]
   bodySite?: CodeableConcept
   note?: { text: string }[]
   component?: ObservationComponent[]
@@ -71,7 +74,7 @@ export interface ChargeItem extends Resource {
   account?: Reference[]
 }
 
-interface Bundle<T> { entry?: { resource: T }[] }
+interface Bundle<T> { entry?: { resource: T }[]; link?: { relation: string; url: string }[] }
 
 // Every FHIR call of the app goes through fhirRequest, which records it in the request log that
 // the FHIR panel shows. Call it for your own writes too, so they appear there.
@@ -111,8 +114,9 @@ export function clearFhirLog() {
 }
 
 // body is the parsed JSON, or undefined when the server answered with something else (for example
-// a proxy error page); text is the raw answer in both cases.
-export async function fhirRequest<T>(method: string, path: string, body?: unknown): Promise<{ status: number; body: T | undefined; text: string }> {
+// a proxy error page); text is the raw answer in both cases. keepalive lets a request started as
+// the page unloads still reach the server.
+export async function fhirRequest<T>(method: string, path: string, body?: unknown, options: { keepalive?: boolean } = {}): Promise<{ status: number; body: T | undefined; text: string }> {
   const url = path ? `/fhir/${path}` : '/fhir'
   const entry: FhirLogEntry = { id: nextLogId++, method, url, requestBody: body, at: new Date().toISOString() }
   writeLog(entry)
@@ -120,6 +124,7 @@ export async function fhirRequest<T>(method: string, path: string, body?: unknow
   try {
     const response = await fetch(url, {
       method,
+      ...(options.keepalive ? { keepalive: true } : {}),
       headers: { accept: 'application/fhir+json', ...(body === undefined ? {} : { 'content-type': 'application/fhir+json' }) },
       ...(body === undefined ? {} : { body: JSON.stringify(body) }),
     })
@@ -134,10 +139,30 @@ export async function fhirRequest<T>(method: string, path: string, body?: unknow
   }
 }
 
+/** Searches and follows the Bundle's next links, so results beyond one page are included. */
 export async function search<T extends Resource>(query: string): Promise<T[]> {
-  const { status, body, text } = await fhirRequest<Bundle<T>>('GET', query)
-  if (status >= 400 || !body) throw new Error(`GET /fhir/${query}: HTTP ${status}${body ? '' : `, not FHIR JSON: ${text.slice(0, 120)}`}`)
-  return (body.entry ?? []).map((entry) => entry.resource)
+  const results: T[] = []
+  let path: string | undefined = query
+  while (path) {
+    const { status, body, text }: { status: number; body: Bundle<T> | undefined; text: string } = await fhirRequest<Bundle<T>>('GET', path)
+    if (status >= 400 || !body) throw new Error(`GET /fhir/${path}: HTTP ${status}${body ? '' : `, not FHIR JSON: ${text.slice(0, 120)}`}`)
+    results.push(...(body.entry ?? []).map((entry) => entry.resource))
+    // The server answers with its own base URL (http://host:port/fhir/...); keep only what follows
+    // /fhir/, so the request stays on the Vite proxy that adds the credentials.
+    const next: string | undefined = body.link?.find((l) => l.relation === 'next')?.url
+    const url: URL | undefined = next ? new URL(next, window.location.origin) : undefined
+    path = url ? `${url.pathname.replace(/^\/fhir\/?/, '')}${url.search}` : undefined
+  }
+  return results
+}
+
+/** Creates a resource (POST, the server assigns the id) and returns it as stored. */
+// keepalive only for a save started as the page unloads: the browser caps all keepalive request
+// bodies in flight together at 64 KiB, which a whole-chart change exceeds.
+export async function create<T extends Resource>(resource: Omit<T, 'id'>, options: { keepalive?: boolean } = {}): Promise<T> {
+  const { status, body, text } = await fhirRequest<T>('POST', resource.resourceType, resource, options)
+  if (status >= 400 || !body) throw new Error(`POST /fhir/${resource.resourceType}: HTTP ${status}${body ? '' : `, not FHIR JSON: ${text.slice(0, 120)}`}`)
+  return body
 }
 
 export interface OperationOutcome {
@@ -156,7 +181,10 @@ export async function validateResource(resource: Resource): Promise<OperationOut
 
 export interface PatientRecord {
   patient: Patient
+  /** The current chart: the latest tooth-state Observation per tooth. */
   toothStates: Observation[]
+  /** Every tooth-state Observation, older ones included: CarePlans may still reference them. */
+  toothStateHistory: Observation[]
   findings: Observation[]
   conditions: Condition[]
   carePlans: CarePlan[]
@@ -175,9 +203,11 @@ export async function loadPatientRecord(patient: Patient): Promise<PatientRecord
     search<ChargeItem>(`ChargeItem?subject=${subject}&_count=500&_sort=_id`),
   ])
   const isToothState = (o: Observation) => o.meta?.profile?.includes(TOOTH_STATE_PROFILE) ?? false
+  const toothStateHistory = observations.filter(isToothState)
   return {
     patient,
-    toothStates: latestPerTooth(observations.filter(isToothState)),
+    toothStates: latestPerTooth(toothStateHistory),
+    toothStateHistory,
     findings: observations.filter((o) => !isToothState(o) && !o.hasMember),
     conditions,
     carePlans,
@@ -190,7 +220,7 @@ export function toothOf(concept: CodeableConcept | undefined): string | undefine
 }
 
 // One tooth-state Observation per tooth: the most recent effective date wins.
-function latestPerTooth(observations: Observation[]): Observation[] {
+export function latestPerTooth(observations: Observation[]): Observation[] {
   const byTooth = new Map<string, Observation>()
   for (const observation of observations) {
     const tooth = toothOf(observation.bodySite)

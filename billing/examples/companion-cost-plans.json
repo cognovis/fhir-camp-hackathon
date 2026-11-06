@@ -1,0 +1,587 @@
+{
+  "resourceType": "Bundle",
+  "id": "example-companion-cost-plans",
+  "meta": {
+    "tag": [
+      {
+        "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        "code": "HTEST",
+        "display": "test health data"
+      }
+    ]
+  },
+  "type": "collection",
+  "entry": [
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "dent-051",
+        "meta": {
+          "tag": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+              "code": "HTEST",
+              "display": "test health data"
+            }
+          ]
+        },
+        "name": [
+          {
+            "family": "Palmried",
+            "given": [
+              "Greta"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Contract",
+        "id": "example-companion-contract",
+        "meta": {
+          "tag": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+              "code": "HTEST",
+              "display": "test health data"
+            }
+          ]
+        },
+        "status": "executed",
+        "url": "https://github.com/cognovis/fhir-camp-hackathon/Contract/goz-private-treatment",
+        "subject": [
+          {
+            "reference": "Patient/dent-051"
+          }
+        ],
+        "applies": {
+          "start": "2026-01-01"
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Coverage",
+        "id": "example-companion-coverage",
+        "meta": {
+          "tag": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+              "code": "HTEST",
+              "display": "test health data"
+            }
+          ]
+        },
+        "status": "active",
+        "beneficiary": {
+          "reference": "Patient/dent-051"
+        },
+        "payor": [
+          {
+            "display": "Synthetic private insurer"
+          }
+        ],
+        "contract": [
+          {
+            "reference": "Contract/example-companion-contract"
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Account",
+        "id": "example-companion-missing",
+        "meta": {
+          "tag": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+              "code": "HTEST",
+              "display": "test health data"
+            }
+          ]
+        },
+        "status": "active",
+        "name": "Companion rule: missing",
+        "subject": [
+          {
+            "reference": "Patient/dent-051"
+          }
+        ],
+        "servicePeriod": {
+          "start": "2026-11-16"
+        },
+        "coverage": [
+          {
+            "coverage": {
+              "reference": "Coverage/example-companion-coverage"
+            },
+            "priority": 1
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "ChargeItem",
+        "id": "example-companion-missing-5120",
+        "meta": {
+          "tag": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+              "code": "HTEST",
+              "display": "test health data"
+            }
+          ]
+        },
+        "status": "planned",
+        "code": {
+          "coding": [
+            {
+              "system": "http://fhir.de/CodeSystem/bzaek/goz",
+              "code": "5120"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/dent-051"
+        },
+        "occurrenceDateTime": "2026-11-16",
+        "quantity": {
+          "value": 1
+        },
+        "factorOverride": 2.3,
+        "account": [
+          {
+            "reference": "Account/example-companion-missing"
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Account",
+        "id": "example-companion-5000",
+        "meta": {
+          "tag": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+              "code": "HTEST",
+              "display": "test health data"
+            }
+          ]
+        },
+        "status": "active",
+        "name": "Companion rule: 5000",
+        "subject": [
+          {
+            "reference": "Patient/dent-051"
+          }
+        ],
+        "servicePeriod": {
+          "start": "2026-11-16"
+        },
+        "coverage": [
+          {
+            "coverage": {
+              "reference": "Coverage/example-companion-coverage"
+            },
+            "priority": 1
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "ChargeItem",
+        "id": "example-companion-5000-5120",
+        "meta": {
+          "tag": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+              "code": "HTEST",
+              "display": "test health data"
+            }
+          ]
+        },
+        "status": "planned",
+        "code": {
+          "coding": [
+            {
+              "system": "http://fhir.de/CodeSystem/bzaek/goz",
+              "code": "5120"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/dent-051"
+        },
+        "occurrenceDateTime": "2026-11-16",
+        "quantity": {
+          "value": 1
+        },
+        "factorOverride": 2.3,
+        "account": [
+          {
+            "reference": "Account/example-companion-5000"
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "ChargeItem",
+        "id": "example-companion-5000-5000",
+        "meta": {
+          "tag": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+              "code": "HTEST",
+              "display": "test health data"
+            }
+          ]
+        },
+        "status": "planned",
+        "code": {
+          "coding": [
+            {
+              "system": "http://fhir.de/CodeSystem/bzaek/goz",
+              "code": "5000"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/dent-051"
+        },
+        "occurrenceDateTime": "2026-11-16",
+        "quantity": {
+          "value": 1
+        },
+        "factorOverride": 2.3,
+        "account": [
+          {
+            "reference": "Account/example-companion-5000"
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Account",
+        "id": "example-companion-5010",
+        "meta": {
+          "tag": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+              "code": "HTEST",
+              "display": "test health data"
+            }
+          ]
+        },
+        "status": "active",
+        "name": "Companion rule: 5010",
+        "subject": [
+          {
+            "reference": "Patient/dent-051"
+          }
+        ],
+        "servicePeriod": {
+          "start": "2026-11-16"
+        },
+        "coverage": [
+          {
+            "coverage": {
+              "reference": "Coverage/example-companion-coverage"
+            },
+            "priority": 1
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "ChargeItem",
+        "id": "example-companion-5010-5120",
+        "meta": {
+          "tag": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+              "code": "HTEST",
+              "display": "test health data"
+            }
+          ]
+        },
+        "status": "planned",
+        "code": {
+          "coding": [
+            {
+              "system": "http://fhir.de/CodeSystem/bzaek/goz",
+              "code": "5120"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/dent-051"
+        },
+        "occurrenceDateTime": "2026-11-16",
+        "quantity": {
+          "value": 1
+        },
+        "factorOverride": 2.3,
+        "account": [
+          {
+            "reference": "Account/example-companion-5010"
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "ChargeItem",
+        "id": "example-companion-5010-5010",
+        "meta": {
+          "tag": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+              "code": "HTEST",
+              "display": "test health data"
+            }
+          ]
+        },
+        "status": "planned",
+        "code": {
+          "coding": [
+            {
+              "system": "http://fhir.de/CodeSystem/bzaek/goz",
+              "code": "5010"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/dent-051"
+        },
+        "occurrenceDateTime": "2026-11-16",
+        "quantity": {
+          "value": 1
+        },
+        "factorOverride": 2.3,
+        "account": [
+          {
+            "reference": "Account/example-companion-5010"
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Account",
+        "id": "example-companion-no-5120",
+        "meta": {
+          "tag": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+              "code": "HTEST",
+              "display": "test health data"
+            }
+          ]
+        },
+        "status": "active",
+        "name": "Companion rule: no-5120",
+        "subject": [
+          {
+            "reference": "Patient/dent-051"
+          }
+        ],
+        "servicePeriod": {
+          "start": "2026-11-16"
+        },
+        "coverage": [
+          {
+            "coverage": {
+              "reference": "Coverage/example-companion-coverage"
+            },
+            "priority": 1
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "ChargeItem",
+        "id": "example-companion-no-5120-0030",
+        "meta": {
+          "tag": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+              "code": "HTEST",
+              "display": "test health data"
+            }
+          ]
+        },
+        "status": "planned",
+        "code": {
+          "coding": [
+            {
+              "system": "http://fhir.de/CodeSystem/bzaek/goz",
+              "code": "0030"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/dent-051"
+        },
+        "occurrenceDateTime": "2026-11-16",
+        "quantity": {
+          "value": 1
+        },
+        "factorOverride": 2.3,
+        "account": [
+          {
+            "reference": "Account/example-companion-no-5120"
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Account",
+        "id": "example-companion-other-account",
+        "meta": {
+          "tag": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+              "code": "HTEST",
+              "display": "test health data"
+            }
+          ]
+        },
+        "status": "active",
+        "name": "Companion rule: other-account",
+        "subject": [
+          {
+            "reference": "Patient/dent-051"
+          }
+        ],
+        "servicePeriod": {
+          "start": "2026-11-16"
+        },
+        "coverage": [
+          {
+            "coverage": {
+              "reference": "Coverage/example-companion-coverage"
+            },
+            "priority": 1
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "ChargeItem",
+        "id": "example-companion-other-account-5120",
+        "meta": {
+          "tag": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+              "code": "HTEST",
+              "display": "test health data"
+            }
+          ]
+        },
+        "status": "planned",
+        "code": {
+          "coding": [
+            {
+              "system": "http://fhir.de/CodeSystem/bzaek/goz",
+              "code": "5120"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/dent-051"
+        },
+        "occurrenceDateTime": "2026-11-16",
+        "quantity": {
+          "value": 1
+        },
+        "factorOverride": 2.3,
+        "account": [
+          {
+            "reference": "Account/example-companion-other-account"
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Account",
+        "id": "example-companion-donor",
+        "meta": {
+          "tag": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+              "code": "HTEST",
+              "display": "test health data"
+            }
+          ]
+        },
+        "status": "active",
+        "name": "Companion rule: donor",
+        "subject": [
+          {
+            "reference": "Patient/dent-051"
+          }
+        ],
+        "servicePeriod": {
+          "start": "2026-11-16"
+        },
+        "coverage": [
+          {
+            "coverage": {
+              "reference": "Coverage/example-companion-coverage"
+            },
+            "priority": 1
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "ChargeItem",
+        "id": "example-companion-donor-5000",
+        "meta": {
+          "tag": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+              "code": "HTEST",
+              "display": "test health data"
+            }
+          ]
+        },
+        "status": "planned",
+        "code": {
+          "coding": [
+            {
+              "system": "http://fhir.de/CodeSystem/bzaek/goz",
+              "code": "5000"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/dent-051"
+        },
+        "occurrenceDateTime": "2026-11-16",
+        "quantity": {
+          "value": 1
+        },
+        "factorOverride": 2.3,
+        "account": [
+          {
+            "reference": "Account/example-companion-donor"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -104,6 +104,43 @@
         },
         "note": "Hand-written hackathon rule taken from the statutory text."
       }
+    },
+    {
+      "id": "goz-5120-requires-5000-or-5010",
+      "class": "companion-required",
+      "mustUnderstand": true,
+      "effect": "reject",
+      "priority": 4,
+      "parameters": {
+        "selector": {
+          "system": "http://fhir.de/CodeSystem/bzaek/goz",
+          "codes": [
+            "5120"
+          ]
+        },
+        "required": {
+          "system": "http://fhir.de/CodeSystem/bzaek/goz",
+          "codes": [
+            "5000",
+            "5010"
+          ]
+        }
+      },
+      "provenance": {
+        "sources": [
+          {
+            "kind": "author-assessment",
+            "citation": "Invented companion rule for the FHIR Camp hackathon, suggested in issue #8",
+            "uri": "https://github.com/cognovis/fhir-camp-hackathon/issues/8"
+          }
+        ],
+        "evidenceLevel": {
+          "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/evidence-level",
+          "code": "invented",
+          "display": "Invented for the hackathon"
+        },
+        "note": "Demonstration only: GOZ 5120 requires 5000 or 5010 in the same Account. Not a generally applicable GOZ billing requirement."
+      }
     }
   ]
 }

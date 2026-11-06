@@ -57,9 +57,49 @@ The rules are written for this kit and are deliberately simplified:
 | `goz-multiplier-bounds` | `bounded-multiplier` | Multiplier between 1.0 and 3.5; above 2.3 only with a justification | GOZ § 5 and § 10, simplified |
 | `goz-0030-once-per-cost-plan` | `quantity-limit` | GOZ 0030 (written cost plan) at most once per cost plan | invented for the exercise |
 | `goz-9050-not-with-9010-9040` | `mutual-exclusion` | GOZ 9050 not together with 9010 or 9040 | GOZ Anlage 1, text of 9050 |
+| `goz-5120-requires-5000-or-5010` | `companion-required` | GOZ 5120 requires at least one 5000 **or** 5010 in the same Account | invented for the exercise; issue #8 |
 
 Each rule records its basis as `provenance.evidenceLevel`. After editing the payload, run
-`npm run build-catalog` and reload with `npm run setup`.
+`npm run build-catalog`. To reload Aidbox, `npm run setup` overwrites seed resources with
+fixed IDs; check for local edits first. The offline demo below needs no reload.
+
+## Companion-rule demo (issue #8)
+
+From the repository root, with the pinned dependencies installed:
+
+```sh
+npm run build-catalog
+npm --workspace billing run check:companion
+node billing/cost-plan.mjs --bundle billing/examples/companion-cost-plans.json --json
+npm --workspace billing test
+npm run billing:check
+```
+
+The fixture uses synthetic Greta Palmried (`Patient/dent-051`) and six independent
+Accounts. Every fixture resource carries `HTEST`. Expected results:
+
+| Account suffix (`example-companion-…`) | Codes | Decision |
+|---|---|---|
+| `missing` | 5120 | `block` |
+| `5000` | 5120, 5000 | `allow` |
+| `5010` | 5120, 5010 | `allow` |
+| `no-5120` | 0030 | `allow` |
+| `other-account` | 5120 | `block` |
+| `donor` | 5000 | `allow` |
+
+Both blocked cases report `COMPANION_CODE_REQUIRED`, rule
+`goz-5120-requires-5000-or-5010`, and their own `…-5120` ChargeItem. The `donor`
+Account's 5000 cannot satisfy another Account's requirement, even for the same patient.
+The test asserts those exact findings, the generated Library and edition link, and the
+unchanged A/B/C decisions and totals (549.26 / 428.44 / 673.59 EUR).
+
+The installed rules/engine 0.40.0 use an OR search over `required.codes`. The SDK 0.42.1
+selects ChargeItems per Account, so this rule deliberately has no `countingScope`.
+This is an **invented hackathon rule**, not a generally applicable GOZ requirement;
+the issue suggestion is its provenance, not a clinical or statutory authority.
+`cost-plan.mjs --aidbox` still reads the catalog from the local file: changing only
+the server's Library does not change that CLI's rules. The example bundle is not
+imported by `npm run setup`, and `npm run validate` does not validate these fixtures.
 
 What the rule classes cannot express today: a limit per tooth (the SDK counts per cost plan,
 not per tooth), and the price of the six GOZ numbers that are a share of another number. See

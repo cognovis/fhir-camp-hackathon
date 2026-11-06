@@ -39,7 +39,7 @@ export function App() {
   )
 
   return (
-    <div className="layout">
+    <div className="app-layout">
       <header>
         <h1>FHIR Camp starter app</h1>
         <label>
@@ -57,7 +57,7 @@ export function App() {
 
       {record && status && (
         <>
-          <section className="chart">
+          <section className="app-chart">
             <h2>{selectedPlan ? `Planned: ${selectedPlan.title ?? selectedPlan.id}` : `Status ${record.toothStates[0]?.effectiveDateTime ?? ''}`}</h2>
             <OdontogramView status={status} plan={plan} mode={plan ? 'plan' : 'status'} />
           </section>

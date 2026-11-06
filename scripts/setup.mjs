@@ -173,7 +173,9 @@ async function validate() {
   for (const file of bundleFiles()) {
     const bundle = seedBundle(file)
     for (const { resource } of bundle.entry) {
-      const baseProfile = file.startsWith('billing/examples/') || resource.resourceType === 'Library'
+      const demoEvidence = resource.resourceType === 'Observation' && resource.code?.coding?.some((c) => c.system === 'https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence')
+      const demoEncounter = resource.resourceType === 'Encounter' && resource.id.startsWith('dent-051-demo-')
+      const baseProfile = file.startsWith('billing/examples/') || resource.resourceType === 'Library' || demoEvidence || demoEncounter
       const profiles = resource.meta?.profile ?? (baseProfile ? [`http://hl7.org/fhir/StructureDefinition/${resource.resourceType}`] : [])
       if (profiles.length === 0) continue
       const stored = await fhir('GET', `/fhir/${resource.resourceType}/${resource.id}`)

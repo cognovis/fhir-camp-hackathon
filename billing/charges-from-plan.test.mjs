@@ -22,9 +22,10 @@ const generate = (carePlanId, options = {}) => buildCostPlan({
   carePlan: byId(carePlanId), definitionFor, resolve, coverage, owner, ...options,
 })
 
-// The seeded resources, with the ids and the account reference taken out.
+// Compare generated billing lines; reviewed evidence/session links are added separately to the seed.
 const comparable = (resource) => {
-  const { id, account, ...rest } = resource
+  const { id, account, context, ...rest } = resource
+  if (rest.supportingInformation) rest.supportingInformation = rest.supportingInformation.filter((r) => r.reference.startsWith('CarePlan/'))
   return rest
 }
 

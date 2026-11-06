@@ -99,6 +99,10 @@ button.secondary { height: 40px; padding: 0 16px; border-radius: 10px; border: 1
 .finding { display: flex; flex-direction: column; gap: 4px; }
 .finding-text { font-size: 14px; font-weight: 600; }
 .finding-code { font-size: 11px; color: var(--muted); }
+.finding-kind { font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--text-2); }
+.finding-explanation { margin: 2px 0; font-size: 13px; line-height: 1.5; }
+.finding-details { font-size: 12px; overflow-wrap: anywhere; margin: 4px 0; }
+.finding-details summary { cursor: pointer; color: var(--text-2); }
 .justify { display: flex; flex-direction: column; gap: 6px; margin-top: 4px; }
 .justify label { font-size: 12px; font-weight: 600; color: var(--text-2); }
 .justify textarea { box-sizing: border-box; width: 100%; border: 1px solid var(--input); border-radius: 10px; padding: 8px 10px; font-size: 14px; resize: vertical; background: #fff; color: var(--text); }

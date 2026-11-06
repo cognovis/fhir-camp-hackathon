@@ -185,9 +185,32 @@ test('missing, changed, duplicate or wrongly bound contextual Library cannot yie
   ]) { const c = structuredClone(catalog); mutate(c); const r = await evaluate(reference, c); assert.equal(r.decision, 'unavailable'); assert.ok(r.findings.some((f) => f.code === 'GOZ_LIBRARY_UNAVAILABLE')) }
   assert.equal((await evaluateGozAccount({ catalog, cases: reference, account: 'goz-real-plan', asOf: '2030-01-01' })).decision, 'unavailable')
 })
-test('original A/B/C keep prices and now report missing clinical evidence', () => {
+test('demo alternatives keep all services and prices with only two intentional gaps in C', () => {
   const output = JSON.parse(execFileSync(process.execPath, [new URL('cost-plan.mjs', import.meta.url).pathname, '--json'], { encoding: 'utf8' }))
-  assert.deepEqual(output.map((p) => [p.decision, p.total]), [['unavailable', 549.26], ['unavailable', 428.44], ['unavailable', 673.59]])
+  assert.deepEqual(output.map((p) => [p.decision, p.total, p.lines.length]), [['allow', 549.26, 9], ['allow', 428.44, 9], ['unavailable', 673.59, 7]])
+  assert.deepEqual(output.slice(0, 2).map((p) => p.findings), [[], []])
+  assert.deepEqual(output[2].findings.map((f) => [f.code, f.rule, f.line]), [
+    ['REQUIRED_FACT_UNAVAILABLE', 'goz-9040-implantSystem', 'dent-051-alt-c-06'],
+    ['GOZ_JUSTIFICATION_REQUIRED', 'GOZ-G02', 'dent-051-alt-c-05'],
+  ])
+})
+test('completing C in FHIR removes only the corresponding findings', async () => {
+  const b = read('../data/dent-051-palmried.json')
+  b.type = 'collection'
+  const account = 'dent-051-cost-plan-c'
+  const insertion = charge(b, '9010')
+  insertion.reason = [{ text: 'Synthetischer Demofall: erhöhter Aufwand bei schmalem Kieferkamm regio 36.' }]
+  let result = await evaluateGozAccount({ catalog, cases: b, account })
+  assert.equal(result.decision, 'unavailable')
+  assert.deepEqual(result.findings.map((f) => f.code), ['REQUIRED_FACT_UNAVAILABLE'])
+  setFact(b, charge(b, '9040'), 'implantSystem', 'two-phase')
+  result = await evaluateGozAccount({ catalog, cases: b, account })
+  assert.equal(result.decision, 'allow')
+  assert.deepEqual(result.findings, [])
+  setFact(b, charge(b, '9040'), 'implantSystem', 'one-phase')
+  result = await evaluateGozAccount({ catalog, cases: b, account })
+  assert.equal(result.decision, 'block')
+  assert.ok(has(result, 'goz-9040-implantSystem', 'ACCOMPANYING_INFORMATION_REQUIRED'))
 })
 test('Aidbox reads all pages and refuses incomplete searches', async () => {
   const originalFetch = globalThis.fetch, previous = process.env.AIDBOX_URL

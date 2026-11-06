@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 import test from 'node:test'
-import { euro, findingText } from '../src/costPlan.ts'
+import { euro, findingText, findingExplanation, RULE_EXPLANATIONS } from '../src/costPlan.ts'
 import { createPlan } from '../src/plans.ts'
 
 const resources = JSON.parse(readFileSync(new URL('../../data/dent-051-palmried.json', import.meta.url), 'utf8')).entry.map(({ resource }) => resource)
@@ -19,7 +19,26 @@ test('missing fees stay unavailable, while zero is a real price', () => {
 })
 
 test('contextual billing explanations reach the view', () => {
-  assert.equal(findingText({ code: 'GOZ_JUSTIFICATION_REQUIRED', message: 'Individual evidence required.' }), 'Individual evidence required.')
+  const message = findingText({ code: 'GOZ_JUSTIFICATION_REQUIRED', rule: 'GOZ-G02' }, { id: 'insertion', code: '9010', tooth: '36', display: '', quantity: 1, factor: 3 })
+  assert.match(message, /GOZ 9010 · Zahn 36/)
+  assert.match(message, /schriftliche Begründung/)
+})
+
+test('missing evidence is distinguished from a demonstrated rule violation', () => {
+  const missing = findingExplanation({ code: 'REQUIRED_FACT_UNAVAILABLE', rule: 'goz-9040-implantSystem', effect: 'needs-review', details: { fact: 'system|implantSystem' } })
+  assert.equal(missing.kind, 'Prüfbedarf')
+  assert.match(missing.summary, /Implantatsystem/)
+  assert.match(missing.rule, /zweiphasiges/)
+  const invalid = findingExplanation({ code: 'ACCOMPANYING_INFORMATION_REQUIRED', rule: 'goz-9040-implantSystem', effect: 'reject' })
+  assert.equal(invalid.kind, 'Regelverstoß')
+  assert.match(invalid.summary, /erfüllt.*nicht/)
+})
+
+test('every installed rule has an explanation, and unknown findings stay visible', () => {
+  const root = new URL('../../billing/', import.meta.url)
+  const rules = ['goz-context-rules.json', 'goz-hackathon-rules.json'].flatMap((file) => JSON.parse(readFileSync(new URL(file, root), 'utf8')).rules)
+  for (const rule of rules) assert.ok(RULE_EXPLANATIONS[rule.id], rule.id)
+  assert.match(findingText({ code: 'FUTURE_UNKNOWN_FINDING' }), /Angaben/)
 })
 
 test('a copied plan keeps its source Account coverage and factors', async (t) => {

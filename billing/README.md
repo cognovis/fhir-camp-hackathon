@@ -25,8 +25,9 @@ npm --workspace app run typecheck
   `goz-5010-supportKind`, finding `ACCOMPANYING_INFORMATION_REQUIRED` on
   `goz-real-invalid-5010`.
 - `goz-real-agreement.json`: explicit prior individual agreement for 0030 at factor 4; `allow`.
-- Original A/B/C: `unavailable` because the additional clinical evidence is absent.
-  Their calculated fees remain **549.26 / 428.44 / 673.59 EUR**.
+- Main presentation case: A/B `allow`; C `unavailable` with exactly two documented
+  gaps (individual multiplier justification and implant-system evidence).
+  All 25 services and the fees **549.26 / 428.44 / 673.59 EUR** are retained.
 - `companion-cost-plans.json` and `blocked-cost-plan.json` are older test inputs.
   The invented 5120-companion and 0030-quantity rules are no longer loaded; these
   files are not authoritative examples of real GOZ restrictions. The former
@@ -36,6 +37,56 @@ npm --workspace app run typecheck
 not certify all German billing rules. `block` requires a demonstrated violation;
 missing, conflicting or incomplete evidence produces `unavailable` (review required).
 Rule IDs, affected lines, source links and explanations are included in JSON output.
+
+## Presentation: real FHIR state, two focused review items
+
+The main seed contains 148 evidence Observations and ten planned Encounters in
+addition to the original resources. Shared facts are scoped to one alternative;
+tooth/implant/span identities and planned sessions remain distinct. All evidence
+is explicitly synthetic and describes planned care, not treatment already performed.
+No service, quantity, factor or price is removed to make a result green.
+
+1. Open the app, select Greta, choose **Plan**, then **Compare plans**. A and B
+   have no open findings. C shows GOZ 9010 at tooth 36 (missing written justification)
+   and GOZ 9040 at tooth 36 (implant system not documented).
+2. Expand **Quelle und technische Details** to see the rule ID, source and affected
+   ChargeItem. These are the actual evaluator findings, not UI-generated decisions.
+3. Enter an explicitly synthetic individual explanation for C's factor 3.0, for
+   example `Synthetischer Demofall: erhöhter Aufwand bei schmalem Kieferkamm regio 36.`
+   Click **Speichern und erneut prüfen**. The text is persisted in ChargeItem.reason;
+   only the implant-system finding remains. The necessary individual circumstances
+   were already confirmed separately in the synthetic seed; text alone cannot
+   supply missing clinical confirmations in other cases.
+4. To resolve the second item in Aidbox, create this resource with
+   `PUT /fhir/Observation/dent-051-alt-c-06-implantSystem`:
+
+```json
+{
+  "resourceType": "Observation",
+  "id": "dent-051-alt-c-06-implantSystem",
+  "meta": { "tag": [{ "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason", "code": "HTEST" }] },
+  "status": "final",
+  "code": { "coding": [{ "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence", "code": "implantSystem" }] },
+  "subject": { "reference": "Patient/dent-051" },
+  "effectiveDateTime": "2026-11-16T08:00:00+01:00",
+  "performer": [{ "reference": "Practitioner/fhir-camp-dentist" }],
+  "valueString": "two-phase",
+  "note": [{ "text": "Synthetische Demo-Annahme zur geplanten Versorgung." }]
+}
+```
+
+Read the current `ChargeItem/dent-051-alt-c-06`, append
+`{"reference":"Observation/dent-051-alt-c-06-implantSystem"}` to its
+`supportingInformation`, and PUT the full resource back, preserving its other fields
+and references. Re-check: C now allows. A one-phase value instead produces the
+native rejection `ACCOMPANYING_INFORMATION_REQUIRED`; absence is review need,
+not proof of a violation. The pinned SDK cannot read a value-less Observation with
+dataAbsentReason as a billing fact, so the initial seed omits this evidence link.
+
+Reloading the declared seed restores the two initial gaps (including the empty
+ChargeItem.reason); it does not delete additional standalone resources. Do not reload
+over someone else's edits. Copied/new plans need their own reviewed evidence: the
+CarePlan charge generator does not copy clinical confirmations automatically.
 
 ## Where the rules live
 
@@ -182,8 +233,9 @@ npm run setup                      # reload declared seeds; first preserve any l
 npm run validate                   # existing profiles and example/Library base-R4 checks
 ```
 
-The current seed contains 561 unique resources. Validation runs 141 existing profile
-checks and 159 base-R4 checks (156 example resources and three Libraries). Re-running
+The current seed contains 719 unique resources. Validation runs 141 existing profile
+checks and 317 base-R4 checks (156 example resources, three Libraries and 158 main-case
+evidence/Encounter resources). Re-running
 setup overwrites the declared seed IDs; it does not reset the database or remove other
-resources. Check local edits before reloading. The original A/B/C data remain present
-and intentionally lack the new clinical evidence.
+resources. Check local edits before reloading. The original A/B/C services remain present;
+only the two intentional C gaps remain after loading the main-case evidence.

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent, type ReactNode } from 'react'
-import { DECISIONS, euro, findingText, loadCostPlans, saveJustification, type CostPlan, type CostPlanLine } from './costPlan'
+import { DECISIONS, euro, findingExplanation, findingText, loadCostPlans, saveJustification, type CostPlan, type CostPlanLine } from './costPlan'
 import { display, loadPatientRecord, patientName, search, type CarePlan, type ChargeItem, type Patient, type PatientRecord } from './fhir'
 import { toChartStatus, toPlanChart } from './odontogram/chartAdapter'
 import { OdontogramView } from './odontogram/OdontogramView'
@@ -452,17 +452,32 @@ function PlanBody({ costPlan, chargeItems, loading, onJustify, compact }: PlanPr
 
       <div className={`decision ${DECISIONS[costPlan.decision]?.tone ?? 'review'}`}>
         <div className="decision-head">
-          <span>Billing check</span>
+          <span>Regelprüfung{costPlan.findings.length > 0 ? ` · ${costPlan.findings.length} Hinweise` : ''}</span>
           <DecisionBadge decision={costPlan.decision} />
         </div>
-        {costPlan.findings.length === 0 && <div className="decision-ok">No findings.</div>}
+        {costPlan.findings.length === 0 && <div className="decision-ok">Die hinterlegten Regeln ergeben mit den vorhandenen Angaben keine offenen Hinweise.</div>}
         {costPlan.findings.map((finding, i) => {
           const line = lineOf(finding.line)
+          const explanation = findingExplanation(finding)
           return (
             <div key={`${finding.code}-${finding.line ?? i}`} className="finding">
+              <span className="finding-kind">{explanation.kind}</span>
               <div className="finding-text">{findingText(finding, line)}</div>
-              <div className="finding-code"><code>{finding.code}</code>{finding.rule && <> · rule <code>{finding.rule}</code></>}</div>
-              {finding.code === 'MULTIPLIER_JUSTIFICATION_REQUIRED' && finding.line && (
+              <p className="finding-explanation"><strong>Warum wird geprüft?</strong> {explanation.rule}</p>
+              <p className="finding-explanation"><strong>Nächster Schritt:</strong> {explanation.action}</p>
+              <details className="finding-details">
+                <summary>Quelle und technische Details</summary>
+                <div className="finding-code"><code>{finding.code}</code>{finding.rule && <> · Regel <code>{finding.rule}</code></>}</div>
+                {finding.line && <div>Position: <a href={`/fhir/ChargeItem/${encodeURIComponent(finding.line)}`} target="_blank" rel="noreferrer">{finding.line}</a></div>}
+                {finding.message && <div>Originalmeldung: {finding.message}</div>}
+                {finding.details?.fact && <div>FHIR-Angabe: <code>{finding.details.fact}</code></div>}
+                {finding.sources?.map((source, index) => (
+                  <div key={`${source.uri}-${index}`}>
+                    {source.uri?.startsWith('https://') ? <a href={source.uri} target="_blank" rel="noreferrer">{source.citation ?? source.uri}</a> : source.citation}
+                  </div>
+                ))}
+              </details>
+              {['MULTIPLIER_JUSTIFICATION_REQUIRED', 'GOZ_JUSTIFICATION_REQUIRED'].includes(finding.code) && finding.line && (
                 <JustificationForm chargeItemId={finding.line} onSave={onJustify} />
               )}
             </div>
@@ -525,7 +540,7 @@ function JustificationForm({ chargeItemId, onSave }: { chargeItemId: string; onS
   }
   return (
     <form className="justify" onSubmit={submit}>
-      <label htmlFor={`justify-${chargeItemId}`}>Justification (ChargeItem.reason, GOZ § 10)</label>
+      <label htmlFor={`justify-${chargeItemId}`}>Individuelle Begründung zur Leistung</label>
       <textarea
         id={`justify-${chargeItemId}`}
         rows={2}
@@ -534,7 +549,7 @@ function JustificationForm({ chargeItemId, onSave }: { chargeItemId: string; onS
         placeholder="z. B. Erschwerte Insertion wegen schmalem Kieferkamm regio 36"
       />
       <div className="justify-actions">
-        <button type="submit" className="primary" disabled={busy || !text.trim()}>{busy ? 'Saving…' : 'Save and re-check'}</button>
+        <button type="submit" className="primary" disabled={busy || !text.trim()}>{busy ? 'Wird gespeichert…' : 'Speichern und erneut prüfen'}</button>
         {error && <span className="error">{error}</span>}
       </div>
     </form>

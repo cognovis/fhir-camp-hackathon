@@ -1,3 +1,4 @@
+import { t } from './i18n.ts'
 // New treatment alternatives: a CarePlan (dental-care-plan profile) written to Aidbox through the
 // /fhir proxy, either blank or as a copy of another alternative. A copy gets its cost plan
 // (Account and planned ChargeItems) from billing/charges-from-plan.mjs on the dev server.
@@ -68,10 +69,10 @@ async function writeCarePlan(carePlan: CarePlan): Promise<CarePlan> {
   const outcome = await fhir<OperationOutcome>('POST', 'CarePlan/$validate', carePlan)
   const errors = (outcome?.issue ?? []).filter((i) => ['error', 'fatal'].includes(i.severity))
   if (outcome?.resourceType !== 'OperationOutcome' || errors.length) {
-    throw new Error(`CarePlan does not pass $validate: ${errors.map((e) => e.diagnostics ?? e.details?.text).join('; ') || 'no OperationOutcome'}`)
+    throw new Error(t('validationError', { detail: errors.map((e) => e.diagnostics ?? e.details?.text).join('; ') || t('noOutcome') }))
   }
   const saved = await fhir<CarePlan | OperationOutcome>('PUT', `CarePlan/${encodeURIComponent(carePlan.id)}`, carePlan)
-  if (saved.resourceType !== 'CarePlan') throw new Error(`PUT CarePlan/${carePlan.id} failed`)
+  if (saved.resourceType !== 'CarePlan') throw new Error(t('planSaveError', { id: carePlan.id }))
   return saved
 }
 
@@ -92,14 +93,14 @@ export async function createPlan(patient: Patient, carePlans: CarePlan[], charge
     const accounts = new Set(chargeItems
       .filter((charge) => charge.supportingInformation?.some((r) => r.reference === `CarePlan/${source.id}`))
       .flatMap((charge) => charge.account ?? []).map((r) => r.reference))
-    if (accounts.size !== 1) throw new Error('The source plan must have one unambiguous cost plan Account.')
+    if (accounts.size !== 1) throw new Error(t('copyAccount'))
     const accountRef = [...accounts][0]
-    if (!accountRef || !/^Account\/[A-Za-z0-9.-]{1,64}$/.test(accountRef)) throw new Error('The source Account reference is invalid.')
+    if (!accountRef || !/^Account\/[A-Za-z0-9.-]{1,64}$/.test(accountRef)) throw new Error(t('invalidAccount'))
     const account = await fhir<{ resourceType: string; subject?: { reference?: string }[]; coverage?: { coverage?: { reference?: string } }[] }>('GET', accountRef)
-    if (account.resourceType !== 'Account' || !account.subject?.some((r) => r.reference === `Patient/${patient.id}`)) throw new Error('The source Account does not belong to this patient.')
+    if (account.resourceType !== 'Account' || !account.subject?.some((r) => r.reference === `Patient/${patient.id}`)) throw new Error(t('foreignAccount'))
     const coverages = account.coverage ?? []
     const reference = coverages[0]?.coverage?.reference
-    if (coverages.length !== 1 || !reference || !/^Coverage\/[A-Za-z0-9.-]{1,64}$/.test(reference)) throw new Error('The source Account must have one unambiguous Coverage.')
+    if (coverages.length !== 1 || !reference || !/^Coverage\/[A-Za-z0-9.-]{1,64}$/.test(reference)) throw new Error(t('copyCoverage'))
     coverage = reference.split('/')[1]
   }
   const saved = await writeCarePlan(buildCarePlan(patient, carePlans, source))
@@ -110,7 +111,7 @@ export async function createPlan(patient: Patient, carePlans: CarePlan[], charge
       body: JSON.stringify({ carePlan: saved.id, coverage, factors: factorsOf(source, chargeItems) }),
     })
     const body = await response.json().catch(() => ({}))
-    if (!response.ok) throw new Error(`${saved.title} was saved, but its cost plan was not: ${(body as { error?: string }).error ?? `HTTP ${response.status}`}`)
+    if (!response.ok) throw new Error(t('chargesSaveError', { name: saved.title, detail: (body as { error?: string }).error ?? `HTTP ${response.status}` }))
   }
   return saved
 }
@@ -125,9 +126,9 @@ export async function deletePlan(loaded: CarePlan, chargeItems: ChargeItem[]): P
   const fresh = await fetch(`/fhir/CarePlan/${encodeURIComponent(loaded.id)}`, { headers: { accept: 'application/fhir+json' } })
   if (!fresh.ok) throw new Error(`GET CarePlan/${loaded.id}: HTTP ${fresh.status}`)
   const carePlan = (await fresh.json()) as CarePlan
-  if (carePlan.intent === 'plan') throw new Error(`${carePlan.title ?? carePlan.id} is the chosen alternative and cannot be deleted.`)
+  if (carePlan.intent === 'plan') throw new Error(t('chosenDeleteError', { name: carePlan.title ?? carePlan.id }))
   const version = carePlan.meta?.versionId
-  if (!version) throw new Error(`CarePlan/${carePlan.id} has no versionId; refusing to delete it without If-Match.`)
+  if (!version) throw new Error(t('noVersion', { id: carePlan.id }))
   // The loaded ChargeItems plus the ones charges-from-plan wrote since, read fresh by their Account.
   const generatedAccount = `Account/${carePlan.id}-cost-plan`
   const search = await fetch(`/fhir/ChargeItem?account=${encodeURIComponent(generatedAccount)}&_count=1000`, { headers: { accept: 'application/fhir+json' } })
@@ -151,6 +152,6 @@ export async function deletePlan(loaded: CarePlan, chargeItems: ChargeItem[]): P
   })
   if (!response.ok) {
     const outcome = await response.json().catch(() => undefined)
-    throw new Error(`Delete ${carePlan.id}: HTTP ${response.status} ${outcome?.issue?.map((i: { diagnostics?: string }) => i.diagnostics).join('; ') ?? ''}`.trim())
+    throw new Error(t('deleteError', { id: carePlan.id, detail: `HTTP ${response.status} ${outcome?.issue?.map((i: { diagnostics?: string }) => i.diagnostics).join('; ') ?? ''}`.trim() }))
   }
 }

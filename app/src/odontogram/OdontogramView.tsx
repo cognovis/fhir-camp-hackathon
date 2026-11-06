@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next'
+import { language } from '../i18n.ts'
 // INTEGRATION POINT: the chart component. See chartAdapter.ts for the contract.
 //
 // Renders the MIT odontogram (@cognovis/react-odontogram) and pushes a chart payload
@@ -30,6 +32,7 @@ function whenGridReady(callback: () => void): () => void {
 }
 
 export function OdontogramView({ status, plan, mode }: OdontogramViewProps) {
+  useTranslation()
   useEffect(() => whenGridReady(() => {
     // The chart only displays what FHIR holds. By default the library files every import as the
     // initial examination dated today; this view re-imports on every patient or plan change.
@@ -50,5 +53,5 @@ export function OdontogramView({ status, plan, mode }: OdontogramViewProps) {
   // written back as FHIR Observations (TASKS.md, task 1: subscribe with onStateChange and read
   // the chart with getStatusChart). Selecting another patient or plan reloads the chart from FHIR.
   // The app owns the Status/Plan switch and the plan tabs; styles.css hides the chart's own.
-  return <OdontogramShell language="de" numberingSystem="FDI" />
+  return <OdontogramShell language={language()} numberingSystem="FDI" />
 }

@@ -169,3 +169,6 @@ button.with-icon { display: flex; align-items: center; gap: 8px; padding: 0 16px
 button.danger { color: var(--bad-fg); border-color: #f3b4b4; }
 button.danger:hover:not(:disabled) { background: var(--bad-bg); }
 button.icon-only { width: 40px; padding: 0; display: flex; align-items: center; justify-content: center; flex: 0 0 auto !important; }
+
+/* The browser controls language for both the app and the chart. */
+.app-chart button:is([aria-label="Language"], [aria-label="Sprache"]) { display: none; }

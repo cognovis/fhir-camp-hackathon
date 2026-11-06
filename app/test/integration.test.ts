@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
-import test from 'node:test'
+import test, { beforeEach } from 'node:test'
+import { i18n } from '../src/i18n.ts'
 import { euro, findingText, findingExplanation, RULE_EXPLANATIONS } from '../src/costPlan.ts'
 import { createPlan } from '../src/plans.ts'
 
@@ -10,6 +11,8 @@ const source = resources.find((r) => r.id === 'dent-051-hkp-alt-c')
 const plans = resources.filter((r) => r.resourceType === 'CarePlan')
 const charges = resources.filter((r) => r.resourceType === 'ChargeItem')
 const account = resources.find((r) => r.id === 'dent-051-cost-plan-c')
+
+beforeEach(async () => { await i18n.changeLanguage('de-DE') })
 
 test('missing fees stay unavailable, while zero is a real price', () => {
   assert.equal(euro(null), '–')
@@ -68,7 +71,7 @@ test('ambiguous source coverage is rejected before creating a partial plan', asy
     assert.ok(!init.method || init.method === 'GET', 'must not write')
     return Response.json({ ...account, coverage: [...account.coverage, ...account.coverage] })
   })
-  await assert.rejects(createPlan(patient, plans, charges, source), /unambiguous Coverage/)
+  await assert.rejects(createPlan(patient, plans, charges, source), /eindeutig zugeordnete Versicherung/)
 })
 
 test('a source Account belonging to another patient is rejected before writes', async (t) => {
@@ -76,5 +79,5 @@ test('a source Account belonging to another patient is rejected before writes', 
     assert.ok(!init.method || init.method === 'GET', 'must not write')
     return Response.json({ ...account, subject: [{ reference: 'Patient/another' }] })
   })
-  await assert.rejects(createPlan(patient, plans, charges, source), /does not belong/)
+  await assert.rejects(createPlan(patient, plans, charges, source), /gehört nicht/)
 })

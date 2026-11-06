@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next'
+import { t, date, number } from './i18n.ts'
 import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent, type ReactNode } from 'react'
 import { DECISIONS, euro, findingExplanation, findingText, loadCostPlans, saveJustification, type CostPlan, type CostPlanLine } from './costPlan'
 import { display, loadPatientRecord, patientName, search, type CarePlan, type ChargeItem, type Patient, type PatientRecord } from './fhir'
@@ -13,6 +15,7 @@ type Mode = 'status' | 'plan'
 const COMPARE = 'compare'
 
 export function App() {
+  useTranslation()
   const [patients, setPatients] = useState<Patient[]>([])
   const [patientId, setPatientId] = useState<string>()
   const [record, setRecord] = useState<PatientRecord>()
@@ -26,7 +29,7 @@ export function App() {
   useEffect(() => {
     search<Patient>(`Patient?identifier=${encodeURIComponent(`${DENTAL_PATIENT}|`)}&_sort=_id&_count=50`)
       .then((list) => { setPatients(list); setPatientId((current) => current ?? list.find((p) => p.id === 'dent-051')?.id ?? list[0]?.id) })
-      .catch((e: Error) => setError(`${e.message}. Is Aidbox running and loaded (npm run setup)?`))
+      .catch((e: Error) => setError(`${e.message}. ${t('aidboxHint')}`))
   }, [])
 
   useEffect(() => {
@@ -76,7 +79,7 @@ export function App() {
   // Delete an alternative with its cost plan, then show the chosen one again.
   const removePlan = useCallback(async (carePlan: CarePlan) => {
     if (!record) return
-    if (!window.confirm(`Delete "${carePlan.title ?? carePlan.id}" with its cost plan from Aidbox?`)) return
+    if (!window.confirm(t('confirmDelete', { name: carePlan.title ?? carePlan.id }))) return
     await deletePlan(carePlan, record.chargeItems)
     setRecord(await loadPatientRecord(record.patient))
     setPlanView((current) => (current === COMPARE ? COMPARE : undefined))
@@ -114,11 +117,11 @@ export function App() {
       <div className="appbar">
         <ToothIcon />
         <div>
-          <div className="appbar-title">FHIR Camp · Treatment and cost plan</div>
-          <div className="appbar-sub">Synthetic data. FDI – ISO 3950 numbering. Chart: @cognovis/react-odontogram (MIT).</div>
+          <div className="appbar-title">{t('appTitle')}</div>
+          <div className="appbar-sub">{t('appSubtitle')}</div>
         </div>
         <label className="patient-select">
-          <span>Patient</span>
+          <span>{t('patient')}</span>
           <select value={patientId ?? ''} onChange={(e) => setPatientId(e.target.value)}>
             {patients.map((p) => (
               <option key={p.id} value={p.id}>{patientName(p)} ({p.id})</option>
@@ -133,13 +136,13 @@ export function App() {
         {patient && <PatientCard patient={patient} mode={mode} onMode={setMode} />}
 
         {record && status && (
-          <section className="app-card plans-card" aria-label={mode === 'plan' ? 'Treatment plans and dental chart' : 'Dental chart'}>
+          <section className="app-card plans-card" aria-label={mode === 'plan' ? t('plansAndChart') : t('chart')}>
             {mode === 'plan' && (
               <div className="plan-nav">
                 <div className="plan-nav-head">
                   <div>
-                    <div className="section-title">Treatment plans</div>
-                    <div className="muted">Build alternatives for {patient?.name?.[0]?.given?.[0] ?? patientName(record.patient)}, price them with the Billing SDK, then compare them side by side.</div>
+                    <div className="section-title">{t('plans')}</div>
+                    <div className="muted">{t('plansIntro', { name: patient?.name?.[0]?.given?.[0] ?? patientName(record.patient) })}</div>
                   </div>
                   <div className="plan-nav-actions">
                     {selectedPlan && carePlans.length > 1 && (
@@ -149,11 +152,11 @@ export function App() {
                         onStep={(i) => setPlanView(carePlans[i].id)}
                       />
                     )}
-                    <button type="button" className="secondary" onClick={recheck} disabled={checking}>{checking ? 'Checking…' : 'Re-check'}</button>
+                    <button type="button" className="secondary" onClick={recheck} disabled={checking}>{checking ? t('checking') : t('recheck')}</button>
                     <AddPlanMenu activePlan={selectedPlan} onAdd={addPlan} />
                   </div>
                 </div>
-                <div role="tablist" aria-label="Treatment plans" className="tabs">
+                <div role="tablist" aria-label={t('plans')} className="tabs">
                   {carePlans.map((carePlan) => {
                     const costPlan = costPlanOf.get(carePlan.id)
                     return (
@@ -163,17 +166,17 @@ export function App() {
                         onClick={() => setPlanView(carePlan.id)}
                         name={shortTitle(carePlan)}
                         badge={<PlanBadge carePlan={carePlan} />}
-                        meta={costPlan ? `${costPlan.lines.length} services · ${euro(costPlan.total)}` : `${carePlan.activity?.length ?? 0} activities`}
+                        meta={costPlan ? `${t('services', { count: costPlan.lines.length })} · ${euro(costPlan.total)}` : t('activities', { count: carePlan.activity?.length ?? 0 })}
                       />
                     )
                   })}
                   {carePlans.length > 0 && (
                     <>
                       <div className="tab-sep" aria-hidden="true" />
-                      <Tab selected={compare} onClick={() => setPlanView(COMPARE)} name="Compare plans" meta={`${carePlans.length} alternatives`} icon={<CompareIcon />} />
+                      <Tab selected={compare} onClick={() => setPlanView(COMPARE)} name={t('comparePlans')} meta={t('alternatives', { count: carePlans.length })} icon={<CompareIcon />} />
                     </>
                   )}
-                  {carePlans.length === 0 && <div className="muted pad-y">No alternatives yet. Add a plan to start.</div>}
+                  {carePlans.length === 0 && <div className="muted pad-y">{t('noAlternatives')}</div>}
                 </div>
               </div>
             )}
@@ -193,8 +196,8 @@ export function App() {
             ) : (
               <>
                 <div className="app-chart-head">
-                  <div className="section-title">{selectedPlan ? selectedPlan.title ?? selectedPlan.id : 'Dental chart'}</div>
-                  <div className="muted">{selectedPlan ? selectedPlan.description : `Status ${chartDate}. Click a tooth to change it; chart changes are not saved yet (task 1).`}</div>
+                  <div className="section-title">{selectedPlan ? selectedPlan.title ?? selectedPlan.id : t('chart')}</div>
+                  <div className="muted" title={selectedPlan ? t('originalContent') : undefined}>{selectedPlan ? selectedPlan.description : t('chartHint', { date: chartDate ? date(chartDate) : '–' })}</div>
                 </div>
                 <div className="app-chart">
                   <OdontogramView status={status} plan={plan} mode={plan ? 'plan' : 'status'} />
@@ -205,7 +208,7 @@ export function App() {
         )}
 
         {record && selectedPlan && (
-          <section className="app-card pad-card" aria-label="Cost plan">
+          <section className="app-card pad-card" aria-label={t('costPlan')}>
             <CostPlanDetail
               carePlan={selectedPlan}
               costPlan={costPlanOf.get(selectedPlan.id)}
@@ -224,11 +227,11 @@ export function App() {
 function PlanStepper({ index, count, onStep }: { index: number; count: number; onStep: (index: number) => void }) {
   return (
     <div className="stepper">
-      <span className="muted">Plan <strong>{index + 1}</strong> of {count}</span>
-      <button type="button" className="icon-btn" aria-label="Previous plan" onClick={() => onStep((index - 1 + count) % count)}>
+      <span className="muted">{t('planCount', { index: index + 1, count })}</span>
+      <button type="button" className="icon-btn" aria-label={t('previousPlan')} onClick={() => onStep((index - 1 + count) % count)}>
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6" /></svg>
       </button>
-      <button type="button" className="icon-btn" aria-label="Next plan" onClick={() => onStep((index + 1) % count)}>
+      <button type="button" className="icon-btn" aria-label={t('nextPlan')} onClick={() => onStep((index + 1) % count)}>
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg>
       </button>
     </div>
@@ -262,18 +265,18 @@ function AddPlanMenu({ activePlan, onAdd }: { activePlan?: CarePlan; onAdd: (sou
     <div className="add-plan" ref={ref}>
       <button type="button" className="primary with-icon" aria-haspopup="menu" aria-expanded={open} onClick={() => setOpen(!open)} disabled={busy}>
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg>
-        {busy ? 'Adding…' : 'Add plan'}
+        {busy ? t('adding') : t('addPlan')}
       </button>
       {open && (
         <div role="menu" className="menu">
           <button type="button" role="menuitem" onClick={() => add()}>
-            <span className="menu-title">Blank plan</span>
-            <span className="muted">A new alternative without planned services, on the current chart status.</span>
+            <span className="menu-title">{t('blankPlan')}</span>
+            <span className="muted">{t('blankPlanHint')}</span>
           </button>
           {activePlan && (
             <button type="button" role="menuitem" onClick={() => add(activePlan)}>
-              <span className="menu-title">Duplicate “{shortTitle(activePlan)}”</span>
-              <span className="muted">Copy its services and multipliers, with its own cost plan, then adjust.</span>
+              <span className="menu-title">{t('duplicatePlan', { name: shortTitle(activePlan) })}</span>
+              <span className="muted">{t('duplicateHint')}</span>
             </button>
           )}
         </div>
@@ -308,27 +311,27 @@ function age(birthDate?: string): string {
 function PatientCard({ patient, mode, onMode }: { patient: Patient; mode: Mode; onMode: (mode: Mode) => void }) {
   const name = patient.name?.[0]
   const initials = `${name?.given?.[0]?.[0] ?? ''}${name?.family?.[0] ?? ''}`.toUpperCase() || '?'
-  const gender = { female: 'Female', male: 'Male', other: 'Other', unknown: 'Unknown' }[patient.gender ?? ''] ?? '–'
+  const gender = patient.gender === 'female' || patient.gender === 'male' || patient.gender === 'other' || patient.gender === 'unknown' ? t(patient.gender) : '–'
   return (
-    <section className="app-card patient-card" aria-label="Patient demographics">
+    <section className="app-card patient-card" aria-label={t('patientDemographics')}>
       <div className="patient-id">
         <div className="avatar" aria-hidden="true">{initials}</div>
         <div>
-          <div className="eyebrow">Patient</div>
+          <div className="eyebrow">{t('patient')}</div>
           <div className="patient-name">{patientName(patient)}</div>
         </div>
       </div>
-      <Field label="Gender" value={gender} />
-      <Field label="Date of birth" value={patient.birthDate ? new Date(patient.birthDate).toLocaleDateString('de-DE') : '–'} />
-      <Field label="Age" value={`${age(patient.birthDate)} yrs`} />
-      <Field label="FHIR id" value={patient.id} mono />
-      <DownloadButton label="Download FHIR" title="The patient's resources as a FHIR Bundle (JSON)" onDownload={() => downloadPatient(patient)} />
+      <Field label={t('gender')} value={gender} />
+      <Field label={t('birthDate')} value={patient.birthDate ? date(patient.birthDate) : '–'} />
+      <Field label={t('age')} value={t('years', { age: age(patient.birthDate) })} />
+      <Field label={t('fhirId')} value={patient.id} mono />
+      <DownloadButton label={t('downloadFhir')} title={t('downloadPatientTitle')} onDownload={() => downloadPatient(patient)} />
       <div className="field view-switch">
-        <div className="field-label" id="view-label">View</div>
+        <div className="field-label" id="view-label">{t('view')}</div>
         <div role="group" aria-labelledby="view-label" className="segmented">
           {(['status', 'plan'] as const).map((m) => (
             <button key={m} type="button" aria-pressed={mode === m} className={mode === m ? 'on' : undefined} onClick={() => onMode(m)}>
-              {m === 'status' ? 'Status' : 'Plan'}
+              {m === 'status' ? t('status') : t('plan')}
             </button>
           ))}
         </div>
@@ -360,12 +363,12 @@ function Tab({ selected, onClick, name, meta, badge, icon }: { selected: boolean
 
 // intent "plan" marks the alternative the patient chose; the others are options (dental-care-plan).
 function PlanBadge({ carePlan }: { carePlan: CarePlan }) {
-  return carePlan.intent === 'plan' ? <span className="badge ok">Chosen</span> : <span className="badge">Option</span>
+  return carePlan.intent === 'plan' ? <span className="badge ok">{t('chosen')}</span> : <span className="badge">{t('option')}</span>
 }
 
 function DecisionBadge({ decision }: { decision: string }) {
-  const meta = DECISIONS[decision] ?? { label: decision, tone: 'review' }
-  return <span className={`badge ${meta.tone}`}>{meta.label}</span>
+  const meta = DECISIONS[decision]
+  return <span className={`badge ${meta?.tone ?? 'review'}`}>{meta ? t(meta.label) : decision}</span>
 }
 
 interface PlanProps {
@@ -387,11 +390,11 @@ function ComparePlans({ carePlans, costPlanOf, chargeItems, loading, onJustify, 
     <div className="compare">
       <div className="compare-head">
         <div>
-          <div className="section-title">Compare alternatives</div>
-          <div className="muted">GOZ lines, total and billing decision per alternative. A raised multiplier needs a justification before the plan can go out.</div>
+          <div className="section-title">{t('compareAlternatives')}</div>
+          <div className="muted">{t('compareHint')}</div>
         </div>
         <div className={`banner${chosen ? ' ok' : ''}`}>
-          {chosen ? `${shortTitle(chosen)} chosen by the patient · ${euro(costPlanOf.get(chosen.id)?.total)}` : 'No plan chosen by the patient yet'}
+          {chosen ? t('chosenSummary', { name: shortTitle(chosen), total: euro(costPlanOf.get(chosen.id)?.total) }) : t('noChosen')}
         </div>
       </div>
       <div className="compare-grid">
@@ -404,20 +407,20 @@ function ComparePlans({ carePlans, costPlanOf, chargeItems, loading, onJustify, 
                   <h3>{shortTitle(carePlan)}</h3>
                   <PlanBadge carePlan={carePlan} />
                 </div>
-                {costPlan && costPlan.total === lowest && <span className="app-pill">Lowest total</span>}
+                {costPlan && costPlan.total === lowest && <span className="app-pill">{t('lowestTotal')}</span>}
               </div>
-              <div className="muted">{carePlan.title?.split(':').slice(1).join(':').trim()}</div>
+              <div className="muted" title={t('originalContent')}>{carePlan.title?.split(':').slice(1).join(':').trim()}</div>
               <PlanBody carePlan={carePlan} costPlan={costPlan} chargeItems={chargeItems} loading={loading} onJustify={onJustify} compact />
               <div className="plan-col-actions">
-                <button type="button" className="secondary" onClick={() => onOpen(carePlan.id)}>Show on the chart</button>
-                <DownloadButton label="FHIR" title="CarePlan, cost plan Account and ChargeItems as a FHIR Bundle (JSON)" onDownload={() => downloadPlan(carePlan)} />
+                <button type="button" className="secondary" onClick={() => onOpen(carePlan.id)}>{t('showChart')}</button>
+                <DownloadButton label="FHIR" title={t('downloadPlanTitle')} onDownload={() => downloadPlan(carePlan)} />
                 <DeleteButton carePlan={carePlan} onDelete={onDelete} iconOnly />
               </div>
             </article>
           )
         })}
       </div>
-      <p className="note">Generated for the hackathon, not a billing-grade calculation. Dentist fees only (GOZ), without lab costs and materials.</p>
+      <p className="note">{t('demoDisclaimer')}</p>
     </div>
   )
 }
@@ -426,36 +429,36 @@ function CostPlanDetail(props: PlanProps & { onDelete: (carePlan: CarePlan) => P
   return (
     <>
       <div className="detail-head">
-        <h2>Cost plan <span className="muted-strong">· {shortTitle(props.carePlan)}</span></h2>
+        <h2>{t('costPlan')} <span className="muted-strong">· {shortTitle(props.carePlan)}</span></h2>
         <PlanBadge carePlan={props.carePlan} />
         <span className="detail-actions">
-          <DownloadButton label="Download FHIR" title="CarePlan, cost plan Account and ChargeItems as a FHIR Bundle (JSON)" onDownload={() => downloadPlan(props.carePlan)} />
+          <DownloadButton label={t('downloadFhir')} title={t('downloadPlanTitle')} onDownload={() => downloadPlan(props.carePlan)} />
           <DeleteButton carePlan={props.carePlan} onDelete={props.onDelete} />
         </span>
       </div>
       <PlanBody {...props} />
-      <p className="note">Generated for the hackathon, not a billing-grade calculation. Dentist fees only (GOZ), without lab costs and materials.</p>
+      <p className="note">{t('demoDisclaimer')}</p>
     </>
   )
 }
 
 function PlanBody({ costPlan, chargeItems, loading, onJustify, compact }: PlanProps & { compact?: boolean }) {
-  if (!costPlan) return <div className="muted pad-y">{loading ? 'Pricing with the Billing SDK…' : 'No cost plan Account for this alternative.'}</div>
+  if (!costPlan) return <div className="muted pad-y">{loading ? t('pricing') : t('noAccount')}</div>
   const lineOf = (id?: string) => costPlan.lines.find((l) => l.id === id)
   return (
     <>
       <div className="total-block">
-        <div className="muted">Total estimate</div>
+        <div className="muted">{t('estimate')}</div>
         <div className="total">{euro(costPlan.total)}</div>
-        <div className="muted">{costPlan.lines.length} GOZ services</div>
+        <div className="muted">{t('gozServices', { count: costPlan.lines.length })}</div>
       </div>
 
       <div className={`decision ${DECISIONS[costPlan.decision]?.tone ?? 'review'}`}>
         <div className="decision-head">
-          <span>Regelprüfung{costPlan.findings.length > 0 ? ` · ${costPlan.findings.length} Hinweise` : ''}</span>
+          <span>{t('ruleCheck')}{costPlan.findings.length > 0 ? ` · ${t('findingCount', { count: costPlan.findings.length })}` : ''}</span>
           <DecisionBadge decision={costPlan.decision} />
         </div>
-        {costPlan.findings.length === 0 && <div className="decision-ok">Die hinterlegten Regeln ergeben mit den vorhandenen Angaben keine offenen Hinweise.</div>}
+        {costPlan.findings.length === 0 && <div className="decision-ok">{t('noFindings')}</div>}
         {costPlan.findings.map((finding, i) => {
           const line = lineOf(finding.line)
           const explanation = findingExplanation(finding)
@@ -463,14 +466,14 @@ function PlanBody({ costPlan, chargeItems, loading, onJustify, compact }: PlanPr
             <div key={`${finding.code}-${finding.line ?? i}`} className="finding">
               <span className="finding-kind">{explanation.kind}</span>
               <div className="finding-text">{findingText(finding, line)}</div>
-              <p className="finding-explanation"><strong>Warum wird geprüft?</strong> {explanation.rule}</p>
-              <p className="finding-explanation"><strong>Nächster Schritt:</strong> {explanation.action}</p>
+              <p className="finding-explanation"><strong>{t('whyCheck')}</strong> {explanation.rule}</p>
+              <p className="finding-explanation"><strong>{t('nextStep')}</strong> {explanation.action}</p>
               <details className="finding-details">
-                <summary>Quelle und technische Details</summary>
-                <div className="finding-code"><code>{finding.code}</code>{finding.rule && <> · Regel <code>{finding.rule}</code></>}</div>
-                {finding.line && <div>Position: <a href={`/fhir/ChargeItem/${encodeURIComponent(finding.line)}`} target="_blank" rel="noreferrer">{finding.line}</a></div>}
-                {finding.message && <div>Originalmeldung: {finding.message}</div>}
-                {finding.details?.fact && <div>FHIR-Angabe: <code>{finding.details.fact}</code></div>}
+                <summary>{t('technicalDetails')}</summary>
+                <div className="finding-code"><code>{finding.code}</code>{finding.rule && <> · {t('rule')} <code>{finding.rule}</code></>}</div>
+                {finding.line && <div>{t('position')}: <a href={`/fhir/ChargeItem/${encodeURIComponent(finding.line)}`} target="_blank" rel="noreferrer">{finding.line}</a></div>}
+                {finding.message && <div>{t('originalMessage')}: {finding.message}</div>}
+                {finding.details?.fact && <div>{t('fhirFact')}: <code>{finding.details.fact}</code></div>}
                 {finding.sources?.map((source, index) => (
                   <div key={`${source.uri}-${index}`}>
                     {source.uri?.startsWith('https://') ? <a href={source.uri} target="_blank" rel="noreferrer">{source.citation ?? source.uri}</a> : source.citation}
@@ -489,11 +492,11 @@ function PlanBody({ costPlan, chargeItems, loading, onJustify, compact }: PlanPr
         <thead>
           <tr>
             <th>GOZ</th>
-            <th>Tooth</th>
-            {!compact && <th className="num">Qty</th>}
-            <th className="num">Factor</th>
-            <th className="num">Fee</th>
-            {!compact && <th>Service</th>}
+            <th>{t('tooth')}</th>
+            {!compact && <th className="num">{t('quantity')}</th>}
+            <th className="num">{t('factor')}</th>
+            <th className="num">{t('fee')}</th>
+            {!compact && <th>{t('service')}</th>}
           </tr>
         </thead>
         <tbody>
@@ -503,7 +506,7 @@ function PlanBody({ costPlan, chargeItems, loading, onJustify, compact }: PlanPr
         </tbody>
         <tfoot>
           <tr>
-            <td colSpan={compact ? 3 : 4}>Total</td>
+            <td colSpan={compact ? 3 : 4}>{t('total')}</td>
             <td className="num">{euro(costPlan.total)}</td>
             {!compact && <td />}
           </tr>
@@ -516,13 +519,13 @@ function PlanBody({ costPlan, chargeItems, loading, onJustify, compact }: PlanPr
 function LineRow({ line, chargeItem, flagged, compact }: { line: CostPlanLine; chargeItem?: ChargeItem; flagged: boolean; compact?: boolean }) {
   const reason = chargeItem?.reason?.map((r) => r.text ?? display(r)).filter(Boolean).join('; ')
   return (
-    <tr className={flagged ? 'flagged' : undefined} title={compact ? line.display : undefined}>
+    <tr className={flagged ? 'flagged' : undefined} title={compact ? `${t('originalContent')}: ${line.display}` : undefined}>
       <td><code>{line.code}</code>{compact && <div className="line-display">{line.display}</div>}</td>
       <td>{line.tooth || '–'}</td>
       {!compact && <td className="num">{line.quantity}</td>}
-      <td className="num">{line.factor.toFixed(1)}{reason && <div className="reason" title={reason}>justified</div>}</td>
+      <td className="num">{number(line.factor, { minimumFractionDigits: 1 })}{reason && <div className="reason" title={reason}>{t('justified')}</div>}</td>
       <td className="num">{euro(line.amount)}</td>
-      {!compact && <td>{line.display}{reason && <div className="reason">Justification: {reason}</div>}</td>}
+      {!compact && <td title={t('originalContent')}>{line.display}{reason && <div className="reason">{t('justification')}: {reason}</div>}</td>}
     </tr>
   )
 }
@@ -540,16 +543,16 @@ function JustificationForm({ chargeItemId, onSave }: { chargeItemId: string; onS
   }
   return (
     <form className="justify" onSubmit={submit}>
-      <label htmlFor={`justify-${chargeItemId}`}>Individuelle Begründung zur Leistung</label>
+      <label htmlFor={`justify-${chargeItemId}`}>{t('individualJustification')}</label>
       <textarea
         id={`justify-${chargeItemId}`}
         rows={2}
         value={text}
         onChange={(e) => setText(e.target.value)}
-        placeholder="z. B. Erschwerte Insertion wegen schmalem Kieferkamm regio 36"
+        placeholder={t('justificationPlaceholder')}
       />
       <div className="justify-actions">
-        <button type="submit" className="primary" disabled={busy || !text.trim()}>{busy ? 'Wird gespeichert…' : 'Speichern und erneut prüfen'}</button>
+        <button type="submit" className="primary" disabled={busy || !text.trim()}>{busy ? t('saving') : t('saveRecheck')}</button>
         {error && <span className="error">{error}</span>}
       </div>
     </form>
@@ -568,7 +571,7 @@ function DownloadButton({ label, title, onDownload }: { label: string; title: st
     <span className="download">
       <button type="button" className="secondary with-icon" title={title} onClick={click} disabled={busy}>
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14" /></svg>
-        {busy ? 'Preparing…' : label}
+        {busy ? t('preparing') : label}
       </button>
       {error && <span role="alert" className="error">{error}</span>}
     </span>
@@ -580,7 +583,7 @@ function DeleteButton({ carePlan, onDelete, iconOnly }: { carePlan: CarePlan; on
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string>()
   const chosen = carePlan.intent === 'plan'
-  const title = chosen ? 'The chosen alternative cannot be deleted' : 'Delete this alternative and its cost plan'
+  const title = chosen ? t('chosenNoDelete') : t('deleteTitle')
   const click = async () => {
     setBusy(true)
     setError(undefined)
@@ -590,7 +593,7 @@ function DeleteButton({ carePlan, onDelete, iconOnly }: { carePlan: CarePlan; on
     <span className="download">
       <button type="button" className={`secondary danger${iconOnly ? ' icon-only' : ' with-icon'}`} title={title} aria-label={iconOnly ? title : undefined} onClick={click} disabled={busy || chosen}>
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3" /></svg>
-        {!iconOnly && (busy ? 'Deleting…' : 'Delete plan')}
+        {!iconOnly && (busy ? t('deleting') : t('deletePlan'))}
       </button>
       {error && <span role="alert" className="error">{error}</span>}
     </span>

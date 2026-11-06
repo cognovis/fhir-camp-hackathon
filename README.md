@@ -33,6 +33,20 @@ dental knowledge required.
 
 All data is synthetic.
 
+## Interface language
+
+The app and odontogram follow the browser's preferred languages: German and English
+are supported, with English as the fallback. Regional preferences also control date,
+number and EUR formatting. Changing browser language updates an open app through the
+`languagechange` event; reloading also applies the current preference. No language
+selection is stored in cookies or localStorage.
+
+Translations live in `app/src/locales/de.json` and `app/src/locales/en.json`.
+`app/src/i18n.ts` configures i18next, react-i18next and the browser detector. Add the
+same keys and interpolation placeholders to both files; `npm --workspace app test`
+checks their consistency. FHIR content (plan titles, clinical text, original GOZ
+descriptions and source messages) remains in its stored language and is not rewritten.
+
 ## Public resources
 
 ### FHIR

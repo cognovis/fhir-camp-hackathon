@@ -14,16 +14,17 @@ login (`.npmrc` sets the `@cognovis` scope):
 
 | Package | Version | Use here |
 | --- | --- | --- |
-| `@cognovis/fhir-billing-sdk` | 0.37.1 | `fhir-billing-check` CLI, `evaluateBillingAccount` |
-| `@cognovis/fhir-billing-rules` | 0.37.0 | `BILLING_RULE_CLASS_DEFINITIONS`, the rule classes |
+| `@cognovis/fhir-billing-sdk` | 0.42.1 | `fhir-billing-check` CLI, `evaluateBillingAccount` |
+| `@cognovis/fhir-billing-rules` | 0.40.0 | `BILLING_RULE_CLASS_DEFINITIONS`, the rule classes |
 | `@cognovis/fhir-sdk` | 0.23.3 | `defineProfile` for the profile bindings |
 
 Source of the billing engine: https://github.com/cognovis/fhir-billing-core (public).
-Keep these versions; the kit is tested with exactly them. Newer packages exist (engine,
-rules and types 0.41.1, `fhir-sdk` 0.24.0), but `fhir-billing-sdk` 0.37.1 requires engine,
-rules and types `^0.37.0` and `fhir-sdk` `^0.23.3`. Do not add the 0.41 packages next to it:
-the SDK would keep using 0.37, and rule classes read from 0.41 may not match what it checks.
-The packages are not on npmjs.org.
+Keep these versions; the kit is tested with exactly them. `fhir-billing-sdk` 0.42.1 requires
+engine, rules and types `^0.40.0` (so 0.40.x, not 0.41) and accepts `fhir-sdk` `^0.23.3`,
+not 0.24. Do not add rules, engine or types 0.41 next to it: the SDK keeps using 0.40, and
+rule classes read from 0.41 may not match what it checks. The registry's `latest` tag of
+`fhir-billing-sdk` still points to 0.37.1, so an unpinned install gets the older SDK. The
+packages are not on npmjs.org.
 
 ## Run it
 

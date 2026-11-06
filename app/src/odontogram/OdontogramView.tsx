@@ -5,7 +5,7 @@
 // only one chart can be mounted at a time.
 
 import { useEffect } from 'react'
-import { OdontogramShell, importStatus, setChartMode } from '@cognovis/react-odontogram'
+import { OdontogramShell, importStatus, setChartMode, setPlanChart } from '@cognovis/react-odontogram'
 import { PAYLOAD_VERSION, type ChartTeeth } from './chartAdapter'
 
 export interface OdontogramViewProps {
@@ -31,12 +31,21 @@ function whenGridReady(callback: () => void): () => void {
 
 export function OdontogramView({ status, plan, mode }: OdontogramViewProps) {
   useEffect(() => whenGridReady(() => {
-    importStatus({ version: PAYLOAD_VERSION, teeth: status, ...(plan ? { plan } : {}) })
-    setChartMode(plan ? mode : 'status')
+    // importStatus loads the status chart and switches the chart back to status mode.
+    importStatus({ version: PAYLOAD_VERSION, teeth: status })
+    if (plan && mode === 'plan') {
+      // Hydrate the plan chart first, then switch to it: setChartMode repaints on the switch, so
+      // the chart shows the selected alternative also when the previous one was a plan too.
+      setPlanChart({ version: PAYLOAD_VERSION, teeth: plan })
+      setChartMode('plan')
+    } else {
+      setChartMode('status')
+    }
   }), [status, plan, mode])
 
   // Editable: teeth can be clicked and changed. Changes stay in the browser until they are
   // written back as FHIR Observations (TASKS.md, task 1: subscribe with onStateChange and read
   // the chart with getStatusChart). Selecting another patient or plan reloads the chart from FHIR.
+  // The app owns the Status/Plan switch and the plan tabs; styles.css hides the chart's own.
   return <OdontogramShell language="de" numberingSystem="FDI" />
 }

@@ -17,7 +17,7 @@
 //     --dry-run                     validate only, write nothing
 //     --out <file>                  also write the transaction Bundle to a file
 //
-// Ids are stable: `<CarePlan id>-cost-plan` and `<CarePlan id>-charge-NN`. Running it again
+// Ids are stable: `<CarePlan id>-cost-plan` and `<CarePlan id>-charge-NN` (long ids hashed). Running it again
 // replaces the cost plan and deletes ChargeItems of that Account the plan no longer has.
 //
 // Generated for the hackathon, not a billing-grade calculation.
@@ -31,14 +31,22 @@ export const PLAN_TYPE_SYSTEM = 'https://fhir.cognovis.de/dental/CodeSystem/dent
 export const DEFAULT_FACTOR = 2.3
 const HTEST = { system: 'http://terminology.hl7.org/CodeSystem/v3-ActReason', code: 'HTEST', display: 'test health data' }
 
-export const accountIdFor = (carePlanId) => `${carePlanId}-cost-plan`
-export const chargeItemIdFor = (carePlanId, index) => `${carePlanId}-charge-${String(index + 1).padStart(2, '0')}`
+// A FHIR id has at most 64 characters. Long CarePlan ids are cut and get a hash of the whole
+// id, so the suffixes below (at most 11 characters) still fit and stay distinct per CarePlan.
+const fnv1a = (text) => {
+  let hash = 0x811c9dc5
+  for (const char of text) hash = Math.imul(hash ^ char.codePointAt(0), 0x01000193) >>> 0
+  return hash.toString(16).padStart(8, '0')
+}
+const idBase = (carePlanId) => (carePlanId.length <= 53 ? carePlanId : `${carePlanId.slice(0, 44)}-${fnv1a(carePlanId)}`)
+export const accountIdFor = (carePlanId) => `${idBase(carePlanId)}-cost-plan`
+export const chargeItemIdFor = (carePlanId, index) => `${idBase(carePlanId)}-charge-${String(index + 1).padStart(2, '0')}`
 
 const gozCoding = (activity) => activity.detail?.code?.coding?.find((c) => c.system === GOZ_SYSTEM && c.code)
 
-// The FDI tooth position of a resource: Observation.bodySite or Condition.bodySite[].
-const toothOf = (resource) => [resource?.bodySite ?? []].flat()
-  .flatMap((site) => site.coding ?? []).find((c) => c.system === TOOTH_SYSTEM)?.code
+// Every FDI tooth position of a resource: Observation.bodySite or Condition.bodySite[].
+const teethOf = (resource) => [resource?.bodySite ?? []].flat()
+  .flatMap((site) => site.coding ?? []).filter((c) => c.system === TOOTH_SYSTEM && c.code).map((c) => c.code)
 
 /**
  * Builds the cost plan of one CarePlan. Pure: everything it reads comes in as arguments.
@@ -92,10 +100,10 @@ export function buildCostPlan({ carePlan, definitionFor, resolve, coverage, owne
     if (!definition) throw new Error(`${where}, activity ${i + 1}: GOZ ${code} is not in the catalog (no ChargeItemDefinition).`)
     const catalogCoding = definition.code.coding.find((c) => c.system === GOZ_SYSTEM && c.code === code)
     const display = gozCoding(activity).display ?? catalogCoding?.display
-    const teeth = [...new Set((activity.detail.reasonReference ?? []).map(({ reference }) => {
-      const tooth = toothOf(resolve(reference))
-      if (!tooth) throw new Error(`${where}, activity ${i + 1}: ${reference} does not resolve to a resource with an FDI tooth position.`)
-      return tooth
+    const teeth = [...new Set((activity.detail.reasonReference ?? []).flatMap(({ reference }) => {
+      const found = teethOf(resolve(reference))
+      if (found.length === 0) throw new Error(`${where}, activity ${i + 1}: ${reference} does not resolve to a resource with an FDI tooth position.`)
+      return found
     }))]
     if (teeth.length > 1) throw new Error(`${where}, activity ${i + 1}: reasonReference names more than one tooth (${teeth.join(', ')}); plan one activity per tooth.`)
     return {

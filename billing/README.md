@@ -91,7 +91,8 @@ The Account takes its name from the CarePlan title ("HKP ..." becomes "Kostenpla
 plan type from the CarePlan category, and the patient's only active `Coverage` (or
 `--coverage <id>`); the owner is `Organization/fhir-camp-practice` (or `--owner <id>`).
 
-Ids are stable: `<CarePlan id>-cost-plan` and `<CarePlan id>-charge-NN`. Running it again
+Ids are stable: `<CarePlan id>-cost-plan` and `<CarePlan id>-charge-NN` (a CarePlan id longer than 53
+characters is cut and gets a hash, to stay within the 64 characters of a FHIR id). Running it again
 replaces the cost plan and deletes ChargeItems of that Account the plan no longer has. Every
 resource passes `$validate` (base R4) before the write and again after it is read back.
 Running it on a seeded CarePlan adds a second cost plan next to the seeded one; for

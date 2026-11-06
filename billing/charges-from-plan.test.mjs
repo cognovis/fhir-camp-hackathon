@@ -50,6 +50,14 @@ describe('buildCostPlan for the seeded alternatives of DENT-051', () => {
     assert.deepEqual(chargeItems.map((c) => c.id).slice(0, 2), ['dent-051-hkp-alt-a-charge-01', 'dent-051-hkp-alt-a-charge-02'])
   })
 
+  it('keeps generated ids within the 64 characters of a FHIR id, distinct per CarePlan', () => {
+    const long = (suffix) => ({ ...structuredClone(byId('dent-051-hkp-alt-a')), id: `${'x'.repeat(63)}${suffix}` })
+    const one = buildCostPlan({ carePlan: long('1'), definitionFor, resolve, coverage, owner })
+    const two = buildCostPlan({ carePlan: long('2'), definitionFor, resolve, coverage, owner })
+    for (const id of [one.account.id, ...one.chargeItems.map((c) => c.id)]) assert.match(id, /^[A-Za-z0-9\-.]{1,64}$/)
+    assert.notEqual(one.account.id, two.account.id)
+  })
+
   it('uses 2.3 as the default multiplier', () => {
     const { chargeItems } = generate('dent-051-hkp-alt-c')
     assert.ok(chargeItems.every((c) => c.factorOverride === 2.3))
@@ -79,6 +87,19 @@ describe('buildCostPlan refuses what it cannot price', () => {
       reasonReference: [{ reference: 'Observation/does-not-exist' }],
     })
     assert.throws(() => buildCostPlan({ carePlan, definitionFor, resolve, coverage, owner }), /Observation\/does-not-exist/)
+  })
+
+  it('refuses a reason whose bodySite names more than one tooth', () => {
+    const condition = {
+      resourceType: 'Condition', id: 'two-teeth',
+      bodySite: [35, 37].map((code) => ({ coding: [{ system: 'https://fhir.cognovis.de/dental-core/CodeSystem/tooth-position-fdi', code: String(code) }] })),
+    }
+    const carePlan = withActivity({
+      code: { coding: [{ system: GOZ_SYSTEM, code: '0090' }] },
+      reasonReference: [{ reference: 'Condition/two-teeth' }],
+    })
+    const resolveWith = (reference) => (reference === 'Condition/two-teeth' ? condition : resolve(reference))
+    assert.throws(() => buildCostPlan({ carePlan, definitionFor, resolve: resolveWith, coverage, owner }), /more than one tooth \(35, 37\)/)
   })
 
   it('refuses a factor for a GOZ number the plan does not contain', () => {

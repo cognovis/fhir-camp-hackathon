@@ -6,7 +6,8 @@ export interface CodeableConcept { coding?: Coding[]; text?: string }
 export interface Reference { reference?: string; display?: string }
 export interface Extension { url: string; valueCoding?: Coding; valueString?: string }
 
-export interface Resource { resourceType: string; id: string; meta?: { profile?: string[]; versionId?: string } }
+export interface Meta { profile?: string[]; versionId?: string; tag?: Coding[] }
+export interface Resource { resourceType: string; id: string; meta?: Meta }
 
 export interface Patient extends Resource {
   resourceType: 'Patient'
@@ -24,8 +25,11 @@ export interface ObservationComponent {
 export interface Observation extends Resource {
   resourceType: 'Observation'
   status: string
+  category?: CodeableConcept[]
   code: CodeableConcept
+  subject?: Reference
   effectiveDateTime?: string
+  performer?: Reference[]
   bodySite?: CodeableConcept
   note?: { text: string }[]
   component?: ObservationComponent[]
@@ -38,10 +42,12 @@ export interface Condition extends Resource {
   code?: CodeableConcept
   bodySite?: CodeableConcept[]
   recordedDate?: string
+  evidence?: { detail?: Reference[] }[]
 }
 
 export interface CarePlanActivity {
   detail?: {
+    kind?: string
     code?: CodeableConcept
     status?: string
     reasonReference?: Reference[]
@@ -51,11 +57,18 @@ export interface CarePlanActivity {
 
 export interface CarePlan extends Resource {
   resourceType: 'CarePlan'
+  identifier?: { system?: string; value?: string }[]
   status: string
   intent: string
+  category?: CodeableConcept[]
   title?: string
   description?: string
+  subject?: Reference
+  period?: { start?: string; end?: string }
   created?: string
+  author?: Reference
+  addresses?: Reference[]
+  supportingInfo?: Reference[]
   activity?: CarePlanActivity[]
 }
 
@@ -71,7 +84,7 @@ export interface ChargeItem extends Resource {
   account?: Reference[]
 }
 
-interface Bundle<T> { entry?: { resource: T }[] }
+interface Bundle<T> { entry?: { resource: T }[]; link?: { relation: string; url: string }[] }
 
 // Every FHIR call of the app goes through fhirRequest, which records it in the request log that
 // the FHIR panel shows. Call it for your own writes too, so they appear there.
@@ -111,8 +124,9 @@ export function clearFhirLog() {
 }
 
 // body is the parsed JSON, or undefined when the server answered with something else (for example
-// a proxy error page); text is the raw answer in both cases.
-export async function fhirRequest<T>(method: string, path: string, body?: unknown): Promise<{ status: number; body: T | undefined; text: string }> {
+// a proxy error page); text is the raw answer in both cases. keepalive lets a request started as
+// the page unloads still reach the server; headers adds request headers (for example If-None-Exist).
+export async function fhirRequest<T>(method: string, path: string, body?: unknown, options: { keepalive?: boolean; headers?: Record<string, string> } = {}): Promise<{ status: number; body: T | undefined; text: string }> {
   const url = path ? `/fhir/${path}` : '/fhir'
   const entry: FhirLogEntry = { id: nextLogId++, method, url, requestBody: body, at: new Date().toISOString() }
   writeLog(entry)
@@ -120,7 +134,8 @@ export async function fhirRequest<T>(method: string, path: string, body?: unknow
   try {
     const response = await fetch(url, {
       method,
-      headers: { accept: 'application/fhir+json', ...(body === undefined ? {} : { 'content-type': 'application/fhir+json' }) },
+      ...(options.keepalive ? { keepalive: true } : {}),
+      headers: { accept: 'application/fhir+json', ...(body === undefined ? {} : { 'content-type': 'application/fhir+json' }), ...options.headers },
       ...(body === undefined ? {} : { body: JSON.stringify(body) }),
     })
     const text = await response.text()
@@ -134,10 +149,67 @@ export async function fhirRequest<T>(method: string, path: string, body?: unknow
   }
 }
 
+/** Searches and follows the Bundle's next links, so results beyond one page are included. */
 export async function search<T extends Resource>(query: string): Promise<T[]> {
-  const { status, body, text } = await fhirRequest<Bundle<T>>('GET', query)
-  if (status >= 400 || !body) throw new Error(`GET /fhir/${query}: HTTP ${status}${body ? '' : `, not FHIR JSON: ${text.slice(0, 120)}`}`)
-  return (body.entry ?? []).map((entry) => entry.resource)
+  const results: T[] = []
+  let path: string | undefined = query
+  while (path) {
+    const { status, body, text }: { status: number; body: Bundle<T> | undefined; text: string } = await fhirRequest<Bundle<T>>('GET', path)
+    if (status >= 400 || !body) throw new Error(`GET /fhir/${path}: HTTP ${status}${body ? '' : `, not FHIR JSON: ${text.slice(0, 120)}`}`)
+    results.push(...(body.entry ?? []).map((entry) => entry.resource))
+    // The server answers with its own base URL (http://host:port/fhir/...); keep only what follows
+    // /fhir/, so the request stays on the Vite proxy that adds the credentials.
+    const next: string | undefined = body.link?.find((l) => l.relation === 'next')?.url
+    const url: URL | undefined = next ? new URL(next, window.location.origin) : undefined
+    path = url ? `${url.pathname.replace(/^\/fhir\/?/, '')}${url.search}` : undefined
+  }
+  return results
+}
+
+// The error for a failed request, with the OperationOutcome's diagnostics when there is one.
+function failure(method: string, path: string, status: number, body: unknown, text: string): Error {
+  const outcome = body as Partial<OperationOutcome> | undefined
+  const detail = (outcome?.issue ?? []).map((i) => i.diagnostics ?? i.details?.text ?? '').filter(Boolean).join('; ')
+  return new Error(`${method} /fhir/${path}: HTTP ${status}${detail ? ` (${detail})` : body ? '' : `, ${text.slice(0, 120)}`}`)
+}
+
+/**
+ * Creates a resource (POST, the server assigns the id) and returns it as stored. With
+ * `ifNoneExist` (a search query) the create is conditional: when a matching resource exists
+ * already, nothing is created and this fails, so the server itself keeps the match unique.
+ */
+// keepalive only for a save started as the page unloads: the browser caps all keepalive request
+// bodies in flight together at 64 KiB, which a whole-chart change exceeds.
+export async function create<T extends Resource>(resource: Omit<T, 'id'>, options: { keepalive?: boolean; ifNoneExist?: string } = {}): Promise<T> {
+  const path = resource.resourceType
+  const { ifNoneExist, keepalive } = options
+  const { status, body, text } = await fhirRequest<T>('POST', path, resource, { keepalive, ...(ifNoneExist ? { headers: { 'if-none-exist': ifNoneExist } } : {}) })
+  if (status >= 400 || !body) throw failure('POST', path, status, body, text)
+  // 201 is a new resource; 200 means a conditional create found an existing one.
+  if (ifNoneExist && status !== 201) throw new Error(`POST /fhir/${path}: ${ifNoneExist} exists already`)
+  return body
+}
+
+/**
+ * Updates several resources in one transaction: all or nothing. Each update carries the
+ * version it was read at (If-Match), so a change made in between fails instead of being lost.
+ */
+export async function updateAll(resources: Resource[]): Promise<void> {
+  if (resources.length === 0) return
+  const bundle = {
+    resourceType: 'Bundle',
+    type: 'transaction',
+    entry: resources.map((resource) => ({
+      resource,
+      request: {
+        method: 'PUT',
+        url: `${resource.resourceType}/${resource.id}`,
+        ...(resource.meta?.versionId ? { ifMatch: `W/"${resource.meta.versionId}"` } : {}),
+      },
+    })),
+  }
+  const { status, body, text } = await fhirRequest('POST', '', bundle)
+  if (status >= 400) throw failure('POST', '', status, body, text)
 }
 
 export interface OperationOutcome {
@@ -156,7 +228,10 @@ export async function validateResource(resource: Resource): Promise<OperationOut
 
 export interface PatientRecord {
   patient: Patient
+  /** The current chart: the latest tooth-state Observation per tooth. */
   toothStates: Observation[]
+  /** Every tooth-state Observation, older ones included: CarePlans may still reference them. */
+  toothStateHistory: Observation[]
   findings: Observation[]
   conditions: Condition[]
   carePlans: CarePlan[]
@@ -175,9 +250,11 @@ export async function loadPatientRecord(patient: Patient): Promise<PatientRecord
     search<ChargeItem>(`ChargeItem?subject=${subject}&_count=500&_sort=_id`),
   ])
   const isToothState = (o: Observation) => o.meta?.profile?.includes(TOOTH_STATE_PROFILE) ?? false
+  const toothStateHistory = observations.filter(isToothState)
   return {
     patient,
-    toothStates: latestPerTooth(observations.filter(isToothState)),
+    toothStates: latestPerTooth(toothStateHistory),
+    toothStateHistory,
     findings: observations.filter((o) => !isToothState(o) && !o.hasMember),
     conditions,
     carePlans,
@@ -190,7 +267,7 @@ export function toothOf(concept: CodeableConcept | undefined): string | undefine
 }
 
 // One tooth-state Observation per tooth: the most recent effective date wins.
-function latestPerTooth(observations: Observation[]): Observation[] {
+export function latestPerTooth(observations: Observation[]): Observation[] {
   const byTooth = new Map<string, Observation>()
   for (const observation of observations) {
     const tooth = toothOf(observation.bodySite)

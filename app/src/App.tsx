@@ -1,12 +1,13 @@
-import { ChartNoAxesColumn, ChevronDown, Flame, Trash2 } from 'lucide-react'
+import { ChartNoAxesColumn, Check, ChevronDown, Flame, Trash2 } from 'lucide-react'
 import { AlertDialog, Avatar, Badge, Button, Callout, Card, DropdownMenu, Flex, Link, Select, Skeleton, Spinner, Table, Tabs, TextArea, Tooltip } from '@radix-ui/themes'
 import { useTranslation } from 'react-i18next'
 import { t, date, number } from './i18n.ts'
 import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties, type FormEvent, type ReactNode } from 'react'
 import { DECISIONS, euro, findingExplanation, findingText, loadCostPlans, saveJustification, type CostPlan, type CostPlanLine } from './costPlan'
-import { display, loadPatientRecord, patientName, search, toothOf, type CarePlan, type ChargeItem, type Patient, type PatientRecord, type Resource } from './fhir'
+import { create, display, latestPerTooth, loadPatientRecord, patientName, search, toothOf, updateAll, type CarePlan, type ChargeItem, type Observation, type Patient, type PatientRecord, type Resource } from './fhir'
 import { FhirPanel } from './inspector/FhirPanel'
-import { toChartStatus, toPlanChart } from './odontogram/chartAdapter'
+import { ALTERNATIVE_TEMPLATES, chooseAlternative, createAlternative, findGaps, isChoosable, type AlternativeTemplate, type Gap } from './planAlternatives'
+import { toChartStatus, toPlanChart, toToothState, type ChartTeeth } from './odontogram/chartAdapter'
 import { captureChart, OdontogramView } from './odontogram/OdontogramView'
 import { createPlan, deletePlan } from './plans'
 
@@ -33,6 +34,16 @@ export function App() {
   const [costPlanError, setCostPlanError] = useState<string>()
   const [checking, setChecking] = useState(false)
   const [error, setError] = useState<string>()
+  const [saveErrors, setSaveErrors] = useState<{ patientId: string; tooth: string; message: string }[]>([])
+  const saveAttempts = useRef({ count: 0, latest: new Map<string, number>() })
+  // Tooth states being written. A page unload cancels these requests, so it resends them as
+  // keepalive requests: a duplicate Observation if the first one also arrives, never a lost one.
+  const pendingWrites = useRef(new Set<Omit<Observation, 'id'>>())
+  useEffect(() => {
+    const resend = () => { for (const observation of pendingWrites.current) create(observation, { keepalive: true }).catch(() => {}) }
+    window.addEventListener('beforeunload', resend)
+    return () => window.removeEventListener('beforeunload', resend)
+  }, [])
   // The FHIR panel: what the app reads and writes, live from Aidbox.
   const appElement = useRef<HTMLDivElement>(null)
   const previewPanelWidth = useCallback((width: number) => {
@@ -61,6 +72,11 @@ export function App() {
   const panelOpenRef = useRef(panelOpen)
   panelOpenRef.current = panelOpen
   const follow = useCallback((resource: Resource | undefined) => { if (resource && panelOpenRef.current) inspect(resource) }, [inspect])
+  // Every record load gets a number; only the newest one may set the record, so a slow load
+  // cannot overwrite a newer one or the record of a patient selected in between.
+  const loadGeneration = useRef(0)
+  const shownPatientId = useRef<string>(undefined)
+  shownPatientId.current = patientId
 
   useEffect(() => {
     search<Patient>(`Patient?identifier=${encodeURIComponent(`${DENTAL_PATIENT}|`)}&_sort=_id&_count=50`)
@@ -79,8 +95,9 @@ export function App() {
     setInspected(undefined)
     // Ignore the answer of a load that a newer patient selection has superseded.
     let current = true
+    const generation = ++loadGeneration.current
     loadPatientRecord(patient)
-      .then((loaded) => { if (current) setRecord(loaded) })
+      .then((loaded) => { if (current && generation === loadGeneration.current) setRecord(loaded) })
       .catch((e: Error) => { if (current) setError(e.message) })
     setChecking(true)
     loadCostPlans(patient.id)
@@ -105,24 +122,58 @@ export function App() {
     await recheck()
   }, [recheck, follow])
 
+  // Reload the record after a write. A write for a patient no longer on screen reloads nothing,
+  // and a load superseded by a newer one is dropped.
+  const reloadRecord = useCallback(async (patient: Patient) => {
+    if (shownPatientId.current !== patient.id) return
+    const generation = ++loadGeneration.current
+    const loaded = await loadPatientRecord(patient)
+    if (generation === loadGeneration.current && shownPatientId.current === patient.id) setRecord(loaded)
+  }, [])
+
   // Write a new alternative (blank, or a copy of `source` with its cost plan), then reload and show it.
   const addPlan = useCallback(async (source?: CarePlan) => {
     if (!record) return
     const created = await createPlan(record.patient, record.carePlans, record.chargeItems, source)
-    setRecord(await loadPatientRecord(record.patient))
+    await reloadRecord(record.patient)
     setPlanView(created.id)
     follow(created)
     await recheck()
-  }, [record, recheck, follow])
+  }, [record, recheck, follow, reloadRecord])
+
+  // Write a new alternative for a finding (a missing tooth) with its cost plan, then show it.
+  // It joins the record before the reload, so a failed reload or cost plan does not hide it.
+  const addFromFinding = useCallback(async (gap: Gap, template: AlternativeTemplate) => {
+    if (!record) return
+    const patient = record.patient
+    const { created, costPlanError } = await createAlternative(patient, gap, template)
+    setRecord((r) => (r && r.patient.id === patient.id ? { ...r, carePlans: [...r.carePlans, created] } : r))
+    setPlanView(created.id)
+    follow(created)
+    await reloadRecord(patient)
+    if (costPlanError) throw costPlanError
+    await recheck()
+  }, [record, recheck, follow, reloadRecord])
+
+  // The patient chooses an alternative: it gets intent = plan, the other draft alternatives
+  // intent = option, in one transaction. The status stays draft (docs/adr/0001).
+  const choosePlan = useCallback(async (carePlan: CarePlan) => {
+    if (!record) return
+    try {
+      await updateAll(chooseAlternative(record.carePlans, carePlan.id))
+    } finally {
+      await reloadRecord(record.patient)
+    }
+  }, [record, reloadRecord])
 
   // Delete an alternative with its cost plan, then show the chosen one again.
   const removePlan = useCallback(async (carePlan: CarePlan) => {
     if (!record) return
     await deletePlan(carePlan, record.chargeItems)
-    setRecord(await loadPatientRecord(record.patient))
+    await reloadRecord(record.patient)
     setPlanView((current) => (current === COMPARE ? COMPARE : undefined))
     await recheck()
-  }, [record, recheck])
+  }, [record, recheck, reloadRecord])
 
   // The alternative on screen: the one picked, else the one the patient chose, else the first.
   const carePlans = record?.carePlans ?? []
@@ -131,9 +182,10 @@ export function App() {
     ? carePlans.find((p) => p.id === planView) ?? carePlans.find((p) => p.intent === 'plan') ?? carePlans[0]
     : undefined
 
+  const gaps = useMemo(() => (record ? findGaps(record.toothStates, record.conditions) : []), [record])
   const status = useMemo(() => (record ? toChartStatus(record.toothStates) : undefined), [record])
   const plan = useMemo(
-    () => (record && status && selectedPlan ? toPlanChart(status, selectedPlan, record.toothStates) : undefined),
+    () => (record && status && selectedPlan ? toPlanChart(status, selectedPlan, record.toothStateHistory) : undefined),
     [record, status, selectedPlan],
   )
   const costPlanOf = useMemo(() => {
@@ -157,7 +209,54 @@ export function App() {
     setPlanView(value)
     follow(carePlans.find((p) => p.id === value))
   }
-  const chartDate = record?.toothStates[0]?.effectiveDateTime ?? ''
+  // The date of the latest tooth state: saved chart changes carry a full timestamp.
+  const chartDate = (record?.toothStates ?? []).reduce((latest, o) => ((o.effectiveDateTime ?? '') > latest ? (o.effectiveDateTime ?? '') : latest), '').slice(0, 10)
+
+  // Chart to FHIR: every changed tooth becomes a new tooth-state Observation; the previous one
+  // stays as history, and the record keeps the latest per tooth.
+  // The view saves one tooth per call, so an error belongs to its patient and tooth until that
+  // tooth saves or the patient's next save round starts (a call with no teeth, see OdontogramView).
+  // Only the latest save of a tooth settles its error: an older answer arriving late is stale.
+  async function saveChart(changed: ChartTeeth, options: { keepalive?: boolean } = {}) {
+    if (!record) return
+    const patientId = record.patient.id
+    const teeth = Object.keys(changed)
+    if (teeth.length === 0) {
+      setSaveErrors((current) => (current.some((e) => e.patientId === patientId) ? current.filter((e) => e.patientId !== patientId) : current))
+      return
+    }
+    const attempt = ++saveAttempts.current.count
+    for (const tooth of teeth) saveAttempts.current.latest.set(`${patientId}/${tooth}`, attempt)
+    const settle = (message?: string) => {
+      const current = teeth.filter((tooth) => saveAttempts.current.latest.get(`${patientId}/${tooth}`) === attempt)
+      setSaveErrors((errors) => [
+        ...errors.filter((e) => e.patientId !== patientId || !current.includes(e.tooth)),
+        ...(message ? current.map((tooth) => ({ patientId, tooth, message })) : []),
+      ])
+    }
+    const effective = new Date().toISOString()
+    const previous = (tooth: string) => record.toothStates.find((o) => toothOf(o.bodySite) === tooth)
+    let observations: Omit<Observation, 'id'>[] = []
+    try {
+      // Throws for a tooth state the profile cannot carry; the error names the gap.
+      observations = Object.entries(changed).map(([tooth, t]) => toToothState(record.patient, tooth, t, effective, previous(tooth)))
+      // Saves started as the page unloads are keepalive requests already.
+      if (!options.keepalive) for (const o of observations) pendingWrites.current.add(o)
+      const created = await Promise.all(observations.map((o) => create<Observation>(o, options)))
+      setRecord((r) => {
+        if (r?.patient.id !== record.patient.id) return r
+        const toothStateHistory = [...r.toothStateHistory, ...created]
+        return { ...r, toothStates: latestPerTooth(toothStateHistory), toothStateHistory }
+      })
+      follow(created[0])
+      settle()
+    } catch (e) {
+      settle((e as Error).message)
+      throw e
+    } finally {
+      for (const o of observations) pendingWrites.current.delete(o)
+    }
+  }
 
   return (
     <div ref={appElement} className={panelOpen ? 'app-page with-fhir-panel' : 'app-page'} style={{ '--fhir-panel-width': `${panelWidth}px` } as CSSProperties}>
@@ -186,6 +285,9 @@ export function App() {
       <main className="content">
         {error && <p className="error">{error}</p>}
         {!record && !error && <div className="loading-state"><Spinner className="app-spinner" role="status" aria-label={t('loading')} />{t('loading')}</div>}
+        {saveErrors.map(({ patientId, tooth, message }) => (
+          <p key={`${patientId}/${tooth}`} className="error">{t('chartSaveError', { patient: patientId, tooth, message })}</p>
+        ))}
 
         {patient && <PatientCard patient={patient} onInspect={inspect} />}
 
@@ -207,7 +309,7 @@ export function App() {
                     </div>
                     <div className="plan-nav-actions">
                       <Button type="button" variant="outline" onClick={recheck} disabled={checking} aria-busy={checking}>{checking && <Spinner className="app-spinner" role="status" aria-label={t('checking')} />}{checking ? t('checking') : t('recheck')}</Button>
-                      <AddPlanMenu activePlan={selectedPlan} onAdd={addPlan} />
+                      <AddPlanMenu activePlan={selectedPlan} gaps={gaps} onAdd={addPlan} onAddFromFinding={addFromFinding} />
                     </div>
                   </div>
                   <Tabs.List aria-label={t('plans')} className="tabs">
@@ -245,6 +347,7 @@ export function App() {
                     loading={!costPlans && !costPlanError}
                     onJustify={justify}
                     onOpen={setPlanView}
+                    onChoose={choosePlan}
                     onDelete={removePlan}
                     onInspect={inspect}
                   />
@@ -261,6 +364,7 @@ export function App() {
                         plan={plan}
                         mode={plan ? 'plan' : 'status'}
                         onToothSelect={inspectTooth}
+                        onStatusChange={saveChart}
                       />}
                     </div>
                   </>
@@ -278,6 +382,7 @@ export function App() {
               chargeItems={record.chargeItems}
               loading={!costPlans && !costPlanError}
               onJustify={justify}
+              onChoose={choosePlan}
               onDelete={removePlan}
               onInspect={inspect}
             />
@@ -290,15 +395,19 @@ export function App() {
   )
 }
 
-function AddPlanMenu({ activePlan, onAdd }: { activePlan?: CarePlan; onAdd: (source?: CarePlan) => Promise<void> }) {
+function AddPlanMenu({ activePlan, gaps, onAdd, onAddFromFinding }: {
+  activePlan?: CarePlan; gaps: Gap[]; onAdd: (source?: CarePlan) => Promise<void>
+  onAddFromFinding: (gap: Gap, template: AlternativeTemplate) => Promise<void>
+}) {
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string>()
 
-  const add = async (source?: CarePlan) => {
+  const run = async (write: () => Promise<void>) => {
     setBusy(true)
     setError(undefined)
-    try { await onAdd(source) } catch (e) { setError((e as Error).message) } finally { setBusy(false) }
+    try { await write() } catch (e) { setError((e as Error).message) } finally { setBusy(false) }
   }
+  const add = (source?: CarePlan) => run(() => onAdd(source))
 
   return (
     <div className="add-plan">
@@ -312,6 +421,11 @@ function AddPlanMenu({ activePlan, onAdd }: { activePlan?: CarePlan; onAdd: (sou
         <DropdownMenu.Content>
           <DropdownMenu.Item className="plan-menu-item" onSelect={() => void add()}><span>{t('blankPlan')}<small>{t('blankPlanHint')}</small></span></DropdownMenu.Item>
           {activePlan && <DropdownMenu.Item className="plan-menu-item" onSelect={() => void add(activePlan)}><span>{t('duplicatePlan', { name: shortTitle(activePlan) })}<small>{t('duplicateHint')}</small></span></DropdownMenu.Item>}
+          {gaps.flatMap((gap) => ALTERNATIVE_TEMPLATES.map((template) => (
+            <DropdownMenu.Item key={`${gap.tooth}-${template.key}`} className="plan-menu-item" onSelect={() => void run(() => onAddFromFinding(gap, template))}>
+              <span>{t('missingToothPlan', { tooth: gap.tooth, treatment: t(template.labelKey) })}<small>{gap.condition ? `${display(gap.condition.code)}. ` : ''}{t('findingPlanHint')}</small></span>
+            </DropdownMenu.Item>
+          )))}
         </DropdownMenu.Content>
       </DropdownMenu.Root>
       {error && <div role="alert" className="error add-plan-error">{error}</div>}
@@ -404,9 +518,10 @@ interface PlanProps {
   onInspect: (resource: Resource) => void
 }
 
-function ComparePlans({ carePlans, costPlanOf, chargeItems, loading, onJustify, onOpen, onDelete, onInspect }: {
+function ComparePlans({ carePlans, costPlanOf, chargeItems, loading, onJustify, onOpen, onChoose, onDelete, onInspect }: {
   carePlans: CarePlan[]; costPlanOf: Map<string, CostPlan>; chargeItems: ChargeItem[]; loading: boolean
-  onJustify: PlanProps['onJustify']; onOpen: (id: string) => void; onDelete: (carePlan: CarePlan) => Promise<void>
+  onJustify: PlanProps['onJustify']; onOpen: (id: string) => void
+  onChoose: (carePlan: CarePlan) => Promise<void>; onDelete: (carePlan: CarePlan) => Promise<void>
   onInspect: PlanProps['onInspect']
 }) {
   const totals = carePlans.map((p) => costPlanOf.get(p.id)?.total).filter((t): t is number => typeof t === 'number')
@@ -434,6 +549,7 @@ function ComparePlans({ carePlans, costPlanOf, chargeItems, loading, onJustify, 
                   <PlanBadge carePlan={carePlan} />
                 </div>
                 <div className="card-actions">
+                  <ChooseButton carePlan={carePlan} onChoose={onChoose} />
                   <Tooltip content={t('showChart')}><button type="button" className="card-action" aria-label={t('showChart')} onClick={() => onOpen(carePlan.id)}><ToothIcon size={16} /></button></Tooltip>
                   <InspectButton resource={carePlan} onInspect={onInspect} />
                   <DeleteButton carePlan={carePlan} onDelete={onDelete} iconOnly />
@@ -451,13 +567,14 @@ function ComparePlans({ carePlans, costPlanOf, chargeItems, loading, onJustify, 
   )
 }
 
-function CostPlanDetail(props: PlanProps & { onDelete: (carePlan: CarePlan) => Promise<void> }) {
+function CostPlanDetail(props: PlanProps & { onChoose: (carePlan: CarePlan) => Promise<void>; onDelete: (carePlan: CarePlan) => Promise<void> }) {
   return (
     <>
       <div className="detail-head">
         <h2>{t('costPlan')} <span className="muted-strong">· {shortTitle(props.carePlan)}</span></h2>
         <PlanBadge carePlan={props.carePlan} />
         <span className="detail-actions">
+          <ChooseButton carePlan={props.carePlan} onChoose={props.onChoose} />
           <InspectButton resource={props.carePlan} onInspect={props.onInspect} />
           <DeleteButton carePlan={props.carePlan} onDelete={props.onDelete} iconOnly />
         </span>
@@ -600,6 +717,29 @@ function InspectButton({ resource, onInspect }: { resource: Resource; onInspect:
         <Flame size={16} aria-hidden="true" />
       </button>
     </Tooltip>
+  )
+}
+
+// Choosing marks this alternative as the patient's choice; shown only on a draft plan that is not
+// chosen yet (planAlternatives.ts, chooseAlternative).
+function ChooseButton({ carePlan, onChoose }: { carePlan: CarePlan; onChoose: (carePlan: CarePlan) => Promise<void> }) {
+  const [busy, setBusy] = useState(false)
+  const [error, setError] = useState<string>()
+  if (carePlan.intent === 'plan' || !isChoosable(carePlan)) return null
+  const click = async () => {
+    setBusy(true)
+    setError(undefined)
+    try { await onChoose(carePlan) } catch (e) { setError((e as Error).message) } finally { setBusy(false) }
+  }
+  return (
+    <span className="download">
+      <Tooltip content={t('choosePlanTitle')}>
+        <button type="button" className="card-action" aria-label={t('choosePlan')} onClick={click} disabled={busy} aria-busy={busy}>
+          {busy ? <Spinner role="status" aria-label={t('choosing')} /> : <Check size={16} aria-hidden="true" />}
+        </button>
+      </Tooltip>
+      {error && <span role="alert" className="error">{error}</span>}
+    </span>
   )
 }
 

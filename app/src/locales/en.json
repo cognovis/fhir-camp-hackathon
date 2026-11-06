@@ -29,7 +29,8 @@
   "comparePlans": "Compare plans",
   "alternatives": "{{count}} alternatives",
   "noAlternatives": "No alternatives yet. Add a plan to start.",
-  "chartHint": "Status {{date}}. Click a tooth to change it; chart changes are not saved yet (task 1).",
+  "chartHint": "Status {{date}}. Click a tooth to edit it. Changes to tooth status, restorations, fillings and root canals are saved; other findings such as caries or mobility are not saved yet.",
+  "chartSaveError": "Chart change not saved, patient {{patient}}, tooth {{tooth}}: {{message}}",
   "adding": "Adding…",
   "addPlan": "Add plan",
   "blankPlan": "Blank plan",
@@ -205,5 +206,13 @@
   "inspectResource": "{{resource}} in the FHIR panel",
   "resizeFhirPanel": "Resize FHIR panel",
   "loading": "Loading…",
-  "panelDownloads": "Downloads"
+  "panelDownloads": "Downloads",
+  "missingToothPlan": "Tooth {{tooth}} missing: {{treatment}}",
+  "findingPlanHint": "A new alternative from this finding, with its cost plan.",
+  "template.cast-partial-denture": "Cast partial denture (removable)",
+  "choosePlan": "Mark as chosen by the patient",
+  "choosing": "Choosing…",
+  "choosePlanTitle": "The patient chooses this alternative; the others become options",
+  "chooseUnknownPlan": "CarePlan/{{id}} is not one of the patient's plans.",
+  "chooseNotDraft": "CarePlan/{{id}} has status {{status}}; only a draft alternative can be chosen."
 }

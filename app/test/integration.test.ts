@@ -4,6 +4,8 @@ import test, { beforeEach } from 'node:test'
 import { i18n } from '../src/i18n.ts'
 import { euro, findingText, findingExplanation, RULE_EXPLANATIONS } from '../src/costPlan.ts'
 import { createPlan } from '../src/plans.ts'
+import { chooseAlternative } from '../src/planAlternatives.ts'
+import { updateAll } from '../src/fhir.ts'
 
 const resources = JSON.parse(readFileSync(new URL('../../data/dent-051-palmried.json', import.meta.url), 'utf8')).entry.map(({ resource }) => resource)
 const patient = resources.find((r) => r.resourceType === 'Patient')
@@ -13,6 +15,34 @@ const charges = resources.filter((r) => r.resourceType === 'ChargeItem')
 const account = resources.find((r) => r.id === 'dent-051-cost-plan-c')
 
 beforeEach(async () => { await i18n.changeLanguage('de-DE') })
+
+test('choosing an alternative changes only draft intents and keeps services', () => {
+  const completed = { ...plans[0], id: 'completed', status: 'completed' }
+  const changed = chooseAlternative([...plans, completed], source.id)
+  assert.equal(changed.filter((p) => p.intent === 'plan').length, 1)
+  assert.equal(changed.find((p) => p.intent === 'plan')?.id, source.id)
+  assert.ok(changed.every((p) => p.status === 'draft'))
+  for (const plan of changed) assert.deepEqual(plan.activity, plans.find((p) => p.id === plan.id).activity)
+  assert.equal(completed.status, 'completed')
+  assert.throws(() => chooseAlternative(plans, 'unknown'))
+  assert.throws(() => chooseAlternative([completed], completed.id))
+})
+
+test('choice writes all alternatives atomically with their read versions', async (t) => {
+  const versioned = plans.map((p, i) => ({ ...p, meta: { ...p.meta, versionId: String(i + 1) } }))
+  t.mock.method(globalThis, 'fetch', async (url, init = {}) => {
+    assert.equal(url, '/fhir')
+    const body = JSON.parse(String(init.body))
+    assert.equal(body.type, 'transaction')
+    assert.equal(body.entry.length, versioned.length)
+    body.entry.forEach((entry, i) => {
+      assert.equal(entry.request.ifMatch, `W/"${i + 1}"`)
+      assert.equal(entry.request.method, 'PUT')
+    })
+    return Response.json({ resourceType: 'OperationOutcome' }, { status: 412 })
+  })
+  await assert.rejects(updateAll(chooseAlternative(versioned, source.id)), /412/)
+})
 
 test('missing fees stay unavailable, while zero is a real price', () => {
   assert.equal(euro(null), '–')

@@ -15,6 +15,7 @@ volumes:
 services:
   postgres:
     image: docker.io/library/postgres:18
+    restart: unless-stopped
     volumes:
       - postgres_data:/var/lib/postgresql/18/docker:delegated
     command: ["postgres", "-c", "shared_preload_libraries=pg_stat_statements"]
@@ -28,9 +29,11 @@ services:
   aidbox:
     # Latest stable Aidbox release at the time of writing (November 2026).
     image: docker.io/healthsamurai/aidboxone:2610
+    restart: unless-stopped
     depends_on:
       - postgres
     ports:
+      # AIDBOX_PORT controls the host port; container clients keep using aidbox:8080.
       - "${AIDBOX_PORT:-8080}:8080"
     mem_limit: 3g
     # BOX_LICENSE comes from .env when you set it there. Without it, Aidbox asks you to activate
@@ -63,7 +66,7 @@ services:
       BOX_SEARCH_INCLUDE_CONFORMANT: "true"
       BOX_SECURITY_DEV_MODE: "true"
       BOX_SETTINGS_MODE: read-write
-      BOX_WEB_BASE_URL: http://localhost:${AIDBOX_PORT:-8080}
+      BOX_WEB_BASE_URL: http://${AIDBOX_HOST:-localhost}:${AIDBOX_PORT:-8080}
       BOX_WEB_PORT: 8080
     healthcheck:
       test: curl -f http://localhost:8080/health || exit 1
@@ -83,7 +86,7 @@ services:
         condition: service_healthy
     environment:
       AIDBOX_URL: http://aidbox:8080
-      AIDBOX_BROWSER_URL: http://localhost:${AIDBOX_PORT:-8080}
+      AIDBOX_BROWSER_URL: http://${AIDBOX_HOST:-localhost}:${AIDBOX_PORT:-8080}
       APP_BROWSER_URL: http://localhost:${APP_PORT:-5173}
       SETUP_WAIT_FOR_ACTIVATION: "true"
     restart: "no"

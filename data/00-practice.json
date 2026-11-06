@@ -1,0 +1,113 @@
+{
+ "resourceType": "Bundle",
+ "id": "fhir-camp-practice",
+ "type": "transaction",
+ "entry": [
+  {
+   "fullUrl": "urn:uuid:Organization-fhir-camp-practice",
+   "resource": {
+    "resourceType": "Organization",
+    "id": "fhir-camp-practice",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST",
+       "display": "test health data"
+      }
+     ]
+    },
+    "active": true,
+    "type": [
+     {
+      "coding": [
+       {
+        "system": "http://terminology.hl7.org/CodeSystem/organization-type",
+        "code": "prov",
+        "display": "Healthcare Provider"
+       }
+      ]
+     }
+    ],
+    "name": "Zahnarztpraxis am Deich (synthetisch)",
+    "address": [
+     {
+      "city": "Halmkoog",
+      "postalCode": "25869",
+      "country": "DE"
+     }
+    ]
+   },
+   "request": {
+    "method": "PUT",
+    "url": "Organization/fhir-camp-practice"
+   }
+  },
+  {
+   "fullUrl": "urn:uuid:Organization-fhir-camp-insurer",
+   "resource": {
+    "resourceType": "Organization",
+    "id": "fhir-camp-insurer",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST",
+       "display": "test health data"
+      }
+     ]
+    },
+    "active": true,
+    "type": [
+     {
+      "coding": [
+       {
+        "system": "http://terminology.hl7.org/CodeSystem/organization-type",
+        "code": "ins",
+        "display": "Insurance Company"
+       }
+      ]
+     }
+    ],
+    "name": "Beispiel Private Krankenversicherung AG (synthetisch)"
+   },
+   "request": {
+    "method": "PUT",
+    "url": "Organization/fhir-camp-insurer"
+   }
+  },
+  {
+   "fullUrl": "urn:uuid:Practitioner-fhir-camp-dentist",
+   "resource": {
+    "resourceType": "Practitioner",
+    "id": "fhir-camp-dentist",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST",
+       "display": "test health data"
+      }
+     ]
+    },
+    "active": true,
+    "name": [
+     {
+      "use": "official",
+      "family": "Wattmann",
+      "given": [
+       "Hanne"
+      ],
+      "prefix": [
+       "Dr. med. dent."
+      ]
+     }
+    ]
+   },
+   "request": {
+    "method": "PUT",
+    "url": "Practitioner/fhir-camp-dentist"
+   }
+  }
+ ]
+}

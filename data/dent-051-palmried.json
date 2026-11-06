@@ -1,0 +1,6724 @@
+{
+ "resourceType": "Bundle",
+ "id": "dent-051",
+ "type": "transaction",
+ "entry": [
+  {
+   "fullUrl": "urn:uuid:Patient-dent-051",
+   "resource": {
+    "resourceType": "Patient",
+    "id": "dent-051",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST",
+       "display": "test health data"
+      }
+     ]
+    },
+    "identifier": [
+     {
+      "system": "https://github.com/cognovis/fhir-camp-hackathon/sid/patient",
+      "value": "DENT-051"
+     }
+    ],
+    "name": [
+     {
+      "use": "official",
+      "family": "Palmried",
+      "given": [
+       "Greta"
+      ]
+     }
+    ],
+    "gender": "female",
+    "birthDate": "1952-08-22",
+    "address": [
+     {
+      "postalCode": "25869",
+      "city": "Halmkoog",
+      "country": "DE"
+     }
+    ],
+    "managingOrganization": {
+     "reference": "Organization/fhir-camp-practice"
+    }
+   },
+   "request": {
+    "method": "PUT",
+    "url": "Patient/dent-051"
+   }
+  },
+  {
+   "fullUrl": "urn:uuid:Coverage-dent-051-cov-01",
+   "resource": {
+    "resourceType": "Coverage",
+    "id": "dent-051-cov-01",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST",
+       "display": "test health data"
+      }
+     ]
+    },
+    "status": "active",
+    "type": {
+     "coding": [
+      {
+       "system": "http://fhir.de/CodeSystem/versicherungsart-de-basis",
+       "code": "PKV",
+       "display": "private Krankenversicherung"
+      }
+     ],
+     "text": "PKV (synthetisch)"
+    },
+    "beneficiary": {
+     "reference": "Patient/dent-051"
+    },
+    "period": {
+     "start": "2024-03-24"
+    },
+    "payor": [
+     {
+      "reference": "Organization/fhir-camp-insurer"
+     }
+    ],
+    "contract": [
+     {
+      "reference": "Contract/dent-051-treatment-contract"
+     }
+    ]
+   },
+   "request": {
+    "method": "PUT",
+    "url": "Coverage/dent-051-cov-01"
+   }
+  },
+  {
+   "fullUrl": "urn:uuid:Contract-dent-051-treatment-contract",
+   "resource": {
+    "resourceType": "Contract",
+    "id": "dent-051-treatment-contract",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST",
+       "display": "test health data"
+      }
+     ]
+    },
+    "status": "executed",
+    "url": "https://github.com/cognovis/fhir-camp-hackathon/Contract/goz-private-treatment",
+    "title": "Privatzahnärztliche Behandlung nach GOZ (synthetisch)",
+    "subject": [
+     {
+      "reference": "Patient/dent-051"
+     }
+    ],
+    "applies": {
+     "start": "2026-10-01"
+    }
+   },
+   "request": {
+    "method": "PUT",
+    "url": "Contract/dent-051-treatment-contract"
+   }
+  },
+  {
+   "fullUrl": "urn:uuid:Observation-dent-051-obs-routine",
+   "resource": {
+    "resourceType": "Observation",
+    "id": "dent-051-obs-routine",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST",
+       "display": "test health data"
+      }
+     ]
+    },
+    "status": "final",
+    "category": [
+     {
+      "coding": [
+       {
+        "system": "https://fhir.cognovis.de/dental/CodeSystem/dental-category",
+        "code": "dental",
+        "display": "Dental"
+       }
+      ]
+     }
+    ],
+    "code": {
+     "text": "Zahnbefund (Odontogramm)"
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-09-24",
+    "performer": [
+     {
+      "reference": "Practitioner/fhir-camp-dentist"
+     }
+    ],
+    "valueString": "Einzelzahnlücke regio 36. Pfeilerzähne 35 und 37 vital, kariesfrei und parodontal belastbar; 37 mit großer Kompositfüllung.",
+    "hasMember": [
+     {
+      "reference": "Observation/dent-051-obs-tooth-chart-18"
+     },
+     {
+      "reference": "Observation/dent-051-obs-tooth-chart-17"
+     },
+     {
+      "reference": "Observation/dent-051-obs-tooth-chart-16"
+     },
+     {
+      "reference": "Observation/dent-051-obs-tooth-chart-15"
+     },
+     {
+      "reference": "Observation/dent-051-obs-tooth-chart-14"
+     },
+     {
+      "reference": "Observation/dent-051-obs-tooth-chart-13"
+     },
+     {
+      "reference": "Observation/dent-051-obs-tooth-chart-12"
+     },
+     {
+      "reference": "Observation/dent-051-obs-tooth-chart-11"
+     },
+     {
+      "reference": "Observation/dent-051-obs-tooth-chart-21"
+     },
+     {
+      "reference": "Observation/dent-051-obs-tooth-chart-22"
+     },
+     {
+      "reference": "Observation/dent-051-obs-tooth-chart-23"
+     },
+     {
+      "reference": "Observation/dent-051-obs-tooth-chart-24"
+     },
+     {
+      "reference": "Observation/dent-051-obs-tooth-chart-25"
+     },
+     {
+      "reference": "Observation/dent-051-obs-tooth-chart-26"
+     },
+     {
+      "reference": "Observation/dent-051-obs-tooth-chart-27"
+     },
+     {
+      "reference": "Observation/dent-051-obs-tooth-chart-28"
+     },
+     {
+      "reference": "Observation/dent-051-obs-tooth-chart-38"
+     },
+     {
+      "reference": "Observation/dent-051-obs-tooth-chart-37"
+     },
+     {
+      "reference": "Observation/dent-051-obs-tooth-chart-36"
+     },
+     {
+      "reference": "Observation/dent-051-obs-tooth-chart-35"
+     },
+     {
+      "reference": "Observation/dent-051-obs-tooth-chart-34"
+     },
+     {
+      "reference": "Observation/dent-051-obs-tooth-chart-33"
+     },
+     {
+      "reference": "Observation/dent-051-obs-tooth-chart-32"
+     },
+     {
+      "reference": "Observation/dent-051-obs-tooth-chart-31"
+     },
+     {
+      "reference": "Observation/dent-051-obs-tooth-chart-41"
+     },
+     {
+      "reference": "Observation/dent-051-obs-tooth-chart-42"
+     },
+     {
+      "reference": "Observation/dent-051-obs-tooth-chart-43"
+     },
+     {
+      "reference": "Observation/dent-051-obs-tooth-chart-44"
+     },
+     {
+      "reference": "Observation/dent-051-obs-tooth-chart-45"
+     },
+     {
+      "reference": "Observation/dent-051-obs-tooth-chart-46"
+     },
+     {
+      "reference": "Observation/dent-051-obs-tooth-chart-47"
+     },
+     {
+      "reference": "Observation/dent-051-obs-tooth-chart-48"
+     }
+    ]
+   },
+   "request": {
+    "method": "PUT",
+    "url": "Observation/dent-051-obs-routine"
+   }
+  },
+  {
+   "fullUrl": "urn:uuid:Observation-dent-051-obs-tooth-chart-18",
+   "resource": {
+    "resourceType": "Observation",
+    "id": "dent-051-obs-tooth-chart-18",
+    "meta": {
+     "profile": [
+      "https://fhir.cognovis.de/dental-core/StructureDefinition/dental-tooth-state"
+     ],
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST",
+       "display": "test health data"
+      }
+     ]
+    },
+    "status": "final",
+    "category": [
+     {
+      "coding": [
+       {
+        "system": "https://fhir.cognovis.de/dental/CodeSystem/dental-category",
+        "code": "dental",
+        "display": "Dental"
+       }
+      ]
+     }
+    ],
+    "code": {
+     "coding": [
+      {
+       "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+       "code": "tooth-presence",
+       "display": "Tooth presence"
+      }
+     ],
+     "text": "Tooth presence"
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-09-24",
+    "performer": [
+     {
+      "reference": "Practitioner/fhir-camp-dentist"
+     }
+    ],
+    "bodySite": {
+     "coding": [
+      {
+       "system": "https://fhir.cognovis.de/dental-core/CodeSystem/tooth-position-fdi",
+       "code": "18",
+       "display": "Permanent maxillary right third molar"
+      }
+     ],
+     "text": "FDI-Zahnposition 18"
+    },
+    "note": [
+     {
+      "text": "Greta: Zahn 18 ist am 2026-09-24 vorhanden und ohne zahnschemarelevante Besonderheit."
+     }
+    ],
+    "component": [
+     {
+      "code": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+         "code": "tooth-presence",
+         "display": "Tooth presence"
+        }
+       ],
+       "text": "Tooth presence"
+      },
+      "valueCodeableConcept": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-chart-value",
+         "code": "tooth-present",
+         "display": "Tooth present"
+        },
+        {
+         "system": "https://fhir.cognovis.de/dental/CodeSystem/sws2-zahnstatus",
+         "version": "2024.0.0",
+         "code": "g",
+         "display": "gesund"
+        }
+       ],
+       "text": "SWS-2.0-Zahnstatus: gesund"
+      }
+     },
+     {
+      "code": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+         "code": "tooth-substrate",
+         "display": "Tooth substrate"
+        }
+       ],
+       "text": "Tooth substrate"
+      },
+      "valueCodeableConcept": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-chart-value",
+         "code": "natural-tooth-structure",
+         "display": "Natural tooth structure"
+        }
+       ],
+       "text": "Natural tooth structure"
+      }
+     }
+    ]
+   },
+   "request": {
+    "method": "PUT",
+    "url": "Observation/dent-051-obs-tooth-chart-18"
+   }
+  },
+  {
+   "fullUrl": "urn:uuid:Observation-dent-051-obs-tooth-chart-17",
+   "resource": {
+    "resourceType": "Observation",
+    "id": "dent-051-obs-tooth-chart-17",
+    "meta": {
+     "profile": [
+      "https://fhir.cognovis.de/dental-core/StructureDefinition/dental-tooth-state"
+     ],
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST",
+       "display": "test health data"
+      }
+     ]
+    },
+    "status": "final",
+    "category": [
+     {
+      "coding": [
+       {
+        "system": "https://fhir.cognovis.de/dental/CodeSystem/dental-category",
+        "code": "dental",
+        "display": "Dental"
+       }
+      ]
+     }
+    ],
+    "code": {
+     "coding": [
+      {
+       "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+       "code": "tooth-presence",
+       "display": "Tooth presence"
+      }
+     ],
+     "text": "Tooth presence"
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-09-24",
+    "performer": [
+     {
+      "reference": "Practitioner/fhir-camp-dentist"
+     }
+    ],
+    "bodySite": {
+     "coding": [
+      {
+       "system": "https://fhir.cognovis.de/dental-core/CodeSystem/tooth-position-fdi",
+       "code": "17",
+       "display": "Permanent maxillary right second molar"
+      }
+     ],
+     "text": "FDI-Zahnposition 17",
+     "extension": [
+      {
+       "url": "https://fhir.cognovis.de/dental-core/StructureDefinition/tooth-surface",
+       "valueCoding": {
+        "system": "http://terminology.hl7.org/CodeSystem/FDI-surface",
+        "code": "O",
+        "display": "Occlusal"
+       }
+      }
+     ]
+    },
+    "note": [
+     {
+      "text": "Greta: Zahn 17 trägt am 2026-09-24 eine klinisch vorhandene Kompositversorgung."
+     }
+    ],
+    "component": [
+     {
+      "code": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+         "code": "tooth-presence",
+         "display": "Tooth presence"
+        }
+       ],
+       "text": "Tooth presence"
+      },
+      "valueCodeableConcept": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-chart-value",
+         "code": "tooth-present",
+         "display": "Tooth present"
+        },
+        {
+         "system": "https://fhir.cognovis.de/dental/CodeSystem/sws2-zahnstatus",
+         "version": "2024.0.0",
+         "code": "U",
+         "display": "Komposit"
+        }
+       ],
+       "text": "SWS-2.0-Zahnstatus: Komposit"
+      }
+     },
+     {
+      "extension": [
+       {
+        "url": "https://fhir.cognovis.de/dental-core/StructureDefinition/tooth-surface",
+        "valueCoding": {
+         "system": "http://terminology.hl7.org/CodeSystem/FDI-surface",
+         "code": "O",
+         "display": "Occlusal"
+        }
+       }
+      ],
+      "code": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+         "code": "restoration-type",
+         "display": "Restoration type"
+        }
+       ],
+       "text": "Restoration type"
+      },
+      "valueCodeableConcept": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-chart-value",
+         "code": "direct-filling",
+         "display": "Direct filling"
+        }
+       ],
+       "text": "Direct filling"
+      }
+     },
+     {
+      "extension": [
+       {
+        "url": "https://fhir.cognovis.de/dental-core/StructureDefinition/tooth-surface",
+        "valueCoding": {
+         "system": "http://terminology.hl7.org/CodeSystem/FDI-surface",
+         "code": "O",
+         "display": "Occlusal"
+        }
+       }
+      ],
+      "code": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+         "code": "restoration-material",
+         "display": "Restoration material"
+        }
+       ],
+       "text": "Restoration material"
+      },
+      "valueCodeableConcept": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-chart-value",
+         "code": "composite-resin",
+         "display": "Composite resin"
+        }
+       ],
+       "text": "Composite resin"
+      }
+     }
+    ]
+   },
+   "request": {
+    "method": "PUT",
+    "url": "Observation/dent-051-obs-tooth-chart-17"
+   }
+  },
+  {
+   "fullUrl": "urn:uuid:Observation-dent-051-obs-tooth-chart-16",
+   "resource": {
+    "resourceType": "Observation",
+    "id": "dent-051-obs-tooth-chart-16",
+    "meta": {
+     "profile": [
+      "https://fhir.cognovis.de/dental-core/StructureDefinition/dental-tooth-state"
+     ],
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST",
+       "display": "test health data"
+      }
+     ]
+    },
+    "status": "final",
+    "category": [
+     {
+      "coding": [
+       {
+        "system": "https://fhir.cognovis.de/dental/CodeSystem/dental-category",
+        "code": "dental",
+        "display": "Dental"
+       }
+      ]
+     }
+    ],
+    "code": {
+     "coding": [
+      {
+       "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+       "code": "tooth-presence",
+       "display": "Tooth presence"
+      }
+     ],
+     "text": "Tooth presence"
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-09-24",
+    "performer": [
+     {
+      "reference": "Practitioner/fhir-camp-dentist"
+     }
+    ],
+    "bodySite": {
+     "coding": [
+      {
+       "system": "https://fhir.cognovis.de/dental-core/CodeSystem/tooth-position-fdi",
+       "code": "16",
+       "display": "Permanent maxillary right first molar"
+      }
+     ],
+     "text": "FDI-Zahnposition 16"
+    },
+    "note": [
+     {
+      "text": "Greta: Zahn 16 ist am 2026-09-24 vorhanden und ohne zahnschemarelevante Besonderheit."
+     }
+    ],
+    "component": [
+     {
+      "code": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+         "code": "tooth-presence",
+         "display": "Tooth presence"
+        }
+       ],
+       "text": "Tooth presence"
+      },
+      "valueCodeableConcept": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-chart-value",
+         "code": "tooth-present",
+         "display": "Tooth present"
+        },
+        {
+         "system": "https://fhir.cognovis.de/dental/CodeSystem/sws2-zahnstatus",
+         "version": "2024.0.0",
+         "code": "g",
+         "display": "gesund"
+        }
+       ],
+       "text": "SWS-2.0-Zahnstatus: gesund"
+      }
+     },
+     {
+      "code": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+         "code": "tooth-substrate",
+         "display": "Tooth substrate"
+        }
+       ],
+       "text": "Tooth substrate"
+      },
+      "valueCodeableConcept": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-chart-value",
+         "code": "natural-tooth-structure",
+         "display": "Natural tooth structure"
+        }
+       ],
+       "text": "Natural tooth structure"
+      }
+     }
+    ]
+   },
+   "request": {
+    "method": "PUT",
+    "url": "Observation/dent-051-obs-tooth-chart-16"
+   }
+  },
+  {
+   "fullUrl": "urn:uuid:Observation-dent-051-obs-tooth-chart-15",
+   "resource": {
+    "resourceType": "Observation",
+    "id": "dent-051-obs-tooth-chart-15",
+    "meta": {
+     "profile": [
+      "https://fhir.cognovis.de/dental-core/StructureDefinition/dental-tooth-state"
+     ],
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST",
+       "display": "test health data"
+      }
+     ]
+    },
+    "status": "final",
+    "category": [
+     {
+      "coding": [
+       {
+        "system": "https://fhir.cognovis.de/dental/CodeSystem/dental-category",
+        "code": "dental",
+        "display": "Dental"
+       }
+      ]
+     }
+    ],
+    "code": {
+     "coding": [
+      {
+       "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+       "code": "tooth-presence",
+       "display": "Tooth presence"
+      }
+     ],
+     "text": "Tooth presence"
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-09-24",
+    "performer": [
+     {
+      "reference": "Practitioner/fhir-camp-dentist"
+     }
+    ],
+    "bodySite": {
+     "coding": [
+      {
+       "system": "https://fhir.cognovis.de/dental-core/CodeSystem/tooth-position-fdi",
+       "code": "15",
+       "display": "Permanent maxillary right second premolar"
+      }
+     ],
+     "text": "FDI-Zahnposition 15"
+    },
+    "note": [
+     {
+      "text": "Greta: Zahn 15 ist am 2026-09-24 vorhanden und ohne zahnschemarelevante Besonderheit."
+     }
+    ],
+    "component": [
+     {
+      "code": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+         "code": "tooth-presence",
+         "display": "Tooth presence"
+        }
+       ],
+       "text": "Tooth presence"
+      },
+      "valueCodeableConcept": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-chart-value",
+         "code": "tooth-present",
+         "display": "Tooth present"
+        },
+        {
+         "system": "https://fhir.cognovis.de/dental/CodeSystem/sws2-zahnstatus",
+         "version": "2024.0.0",
+         "code": "g",
+         "display": "gesund"
+        }
+       ],
+       "text": "SWS-2.0-Zahnstatus: gesund"
+      }
+     },
+     {
+      "code": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+         "code": "tooth-substrate",
+         "display": "Tooth substrate"
+        }
+       ],
+       "text": "Tooth substrate"
+      },
+      "valueCodeableConcept": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-chart-value",
+         "code": "natural-tooth-structure",
+         "display": "Natural tooth structure"
+        }
+       ],
+       "text": "Natural tooth structure"
+      }
+     }
+    ]
+   },
+   "request": {
+    "method": "PUT",
+    "url": "Observation/dent-051-obs-tooth-chart-15"
+   }
+  },
+  {
+   "fullUrl": "urn:uuid:Observation-dent-051-obs-tooth-chart-14",
+   "resource": {
+    "resourceType": "Observation",
+    "id": "dent-051-obs-tooth-chart-14",
+    "meta": {
+     "profile": [
+      "https://fhir.cognovis.de/dental-core/StructureDefinition/dental-tooth-state"
+     ],
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST",
+       "display": "test health data"
+      }
+     ]
+    },
+    "status": "final",
+    "category": [
+     {
+      "coding": [
+       {
+        "system": "https://fhir.cognovis.de/dental/CodeSystem/dental-category",
+        "code": "dental",
+        "display": "Dental"
+       }
+      ]
+     }
+    ],
+    "code": {
+     "coding": [
+      {
+       "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+       "code": "tooth-presence",
+       "display": "Tooth presence"
+      }
+     ],
+     "text": "Tooth presence"
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-09-24",
+    "performer": [
+     {
+      "reference": "Practitioner/fhir-camp-dentist"
+     }
+    ],
+    "bodySite": {
+     "coding": [
+      {
+       "system": "https://fhir.cognovis.de/dental-core/CodeSystem/tooth-position-fdi",
+       "code": "14",
+       "display": "Permanent maxillary right first premolar"
+      }
+     ],
+     "text": "FDI-Zahnposition 14"
+    },
+    "note": [
+     {
+      "text": "Greta: Zahn 14 ist am 2026-09-24 vorhanden und ohne zahnschemarelevante Besonderheit."
+     }
+    ],
+    "component": [
+     {
+      "code": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+         "code": "tooth-presence",
+         "display": "Tooth presence"
+        }
+       ],
+       "text": "Tooth presence"
+      },
+      "valueCodeableConcept": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-chart-value",
+         "code": "tooth-present",
+         "display": "Tooth present"
+        },
+        {
+         "system": "https://fhir.cognovis.de/dental/CodeSystem/sws2-zahnstatus",
+         "version": "2024.0.0",
+         "code": "g",
+         "display": "gesund"
+        }
+       ],
+       "text": "SWS-2.0-Zahnstatus: gesund"
+      }
+     },
+     {
+      "code": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+         "code": "tooth-substrate",
+         "display": "Tooth substrate"
+        }
+       ],
+       "text": "Tooth substrate"
+      },
+      "valueCodeableConcept": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-chart-value",
+         "code": "natural-tooth-structure",
+         "display": "Natural tooth structure"
+        }
+       ],
+       "text": "Natural tooth structure"
+      }
+     }
+    ]
+   },
+   "request": {
+    "method": "PUT",
+    "url": "Observation/dent-051-obs-tooth-chart-14"
+   }
+  },
+  {
+   "fullUrl": "urn:uuid:Observation-dent-051-obs-tooth-chart-13",
+   "resource": {
+    "resourceType": "Observation",
+    "id": "dent-051-obs-tooth-chart-13",
+    "meta": {
+     "profile": [
+      "https://fhir.cognovis.de/dental-core/StructureDefinition/dental-tooth-state"
+     ],
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST",
+       "display": "test health data"
+      }
+     ]
+    },
+    "status": "final",
+    "category": [
+     {
+      "coding": [
+       {
+        "system": "https://fhir.cognovis.de/dental/CodeSystem/dental-category",
+        "code": "dental",
+        "display": "Dental"
+       }
+      ]
+     }
+    ],
+    "code": {
+     "coding": [
+      {
+       "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+       "code": "tooth-presence",
+       "display": "Tooth presence"
+      }
+     ],
+     "text": "Tooth presence"
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-09-24",
+    "performer": [
+     {
+      "reference": "Practitioner/fhir-camp-dentist"
+     }
+    ],
+    "bodySite": {
+     "coding": [
+      {
+       "system": "https://fhir.cognovis.de/dental-core/CodeSystem/tooth-position-fdi",
+       "code": "13",
+       "display": "Permanent maxillary right canine"
+      }
+     ],
+     "text": "FDI-Zahnposition 13"
+    },
+    "note": [
+     {
+      "text": "Greta: Zahn 13 ist am 2026-09-24 vorhanden und ohne zahnschemarelevante Besonderheit."
+     }
+    ],
+    "component": [
+     {
+      "code": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+         "code": "tooth-presence",
+         "display": "Tooth presence"
+        }
+       ],
+       "text": "Tooth presence"
+      },
+      "valueCodeableConcept": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-chart-value",
+         "code": "tooth-present",
+         "display": "Tooth present"
+        },
+        {
+         "system": "https://fhir.cognovis.de/dental/CodeSystem/sws2-zahnstatus",
+         "version": "2024.0.0",
+         "code": "g",
+         "display": "gesund"
+        }
+       ],
+       "text": "SWS-2.0-Zahnstatus: gesund"
+      }
+     },
+     {
+      "code": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+         "code": "tooth-substrate",
+         "display": "Tooth substrate"
+        }
+       ],
+       "text": "Tooth substrate"
+      },
+      "valueCodeableConcept": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-chart-value",
+         "code": "natural-tooth-structure",
+         "display": "Natural tooth structure"
+        }
+       ],
+       "text": "Natural tooth structure"
+      }
+     }
+    ]
+   },
+   "request": {
+    "method": "PUT",
+    "url": "Observation/dent-051-obs-tooth-chart-13"
+   }
+  },
+  {
+   "fullUrl": "urn:uuid:Observation-dent-051-obs-tooth-chart-12",
+   "resource": {
+    "resourceType": "Observation",
+    "id": "dent-051-obs-tooth-chart-12",
+    "meta": {
+     "profile": [
+      "https://fhir.cognovis.de/dental-core/StructureDefinition/dental-tooth-state"
+     ],
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST",
+       "display": "test health data"
+      }
+     ]
+    },
+    "status": "final",
+    "category": [
+     {
+      "coding": [
+       {
+        "system": "https://fhir.cognovis.de/dental/CodeSystem/dental-category",
+        "code": "dental",
+        "display": "Dental"
+       }
+      ]
+     }
+    ],
+    "code": {
+     "coding": [
+      {
+       "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+       "code": "tooth-presence",
+       "display": "Tooth presence"
+      }
+     ],
+     "text": "Tooth presence"
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-09-24",
+    "performer": [
+     {
+      "reference": "Practitioner/fhir-camp-dentist"
+     }
+    ],
+    "bodySite": {
+     "coding": [
+      {
+       "system": "https://fhir.cognovis.de/dental-core/CodeSystem/tooth-position-fdi",
+       "code": "12",
+       "display": "Permanent maxillary right lateral incisor"
+      }
+     ],
+     "text": "FDI-Zahnposition 12"
+    },
+    "note": [
+     {
+      "text": "Greta: Zahn 12 ist am 2026-09-24 vorhanden und ohne zahnschemarelevante Besonderheit."
+     }
+    ],
+    "component": [
+     {
+      "code": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+         "code": "tooth-presence",
+         "display": "Tooth presence"
+        }
+       ],
+       "text": "Tooth presence"
+      },
+      "valueCodeableConcept": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-chart-value",
+         "code": "tooth-present",
+         "display": "Tooth present"
+        },
+        {
+         "system": "https://fhir.cognovis.de/dental/CodeSystem/sws2-zahnstatus",
+         "version": "2024.0.0",
+         "code": "g",
+         "display": "gesund"
+        }
+       ],
+       "text": "SWS-2.0-Zahnstatus: gesund"
+      }
+     },
+     {
+      "code": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+         "code": "tooth-substrate",
+         "display": "Tooth substrate"
+        }
+       ],
+       "text": "Tooth substrate"
+      },
+      "valueCodeableConcept": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-chart-value",
+         "code": "natural-tooth-structure",
+         "display": "Natural tooth structure"
+        }
+       ],
+       "text": "Natural tooth structure"
+      }
+     }
+    ]
+   },
+   "request": {
+    "method": "PUT",
+    "url": "Observation/dent-051-obs-tooth-chart-12"
+   }
+  },
+  {
+   "fullUrl": "urn:uuid:Observation-dent-051-obs-tooth-chart-11",
+   "resource": {
+    "resourceType": "Observation",
+    "id": "dent-051-obs-tooth-chart-11",
+    "meta": {
+     "profile": [
+      "https://fhir.cognovis.de/dental-core/StructureDefinition/dental-tooth-state"
+     ],
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST",
+       "display": "test health data"
+      }
+     ]
+    },
+    "status": "final",
+    "category": [
+     {
+      "coding": [
+       {
+        "system": "https://fhir.cognovis.de/dental/CodeSystem/dental-category",
+        "code": "dental",
+        "display": "Dental"
+       }
+      ]
+     }
+    ],
+    "code": {
+     "coding": [
+      {
+       "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+       "code": "tooth-presence",
+       "display": "Tooth presence"
+      }
+     ],
+     "text": "Tooth presence"
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-09-24",
+    "performer": [
+     {
+      "reference": "Practitioner/fhir-camp-dentist"
+     }
+    ],
+    "bodySite": {
+     "coding": [
+      {
+       "system": "https://fhir.cognovis.de/dental-core/CodeSystem/tooth-position-fdi",
+       "code": "11",
+       "display": "Permanent maxillary right central incisor"
+      }
+     ],
+     "text": "FDI-Zahnposition 11"
+    },
+    "note": [
+     {
+      "text": "Greta: Zahn 11 ist am 2026-09-24 vorhanden und ohne zahnschemarelevante Besonderheit."
+     }
+    ],
+    "component": [
+     {
+      "code": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+         "code": "tooth-presence",
+         "display": "Tooth presence"
+        }
+       ],
+       "text": "Tooth presence"
+      },
+      "valueCodeableConcept": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-chart-value",
+         "code": "tooth-present",
+         "display": "Tooth present"
+        },
+        {
+         "system": "https://fhir.cognovis.de/dental/CodeSystem/sws2-zahnstatus",
+         "version": "2024.0.0",
+         "code": "g",
+         "display": "gesund"
+        }
+       ],
+       "text": "SWS-2.0-Zahnstatus: gesund"
+      }
+     },
+     {
+      "code": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+         "code": "tooth-substrate",
+         "display": "Tooth substrate"
+        }
+       ],
+       "text": "Tooth substrate"
+      },
+      "valueCodeableConcept": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-chart-value",
+         "code": "natural-tooth-structure",
+         "display": "Natural tooth structure"
+        }
+       ],
+       "text": "Natural tooth structure"
+      }
+     }
+    ]
+   },
+   "request": {
+    "method": "PUT",
+    "url": "Observation/dent-051-obs-tooth-chart-11"
+   }
+  },
+  {
+   "fullUrl": "urn:uuid:Observation-dent-051-obs-tooth-chart-21",
+   "resource": {
+    "resourceType": "Observation",
+    "id": "dent-051-obs-tooth-chart-21",
+    "meta": {
+     "profile": [
+      "https://fhir.cognovis.de/dental-core/StructureDefinition/dental-tooth-state"
+     ],
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST",
+       "display": "test health data"
+      }
+     ]
+    },
+    "status": "final",
+    "category": [
+     {
+      "coding": [
+       {
+        "system": "https://fhir.cognovis.de/dental/CodeSystem/dental-category",
+        "code": "dental",
+        "display": "Dental"
+       }
+      ]
+     }
+    ],
+    "code": {
+     "coding": [
+      {
+       "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+       "code": "tooth-presence",
+       "display": "Tooth presence"
+      }
+     ],
+     "text": "Tooth presence"
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-09-24",
+    "performer": [
+     {
+      "reference": "Practitioner/fhir-camp-dentist"
+     }
+    ],
+    "bodySite": {
+     "coding": [
+      {
+       "system": "https://fhir.cognovis.de/dental-core/CodeSystem/tooth-position-fdi",
+       "code": "21",
+       "display": "Permanent maxillary left central incisor"
+      }
+     ],
+     "text": "FDI-Zahnposition 21"
+    },
+    "note": [
+     {
+      "text": "Greta: Zahn 21 ist am 2026-09-24 vorhanden und ohne zahnschemarelevante Besonderheit."
+     }
+    ],
+    "component": [
+     {
+      "code": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+         "code": "tooth-presence",
+         "display": "Tooth presence"
+        }
+       ],
+       "text": "Tooth presence"
+      },
+      "valueCodeableConcept": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-chart-value",
+         "code": "tooth-present",
+         "display": "Tooth present"
+        },
+        {
+         "system": "https://fhir.cognovis.de/dental/CodeSystem/sws2-zahnstatus",
+         "version": "2024.0.0",
+         "code": "g",
+         "display": "gesund"
+        }
+       ],
+       "text": "SWS-2.0-Zahnstatus: gesund"
+      }
+     },
+     {
+      "code": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+         "code": "tooth-substrate",
+         "display": "Tooth substrate"
+        }
+       ],
+       "text": "Tooth substrate"
+      },
+      "valueCodeableConcept": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-chart-value",
+         "code": "natural-tooth-structure",
+         "display": "Natural tooth structure"
+        }
+       ],
+       "text": "Natural tooth structure"
+      }
+     }
+    ]
+   },
+   "request": {
+    "method": "PUT",
+    "url": "Observation/dent-051-obs-tooth-chart-21"
+   }
+  },
+  {
+   "fullUrl": "urn:uuid:Observation-dent-051-obs-tooth-chart-22",
+   "resource": {
+    "resourceType": "Observation",
+    "id": "dent-051-obs-tooth-chart-22",
+    "meta": {
+     "profile": [
+      "https://fhir.cognovis.de/dental-core/StructureDefinition/dental-tooth-state"
+     ],
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST",
+       "display": "test health data"
+      }
+     ]
+    },
+    "status": "final",
+    "category": [
+     {
+      "coding": [
+       {
+        "system": "https://fhir.cognovis.de/dental/CodeSystem/dental-category",
+        "code": "dental",
+        "display": "Dental"
+       }
+      ]
+     }
+    ],
+    "code": {
+     "coding": [
+      {
+       "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+       "code": "tooth-presence",
+       "display": "Tooth presence"
+      }
+     ],
+     "text": "Tooth presence"
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-09-24",
+    "performer": [
+     {
+      "reference": "Practitioner/fhir-camp-dentist"
+     }
+    ],
+    "bodySite": {
+     "coding": [
+      {
+       "system": "https://fhir.cognovis.de/dental-core/CodeSystem/tooth-position-fdi",
+       "code": "22",
+       "display": "Permanent maxillary left lateral incisor"
+      }
+     ],
+     "text": "FDI-Zahnposition 22"
+    },
+    "note": [
+     {
+      "text": "Greta: Zahn 22 ist am 2026-09-24 vorhanden und ohne zahnschemarelevante Besonderheit."
+     }
+    ],
+    "component": [
+     {
+      "code": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+         "code": "tooth-presence",
+         "display": "Tooth presence"
+        }
+       ],
+       "text": "Tooth presence"
+      },
+      "valueCodeableConcept": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-chart-value",
+         "code": "tooth-present",
+         "display": "Tooth present"
+        },
+        {
+         "system": "https://fhir.cognovis.de/dental/CodeSystem/sws2-zahnstatus",
+         "version": "2024.0.0",
+         "code": "g",
+         "display": "gesund"
+        }
+       ],
+       "text": "SWS-2.0-Zahnstatus: gesund"
+      }
+     },
+     {
+      "code": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+         "code": "tooth-substrate",
+         "display": "Tooth substrate"
+        }
+       ],
+       "text": "Tooth substrate"
+      },
+      "valueCodeableConcept": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-chart-value",
+         "code": "natural-tooth-structure",
+         "display": "Natural tooth structure"
+        }
+       ],
+       "text": "Natural tooth structure"
+      }
+     }
+    ]
+   },
+   "request": {
+    "method": "PUT",
+    "url": "Observation/dent-051-obs-tooth-chart-22"
+   }
+  },
+  {
+   "fullUrl": "urn:uuid:Observation-dent-051-obs-tooth-chart-23",
+   "resource": {
+    "resourceType": "Observation",
+    "id": "dent-051-obs-tooth-chart-23",
+    "meta": {
+     "profile": [
+      "https://fhir.cognovis.de/dental-core/StructureDefinition/dental-tooth-state"
+     ],
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST",
+       "display": "test health data"
+      }
+     ]
+    },
+    "status": "final",
+    "category": [
+     {
+      "coding": [
+       {
+        "system": "https://fhir.cognovis.de/dental/CodeSystem/dental-category",
+        "code": "dental",
+        "display": "Dental"
+       }
+      ]
+     }
+    ],
+    "code": {
+     "coding": [
+      {
+       "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+       "code": "tooth-presence",
+       "display": "Tooth presence"
+      }
+     ],
+     "text": "Tooth presence"
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-09-24",
+    "performer": [
+     {
+      "reference": "Practitioner/fhir-camp-dentist"
+     }
+    ],
+    "bodySite": {
+     "coding": [
+      {
+       "system": "https://fhir.cognovis.de/dental-core/CodeSystem/tooth-position-fdi",
+       "code": "23",
+       "display": "Permanent maxillary left canine"
+      }
+     ],
+     "text": "FDI-Zahnposition 23"
+    },
+    "note": [
+     {
+      "text": "Greta: Zahn 23 ist am 2026-09-24 vorhanden und ohne zahnschemarelevante Besonderheit."
+     }
+    ],
+    "component": [
+     {
+      "code": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+         "code": "tooth-presence",
+         "display": "Tooth presence"
+        }
+       ],
+       "text": "Tooth presence"
+      },
+      "valueCodeableConcept": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-chart-value",
+         "code": "tooth-present",
+         "display": "Tooth present"
+        },
+        {
+         "system": "https://fhir.cognovis.de/dental/CodeSystem/sws2-zahnstatus",
+         "version": "2024.0.0",
+         "code": "g",
+         "display": "gesund"
+        }
+       ],
+       "text": "SWS-2.0-Zahnstatus: gesund"
+      }
+     },
+     {
+      "code": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+         "code": "tooth-substrate",
+         "display": "Tooth substrate"
+        }
+       ],
+       "text": "Tooth substrate"
+      },
+      "valueCodeableConcept": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-chart-value",
+         "code": "natural-tooth-structure",
+         "display": "Natural tooth structure"
+        }
+       ],
+       "text": "Natural tooth structure"
+      }
+     }
+    ]
+   },
+   "request": {
+    "method": "PUT",
+    "url": "Observation/dent-051-obs-tooth-chart-23"
+   }
+  },
+  {
+   "fullUrl": "urn:uuid:Observation-dent-051-obs-tooth-chart-24",
+   "resource": {
+    "resourceType": "Observation",
+    "id": "dent-051-obs-tooth-chart-24",
+    "meta": {
+     "profile": [
+      "https://fhir.cognovis.de/dental-core/StructureDefinition/dental-tooth-state"
+     ],
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST",
+       "display": "test health data"
+      }
+     ]
+    },
+    "status": "final",
+    "category": [
+     {
+      "coding": [
+       {
+        "system": "https://fhir.cognovis.de/dental/CodeSystem/dental-category",
+        "code": "dental",
+        "display": "Dental"
+       }
+      ]
+     }
+    ],
+    "code": {
+     "coding": [
+      {
+       "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+       "code": "tooth-presence",
+       "display": "Tooth presence"
+      }
+     ],
+     "text": "Tooth presence"
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-09-24",
+    "performer": [
+     {
+      "reference": "Practitioner/fhir-camp-dentist"
+     }
+    ],
+    "bodySite": {
+     "coding": [
+      {
+       "system": "https://fhir.cognovis.de/dental-core/CodeSystem/tooth-position-fdi",
+       "code": "24",
+       "display": "Permanent maxillary left first premolar"
+      }
+     ],
+     "text": "FDI-Zahnposition 24"
+    },
+    "note": [
+     {
+      "text": "Greta: Zahn 24 ist am 2026-09-24 vorhanden und ohne zahnschemarelevante Besonderheit."
+     }
+    ],
+    "component": [
+     {
+      "code": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+         "code": "tooth-presence",
+         "display": "Tooth presence"
+        }
+       ],
+       "text": "Tooth presence"
+      },
+      "valueCodeableConcept": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-chart-value",
+         "code": "tooth-present",
+         "display": "Tooth present"
+        },
+        {
+         "system": "https://fhir.cognovis.de/dental/CodeSystem/sws2-zahnstatus",
+         "version": "2024.0.0",
+         "code": "g",
+         "display": "gesund"
+        }
+       ],
+       "text": "SWS-2.0-Zahnstatus: gesund"
+      }
+     },
+     {
+      "code": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+         "code": "tooth-substrate",
+         "display": "Tooth substrate"
+        }
+       ],
+       "text": "Tooth substrate"
+      },
+      "valueCodeableConcept": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-chart-value",
+         "code": "natural-tooth-structure",
+         "display": "Natural tooth structure"
+        }
+       ],
+       "text": "Natural tooth structure"
+      }
+     }
+    ]
+   },
+   "request": {
+    "method": "PUT",
+    "url": "Observation/dent-051-obs-tooth-chart-24"
+   }
+  },
+  {
+   "fullUrl": "urn:uuid:Observation-dent-051-obs-tooth-chart-25",
+   "resource": {
+    "resourceType": "Observation",
+    "id": "dent-051-obs-tooth-chart-25",
+    "meta": {
+     "profile": [
+      "https://fhir.cognovis.de/dental-core/StructureDefinition/dental-tooth-state"
+     ],
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST",
+       "display": "test health data"
+      }
+     ]
+    },
+    "status": "final",
+    "category": [
+     {
+      "coding": [
+       {
+        "system": "https://fhir.cognovis.de/dental/CodeSystem/dental-category",
+        "code": "dental",
+        "display": "Dental"
+       }
+      ]
+     }
+    ],
+    "code": {
+     "coding": [
+      {
+       "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+       "code": "tooth-presence",
+       "display": "Tooth presence"
+      }
+     ],
+     "text": "Tooth presence"
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-09-24",
+    "performer": [
+     {
+      "reference": "Practitioner/fhir-camp-dentist"
+     }
+    ],
+    "bodySite": {
+     "coding": [
+      {
+       "system": "https://fhir.cognovis.de/dental-core/CodeSystem/tooth-position-fdi",
+       "code": "25",
+       "display": "Permanent maxillary left second premolar"
+      }
+     ],
+     "text": "FDI-Zahnposition 25"
+    },
+    "note": [
+     {
+      "text": "Greta: Zahn 25 ist am 2026-09-24 vorhanden und ohne zahnschemarelevante Besonderheit."
+     }
+    ],
+    "component": [
+     {
+      "code": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+         "code": "tooth-presence",
+         "display": "Tooth presence"
+        }
+       ],
+       "text": "Tooth presence"
+      },
+      "valueCodeableConcept": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-chart-value",
+         "code": "tooth-present",
+         "display": "Tooth present"
+        },
+        {
+         "system": "https://fhir.cognovis.de/dental/CodeSystem/sws2-zahnstatus",
+         "version": "2024.0.0",
+         "code": "g",
+         "display": "gesund"
+        }
+       ],
+       "text": "SWS-2.0-Zahnstatus: gesund"
+      }
+     },
+     {
+      "code": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+         "code": "tooth-substrate",
+         "display": "Tooth substrate"
+        }
+       ],
+       "text": "Tooth substrate"
+      },
+      "valueCodeableConcept": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-chart-value",
+         "code": "natural-tooth-structure",
+         "display": "Natural tooth structure"
+        }
+       ],
+       "text": "Natural tooth structure"
+      }
+     }
+    ]
+   },
+   "request": {
+    "method": "PUT",
+    "url": "Observation/dent-051-obs-tooth-chart-25"
+   }
+  },
+  {
+   "fullUrl": "urn:uuid:Observation-dent-051-obs-tooth-chart-26",
+   "resource": {
+    "resourceType": "Observation",
+    "id": "dent-051-obs-tooth-chart-26",
+    "meta": {
+     "profile": [
+      "https://fhir.cognovis.de/dental-core/StructureDefinition/dental-tooth-state"
+     ],
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST",
+       "display": "test health data"
+      }
+     ]
+    },
+    "status": "final",
+    "category": [
+     {
+      "coding": [
+       {
+        "system": "https://fhir.cognovis.de/dental/CodeSystem/dental-category",
+        "code": "dental",
+        "display": "Dental"
+       }
+      ]
+     }
+    ],
+    "code": {
+     "coding": [
+      {
+       "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+       "code": "tooth-presence",
+       "display": "Tooth presence"
+      }
+     ],
+     "text": "Tooth presence"
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-09-24",
+    "performer": [
+     {
+      "reference": "Practitioner/fhir-camp-dentist"
+     }
+    ],
+    "bodySite": {
+     "coding": [
+      {
+       "system": "https://fhir.cognovis.de/dental-core/CodeSystem/tooth-position-fdi",
+       "code": "26",
+       "display": "Permanent maxillary left first molar"
+      }
+     ],
+     "text": "FDI-Zahnposition 26"
+    },
+    "note": [
+     {
+      "text": "Greta: Zahn 26 ist am 2026-09-24 vorhanden und ohne zahnschemarelevante Besonderheit."
+     }
+    ],
+    "component": [
+     {
+      "code": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+         "code": "tooth-presence",
+         "display": "Tooth presence"
+        }
+       ],
+       "text": "Tooth presence"
+      },
+      "valueCodeableConcept": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-chart-value",
+         "code": "tooth-present",
+         "display": "Tooth present"
+        },
+        {
+         "system": "https://fhir.cognovis.de/dental/CodeSystem/sws2-zahnstatus",
+         "version": "2024.0.0",
+         "code": "g",
+         "display": "gesund"
+        }
+       ],
+       "text": "SWS-2.0-Zahnstatus: gesund"
+      }
+     },
+     {
+      "code": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+         "code": "tooth-substrate",
+         "display": "Tooth substrate"
+        }
+       ],
+       "text": "Tooth substrate"
+      },
+      "valueCodeableConcept": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-chart-value",
+         "code": "natural-tooth-structure",
+         "display": "Natural tooth structure"
+        }
+       ],
+       "text": "Natural tooth structure"
+      }
+     }
+    ]
+   },
+   "request": {
+    "method": "PUT",
+    "url": "Observation/dent-051-obs-tooth-chart-26"
+   }
+  },
+  {
+   "fullUrl": "urn:uuid:Observation-dent-051-obs-tooth-chart-27",
+   "resource": {
+    "resourceType": "Observation",
+    "id": "dent-051-obs-tooth-chart-27",
+    "meta": {
+     "profile": [
+      "https://fhir.cognovis.de/dental-core/StructureDefinition/dental-tooth-state"
+     ],
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST",
+       "display": "test health data"
+      }
+     ]
+    },
+    "status": "final",
+    "category": [
+     {
+      "coding": [
+       {
+        "system": "https://fhir.cognovis.de/dental/CodeSystem/dental-category",
+        "code": "dental",
+        "display": "Dental"
+       }
+      ]
+     }
+    ],
+    "code": {
+     "coding": [
+      {
+       "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+       "code": "tooth-presence",
+       "display": "Tooth presence"
+      }
+     ],
+     "text": "Tooth presence"
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-09-24",
+    "performer": [
+     {
+      "reference": "Practitioner/fhir-camp-dentist"
+     }
+    ],
+    "bodySite": {
+     "coding": [
+      {
+       "system": "https://fhir.cognovis.de/dental-core/CodeSystem/tooth-position-fdi",
+       "code": "27",
+       "display": "Permanent maxillary left second molar"
+      }
+     ],
+     "text": "FDI-Zahnposition 27"
+    },
+    "note": [
+     {
+      "text": "Greta: Zahnposition 27 ist am 2026-09-24 nicht mit einem natürlichen Zahn besetzt."
+     }
+    ],
+    "component": [
+     {
+      "code": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+         "code": "tooth-presence",
+         "display": "Tooth presence"
+        }
+       ],
+       "text": "Tooth presence"
+      },
+      "valueCodeableConcept": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-chart-value",
+         "code": "tooth-absent",
+         "display": "Tooth absent"
+        },
+        {
+         "system": "https://fhir.cognovis.de/dental/CodeSystem/sws2-zahnstatus",
+         "version": "2024.0.0",
+         "code": "f",
+         "display": "fehlt"
+        }
+       ],
+       "text": "SWS-2.0-Zahnstatus: fehlt"
+      }
+     }
+    ]
+   },
+   "request": {
+    "method": "PUT",
+    "url": "Observation/dent-051-obs-tooth-chart-27"
+   }
+  },
+  {
+   "fullUrl": "urn:uuid:Observation-dent-051-obs-tooth-chart-28",
+   "resource": {
+    "resourceType": "Observation",
+    "id": "dent-051-obs-tooth-chart-28",
+    "meta": {
+     "profile": [
+      "https://fhir.cognovis.de/dental-core/StructureDefinition/dental-tooth-state"
+     ],
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST",
+       "display": "test health data"
+      }
+     ]
+    },
+    "status": "final",
+    "category": [
+     {
+      "coding": [
+       {
+        "system": "https://fhir.cognovis.de/dental/CodeSystem/dental-category",
+        "code": "dental",
+        "display": "Dental"
+       }
+      ]
+     }
+    ],
+    "code": {
+     "coding": [
+      {
+       "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+       "code": "tooth-presence",
+       "display": "Tooth presence"
+      }
+     ],
+     "text": "Tooth presence"
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-09-24",
+    "performer": [
+     {
+      "reference": "Practitioner/fhir-camp-dentist"
+     }
+    ],
+    "bodySite": {
+     "coding": [
+      {
+       "system": "https://fhir.cognovis.de/dental-core/CodeSystem/tooth-position-fdi",
+       "code": "28",
+       "display": "Permanent maxillary left third molar"
+      }
+     ],
+     "text": "FDI-Zahnposition 28"
+    },
+    "note": [
+     {
+      "text": "Greta: Zahnposition 28 ist am 2026-09-24 nicht mit einem natürlichen Zahn besetzt."
+     }
+    ],
+    "component": [
+     {
+      "code": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+         "code": "tooth-presence",
+         "display": "Tooth presence"
+        }
+       ],
+       "text": "Tooth presence"
+      },
+      "valueCodeableConcept": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-chart-value",
+         "code": "tooth-absent",
+         "display": "Tooth absent"
+        },
+        {
+         "system": "https://fhir.cognovis.de/dental/CodeSystem/sws2-zahnstatus",
+         "version": "2024.0.0",
+         "code": "f",
+         "display": "fehlt"
+        }
+       ],
+       "text": "SWS-2.0-Zahnstatus: fehlt"
+      }
+     }
+    ]
+   },
+   "request": {
+    "method": "PUT",
+    "url": "Observation/dent-051-obs-tooth-chart-28"
+   }
+  },
+  {
+   "fullUrl": "urn:uuid:Observation-dent-051-obs-tooth-chart-38",
+   "resource": {
+    "resourceType": "Observation",
+    "id": "dent-051-obs-tooth-chart-38",
+    "meta": {
+     "profile": [
+      "https://fhir.cognovis.de/dental-core/StructureDefinition/dental-tooth-state"
+     ],
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST",
+       "display": "test health data"
+      }
+     ]
+    },
+    "status": "final",
+    "category": [
+     {
+      "coding": [
+       {
+        "system": "https://fhir.cognovis.de/dental/CodeSystem/dental-category",
+        "code": "dental",
+        "display": "Dental"
+       }
+      ]
+     }
+    ],
+    "code": {
+     "coding": [
+      {
+       "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+       "code": "tooth-presence",
+       "display": "Tooth presence"
+      }
+     ],
+     "text": "Tooth presence"
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-09-24",
+    "performer": [
+     {
+      "reference": "Practitioner/fhir-camp-dentist"
+     }
+    ],
+    "bodySite": {
+     "coding": [
+      {
+       "system": "https://fhir.cognovis.de/dental-core/CodeSystem/tooth-position-fdi",
+       "code": "38",
+       "display": "Permanent mandibular left third molar"
+      }
+     ],
+     "text": "FDI-Zahnposition 38"
+    },
+    "note": [
+     {
+      "text": "Greta: Zahn 38 ist am 2026-09-24 vorhanden und ohne zahnschemarelevante Besonderheit."
+     }
+    ],
+    "component": [
+     {
+      "code": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+         "code": "tooth-presence",
+         "display": "Tooth presence"
+        }
+       ],
+       "text": "Tooth presence"
+      },
+      "valueCodeableConcept": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-chart-value",
+         "code": "tooth-present",
+         "display": "Tooth present"
+        },
+        {
+         "system": "https://fhir.cognovis.de/dental/CodeSystem/sws2-zahnstatus",
+         "version": "2024.0.0",
+         "code": "g",
+         "display": "gesund"
+        }
+       ],
+       "text": "SWS-2.0-Zahnstatus: gesund"
+      }
+     },
+     {
+      "code": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+         "code": "tooth-substrate",
+         "display": "Tooth substrate"
+        }
+       ],
+       "text": "Tooth substrate"
+      },
+      "valueCodeableConcept": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-chart-value",
+         "code": "natural-tooth-structure",
+         "display": "Natural tooth structure"
+        }
+       ],
+       "text": "Natural tooth structure"
+      }
+     }
+    ]
+   },
+   "request": {
+    "method": "PUT",
+    "url": "Observation/dent-051-obs-tooth-chart-38"
+   }
+  },
+  {
+   "fullUrl": "urn:uuid:Observation-dent-051-obs-tooth-chart-37",
+   "resource": {
+    "resourceType": "Observation",
+    "id": "dent-051-obs-tooth-chart-37",
+    "meta": {
+     "profile": [
+      "https://fhir.cognovis.de/dental-core/StructureDefinition/dental-tooth-state"
+     ],
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST",
+       "display": "test health data"
+      }
+     ]
+    },
+    "status": "final",
+    "category": [
+     {
+      "coding": [
+       {
+        "system": "https://fhir.cognovis.de/dental/CodeSystem/dental-category",
+        "code": "dental",
+        "display": "Dental"
+       }
+      ]
+     }
+    ],
+    "code": {
+     "coding": [
+      {
+       "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+       "code": "tooth-presence",
+       "display": "Tooth presence"
+      }
+     ],
+     "text": "Tooth presence"
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-09-24",
+    "performer": [
+     {
+      "reference": "Practitioner/fhir-camp-dentist"
+     }
+    ],
+    "bodySite": {
+     "coding": [
+      {
+       "system": "https://fhir.cognovis.de/dental-core/CodeSystem/tooth-position-fdi",
+       "code": "37",
+       "display": "Permanent mandibular left second molar"
+      }
+     ],
+     "text": "FDI-Zahnposition 37"
+    },
+    "note": [
+     {
+      "text": "Greta: Zahn 37 trägt am 2026-09-24 eine große Kompositfüllung mesial-okklusal, vital; geplanter Brückenpfeiler."
+     }
+    ],
+    "component": [
+     {
+      "code": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+         "code": "tooth-presence",
+         "display": "Tooth presence"
+        }
+       ],
+       "text": "Tooth presence"
+      },
+      "valueCodeableConcept": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-chart-value",
+         "code": "tooth-present",
+         "display": "Tooth present"
+        },
+        {
+         "system": "https://fhir.cognovis.de/dental/CodeSystem/sws2-zahnstatus",
+         "version": "2024.0.0",
+         "code": "U",
+         "display": "Komposit"
+        }
+       ],
+       "text": "SWS-2.0-Zahnstatus: Komposit"
+      }
+     },
+     {
+      "extension": [
+       {
+        "url": "https://fhir.cognovis.de/dental-core/StructureDefinition/tooth-surface",
+        "valueCoding": {
+         "system": "http://terminology.hl7.org/CodeSystem/FDI-surface",
+         "code": "M",
+         "display": "Mesial"
+        }
+       },
+       {
+        "url": "https://fhir.cognovis.de/dental-core/StructureDefinition/tooth-surface",
+        "valueCoding": {
+         "system": "http://terminology.hl7.org/CodeSystem/FDI-surface",
+         "code": "O",
+         "display": "Occlusal"
+        }
+       }
+      ],
+      "code": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+         "code": "restoration-type",
+         "display": "Restoration type"
+        }
+       ],
+       "text": "Restoration type"
+      },
+      "valueCodeableConcept": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-chart-value",
+         "code": "direct-filling",
+         "display": "Direct filling"
+        }
+       ],
+       "text": "Direct filling"
+      }
+     },
+     {
+      "extension": [
+       {
+        "url": "https://fhir.cognovis.de/dental-core/StructureDefinition/tooth-surface",
+        "valueCoding": {
+         "system": "http://terminology.hl7.org/CodeSystem/FDI-surface",
+         "code": "M",
+         "display": "Mesial"
+        }
+       },
+       {
+        "url": "https://fhir.cognovis.de/dental-core/StructureDefinition/tooth-surface",
+        "valueCoding": {
+         "system": "http://terminology.hl7.org/CodeSystem/FDI-surface",
+         "code": "O",
+         "display": "Occlusal"
+        }
+       }
+      ],
+      "code": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+         "code": "restoration-material",
+         "display": "Restoration material"
+        }
+       ],
+       "text": "Restoration material"
+      },
+      "valueCodeableConcept": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-chart-value",
+         "code": "composite-resin",
+         "display": "Composite resin"
+        }
+       ],
+       "text": "Composite resin"
+      }
+     }
+    ]
+   },
+   "request": {
+    "method": "PUT",
+    "url": "Observation/dent-051-obs-tooth-chart-37"
+   }
+  },
+  {
+   "fullUrl": "urn:uuid:Observation-dent-051-obs-tooth-chart-36",
+   "resource": {
+    "resourceType": "Observation",
+    "id": "dent-051-obs-tooth-chart-36",
+    "meta": {
+     "profile": [
+      "https://fhir.cognovis.de/dental-core/StructureDefinition/dental-tooth-state"
+     ],
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST",
+       "display": "test health data"
+      }
+     ]
+    },
+    "status": "final",
+    "category": [
+     {
+      "coding": [
+       {
+        "system": "https://fhir.cognovis.de/dental/CodeSystem/dental-category",
+        "code": "dental",
+        "display": "Dental"
+       }
+      ]
+     }
+    ],
+    "code": {
+     "coding": [
+      {
+       "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+       "code": "tooth-presence",
+       "display": "Tooth presence"
+      }
+     ],
+     "text": "Tooth presence"
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-09-24",
+    "performer": [
+     {
+      "reference": "Practitioner/fhir-camp-dentist"
+     }
+    ],
+    "bodySite": {
+     "coding": [
+      {
+       "system": "https://fhir.cognovis.de/dental-core/CodeSystem/tooth-position-fdi",
+       "code": "36",
+       "display": "Permanent mandibular left first molar"
+      }
+     ],
+     "text": "FDI-Zahnposition 36"
+    },
+    "note": [
+     {
+      "text": "Greta: Zahnposition 36 ist am 2026-09-24 seit Jahren nicht besetzt (Einzelzahnlücke)."
+     }
+    ],
+    "component": [
+     {
+      "code": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+         "code": "tooth-presence",
+         "display": "Tooth presence"
+        }
+       ],
+       "text": "Tooth presence"
+      },
+      "valueCodeableConcept": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-chart-value",
+         "code": "tooth-absent",
+         "display": "Tooth absent"
+        },
+        {
+         "system": "https://fhir.cognovis.de/dental/CodeSystem/sws2-zahnstatus",
+         "version": "2024.0.0",
+         "code": "f",
+         "display": "fehlt"
+        }
+       ],
+       "text": "SWS-2.0-Zahnstatus: fehlt"
+      }
+     }
+    ]
+   },
+   "request": {
+    "method": "PUT",
+    "url": "Observation/dent-051-obs-tooth-chart-36"
+   }
+  },
+  {
+   "fullUrl": "urn:uuid:Observation-dent-051-obs-tooth-chart-35",
+   "resource": {
+    "resourceType": "Observation",
+    "id": "dent-051-obs-tooth-chart-35",
+    "meta": {
+     "profile": [
+      "https://fhir.cognovis.de/dental-core/StructureDefinition/dental-tooth-state"
+     ],
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST",
+       "display": "test health data"
+      }
+     ]
+    },
+    "status": "final",
+    "category": [
+     {
+      "coding": [
+       {
+        "system": "https://fhir.cognovis.de/dental/CodeSystem/dental-category",
+        "code": "dental",
+        "display": "Dental"
+       }
+      ]
+     }
+    ],
+    "code": {
+     "coding": [
+      {
+       "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+       "code": "tooth-presence",
+       "display": "Tooth presence"
+      }
+     ],
+     "text": "Tooth presence"
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-09-24",
+    "performer": [
+     {
+      "reference": "Practitioner/fhir-camp-dentist"
+     }
+    ],
+    "bodySite": {
+     "coding": [
+      {
+       "system": "https://fhir.cognovis.de/dental-core/CodeSystem/tooth-position-fdi",
+       "code": "35",
+       "display": "Permanent mandibular left second premolar"
+      }
+     ],
+     "text": "FDI-Zahnposition 35"
+    },
+    "note": [
+     {
+      "text": "Greta: Zahn 35 ist am 2026-09-24 vorhanden, kariesfrei und vital; geplanter Brückenpfeiler."
+     }
+    ],
+    "component": [
+     {
+      "code": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+         "code": "tooth-presence",
+         "display": "Tooth presence"
+        }
+       ],
+       "text": "Tooth presence"
+      },
+      "valueCodeableConcept": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-chart-value",
+         "code": "tooth-present",
+         "display": "Tooth present"
+        },
+        {
+         "system": "https://fhir.cognovis.de/dental/CodeSystem/sws2-zahnstatus",
+         "version": "2024.0.0",
+         "code": "g",
+         "display": "gesund"
+        }
+       ],
+       "text": "SWS-2.0-Zahnstatus: gesund"
+      }
+     },
+     {
+      "code": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+         "code": "tooth-substrate",
+         "display": "Tooth substrate"
+        }
+       ],
+       "text": "Tooth substrate"
+      },
+      "valueCodeableConcept": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-chart-value",
+         "code": "natural-tooth-structure",
+         "display": "Natural tooth structure"
+        }
+       ],
+       "text": "Natural tooth structure"
+      }
+     }
+    ]
+   },
+   "request": {
+    "method": "PUT",
+    "url": "Observation/dent-051-obs-tooth-chart-35"
+   }
+  },
+  {
+   "fullUrl": "urn:uuid:Observation-dent-051-obs-tooth-chart-34",
+   "resource": {
+    "resourceType": "Observation",
+    "id": "dent-051-obs-tooth-chart-34",
+    "meta": {
+     "profile": [
+      "https://fhir.cognovis.de/dental-core/StructureDefinition/dental-tooth-state"
+     ],
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST",
+       "display": "test health data"
+      }
+     ]
+    },
+    "status": "final",
+    "category": [
+     {
+      "coding": [
+       {
+        "system": "https://fhir.cognovis.de/dental/CodeSystem/dental-category",
+        "code": "dental",
+        "display": "Dental"
+       }
+      ]
+     }
+    ],
+    "code": {
+     "coding": [
+      {
+       "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+       "code": "tooth-presence",
+       "display": "Tooth presence"
+      }
+     ],
+     "text": "Tooth presence"
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-09-24",
+    "performer": [
+     {
+      "reference": "Practitioner/fhir-camp-dentist"
+     }
+    ],
+    "bodySite": {
+     "coding": [
+      {
+       "system": "https://fhir.cognovis.de/dental-core/CodeSystem/tooth-position-fdi",
+       "code": "34",
+       "display": "Permanent mandibular left first premolar"
+      }
+     ],
+     "text": "FDI-Zahnposition 34",
+     "extension": [
+      {
+       "url": "https://fhir.cognovis.de/dental-core/StructureDefinition/tooth-surface",
+       "valueCoding": {
+        "system": "http://terminology.hl7.org/CodeSystem/FDI-surface",
+        "code": "M",
+        "display": "Mesial"
+       }
+      },
+      {
+       "url": "https://fhir.cognovis.de/dental-core/StructureDefinition/tooth-surface",
+       "valueCoding": {
+        "system": "http://terminology.hl7.org/CodeSystem/FDI-surface",
+        "code": "O",
+        "display": "Occlusal"
+       }
+      }
+     ]
+    },
+    "note": [
+     {
+      "text": "Greta: Zahn 34 trägt am 2026-09-24 eine klinisch vorhandene Kompositversorgung."
+     }
+    ],
+    "component": [
+     {
+      "code": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+         "code": "tooth-presence",
+         "display": "Tooth presence"
+        }
+       ],
+       "text": "Tooth presence"
+      },
+      "valueCodeableConcept": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-chart-value",
+         "code": "tooth-present",
+         "display": "Tooth present"
+        },
+        {
+         "system": "https://fhir.cognovis.de/dental/CodeSystem/sws2-zahnstatus",
+         "version": "2024.0.0",
+         "code": "U",
+         "display": "Komposit"
+        }
+       ],
+       "text": "SWS-2.0-Zahnstatus: Komposit"
+      }
+     },
+     {
+      "extension": [
+       {
+        "url": "https://fhir.cognovis.de/dental-core/StructureDefinition/tooth-surface",
+        "valueCoding": {
+         "system": "http://terminology.hl7.org/CodeSystem/FDI-surface",
+         "code": "M",
+         "display": "Mesial"
+        }
+       },
+       {
+        "url": "https://fhir.cognovis.de/dental-core/StructureDefinition/tooth-surface",
+        "valueCoding": {
+         "system": "http://terminology.hl7.org/CodeSystem/FDI-surface",
+         "code": "O",
+         "display": "Occlusal"
+        }
+       }
+      ],
+      "code": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+         "code": "restoration-type",
+         "display": "Restoration type"
+        }
+       ],
+       "text": "Restoration type"
+      },
+      "valueCodeableConcept": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-chart-value",
+         "code": "direct-filling",
+         "display": "Direct filling"
+        }
+       ],
+       "text": "Direct filling"
+      }
+     },
+     {
+      "extension": [
+       {
+        "url": "https://fhir.cognovis.de/dental-core/StructureDefinition/tooth-surface",
+        "valueCoding": {
+         "system": "http://terminology.hl7.org/CodeSystem/FDI-surface",
+         "code": "M",
+         "display": "Mesial"
+        }
+       },
+       {
+        "url": "https://fhir.cognovis.de/dental-core/StructureDefinition/tooth-surface",
+        "valueCoding": {
+         "system": "http://terminology.hl7.org/CodeSystem/FDI-surface",
+         "code": "O",
+         "display": "Occlusal"
+        }
+       }
+      ],
+      "code": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+         "code": "restoration-material",
+         "display": "Restoration material"
+        }
+       ],
+       "text": "Restoration material"
+      },
+      "valueCodeableConcept": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-chart-value",
+         "code": "composite-resin",
+         "display": "Composite resin"
+        }
+       ],
+       "text": "Composite resin"
+      }
+     }
+    ]
+   },
+   "request": {
+    "method": "PUT",
+    "url": "Observation/dent-051-obs-tooth-chart-34"
+   }
+  },
+  {
+   "fullUrl": "urn:uuid:Observation-dent-051-obs-tooth-chart-33",
+   "resource": {
+    "resourceType": "Observation",
+    "id": "dent-051-obs-tooth-chart-33",
+    "meta": {
+     "profile": [
+      "https://fhir.cognovis.de/dental-core/StructureDefinition/dental-tooth-state"
+     ],
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST",
+       "display": "test health data"
+      }
+     ]
+    },
+    "status": "final",
+    "category": [
+     {
+      "coding": [
+       {
+        "system": "https://fhir.cognovis.de/dental/CodeSystem/dental-category",
+        "code": "dental",
+        "display": "Dental"
+       }
+      ]
+     }
+    ],
+    "code": {
+     "coding": [
+      {
+       "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+       "code": "tooth-presence",
+       "display": "Tooth presence"
+      }
+     ],
+     "text": "Tooth presence"
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-09-24",
+    "performer": [
+     {
+      "reference": "Practitioner/fhir-camp-dentist"
+     }
+    ],
+    "bodySite": {
+     "coding": [
+      {
+       "system": "https://fhir.cognovis.de/dental-core/CodeSystem/tooth-position-fdi",
+       "code": "33",
+       "display": "Permanent mandibular left canine"
+      }
+     ],
+     "text": "FDI-Zahnposition 33"
+    },
+    "note": [
+     {
+      "text": "Greta: Zahn 33 ist am 2026-09-24 vorhanden und ohne zahnschemarelevante Besonderheit."
+     }
+    ],
+    "component": [
+     {
+      "code": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+         "code": "tooth-presence",
+         "display": "Tooth presence"
+        }
+       ],
+       "text": "Tooth presence"
+      },
+      "valueCodeableConcept": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-chart-value",
+         "code": "tooth-present",
+         "display": "Tooth present"
+        },
+        {
+         "system": "https://fhir.cognovis.de/dental/CodeSystem/sws2-zahnstatus",
+         "version": "2024.0.0",
+         "code": "g",
+         "display": "gesund"
+        }
+       ],
+       "text": "SWS-2.0-Zahnstatus: gesund"
+      }
+     },
+     {
+      "code": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+         "code": "tooth-substrate",
+         "display": "Tooth substrate"
+        }
+       ],
+       "text": "Tooth substrate"
+      },
+      "valueCodeableConcept": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-chart-value",
+         "code": "natural-tooth-structure",
+         "display": "Natural tooth structure"
+        }
+       ],
+       "text": "Natural tooth structure"
+      }
+     }
+    ]
+   },
+   "request": {
+    "method": "PUT",
+    "url": "Observation/dent-051-obs-tooth-chart-33"
+   }
+  },
+  {
+   "fullUrl": "urn:uuid:Observation-dent-051-obs-tooth-chart-32",
+   "resource": {
+    "resourceType": "Observation",
+    "id": "dent-051-obs-tooth-chart-32",
+    "meta": {
+     "profile": [
+      "https://fhir.cognovis.de/dental-core/StructureDefinition/dental-tooth-state"
+     ],
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST",
+       "display": "test health data"
+      }
+     ]
+    },
+    "status": "final",
+    "category": [
+     {
+      "coding": [
+       {
+        "system": "https://fhir.cognovis.de/dental/CodeSystem/dental-category",
+        "code": "dental",
+        "display": "Dental"
+       }
+      ]
+     }
+    ],
+    "code": {
+     "coding": [
+      {
+       "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+       "code": "tooth-presence",
+       "display": "Tooth presence"
+      }
+     ],
+     "text": "Tooth presence"
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-09-24",
+    "performer": [
+     {
+      "reference": "Practitioner/fhir-camp-dentist"
+     }
+    ],
+    "bodySite": {
+     "coding": [
+      {
+       "system": "https://fhir.cognovis.de/dental-core/CodeSystem/tooth-position-fdi",
+       "code": "32",
+       "display": "Permanent mandibular left lateral incisor"
+      }
+     ],
+     "text": "FDI-Zahnposition 32"
+    },
+    "note": [
+     {
+      "text": "Greta: Zahn 32 ist am 2026-09-24 vorhanden und ohne zahnschemarelevante Besonderheit."
+     }
+    ],
+    "component": [
+     {
+      "code": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+         "code": "tooth-presence",
+         "display": "Tooth presence"
+        }
+       ],
+       "text": "Tooth presence"
+      },
+      "valueCodeableConcept": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-chart-value",
+         "code": "tooth-present",
+         "display": "Tooth present"
+        },
+        {
+         "system": "https://fhir.cognovis.de/dental/CodeSystem/sws2-zahnstatus",
+         "version": "2024.0.0",
+         "code": "g",
+         "display": "gesund"
+        }
+       ],
+       "text": "SWS-2.0-Zahnstatus: gesund"
+      }
+     },
+     {
+      "code": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+         "code": "tooth-substrate",
+         "display": "Tooth substrate"
+        }
+       ],
+       "text": "Tooth substrate"
+      },
+      "valueCodeableConcept": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-chart-value",
+         "code": "natural-tooth-structure",
+         "display": "Natural tooth structure"
+        }
+       ],
+       "text": "Natural tooth structure"
+      }
+     }
+    ]
+   },
+   "request": {
+    "method": "PUT",
+    "url": "Observation/dent-051-obs-tooth-chart-32"
+   }
+  },
+  {
+   "fullUrl": "urn:uuid:Observation-dent-051-obs-tooth-chart-31",
+   "resource": {
+    "resourceType": "Observation",
+    "id": "dent-051-obs-tooth-chart-31",
+    "meta": {
+     "profile": [
+      "https://fhir.cognovis.de/dental-core/StructureDefinition/dental-tooth-state"
+     ],
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST",
+       "display": "test health data"
+      }
+     ]
+    },
+    "status": "final",
+    "category": [
+     {
+      "coding": [
+       {
+        "system": "https://fhir.cognovis.de/dental/CodeSystem/dental-category",
+        "code": "dental",
+        "display": "Dental"
+       }
+      ]
+     }
+    ],
+    "code": {
+     "coding": [
+      {
+       "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+       "code": "tooth-presence",
+       "display": "Tooth presence"
+      }
+     ],
+     "text": "Tooth presence"
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-09-24",
+    "performer": [
+     {
+      "reference": "Practitioner/fhir-camp-dentist"
+     }
+    ],
+    "bodySite": {
+     "coding": [
+      {
+       "system": "https://fhir.cognovis.de/dental-core/CodeSystem/tooth-position-fdi",
+       "code": "31",
+       "display": "Permanent mandibular left central incisor"
+      }
+     ],
+     "text": "FDI-Zahnposition 31"
+    },
+    "note": [
+     {
+      "text": "Greta: Zahn 31 ist am 2026-09-24 vorhanden und ohne zahnschemarelevante Besonderheit."
+     }
+    ],
+    "component": [
+     {
+      "code": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+         "code": "tooth-presence",
+         "display": "Tooth presence"
+        }
+       ],
+       "text": "Tooth presence"
+      },
+      "valueCodeableConcept": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-chart-value",
+         "code": "tooth-present",
+         "display": "Tooth present"
+        },
+        {
+         "system": "https://fhir.cognovis.de/dental/CodeSystem/sws2-zahnstatus",
+         "version": "2024.0.0",
+         "code": "g",
+         "display": "gesund"
+        }
+       ],
+       "text": "SWS-2.0-Zahnstatus: gesund"
+      }
+     },
+     {
+      "code": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+         "code": "tooth-substrate",
+         "display": "Tooth substrate"
+        }
+       ],
+       "text": "Tooth substrate"
+      },
+      "valueCodeableConcept": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-chart-value",
+         "code": "natural-tooth-structure",
+         "display": "Natural tooth structure"
+        }
+       ],
+       "text": "Natural tooth structure"
+      }
+     }
+    ]
+   },
+   "request": {
+    "method": "PUT",
+    "url": "Observation/dent-051-obs-tooth-chart-31"
+   }
+  },
+  {
+   "fullUrl": "urn:uuid:Observation-dent-051-obs-tooth-chart-41",
+   "resource": {
+    "resourceType": "Observation",
+    "id": "dent-051-obs-tooth-chart-41",
+    "meta": {
+     "profile": [
+      "https://fhir.cognovis.de/dental-core/StructureDefinition/dental-tooth-state"
+     ],
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST",
+       "display": "test health data"
+      }
+     ]
+    },
+    "status": "final",
+    "category": [
+     {
+      "coding": [
+       {
+        "system": "https://fhir.cognovis.de/dental/CodeSystem/dental-category",
+        "code": "dental",
+        "display": "Dental"
+       }
+      ]
+     }
+    ],
+    "code": {
+     "coding": [
+      {
+       "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+       "code": "tooth-presence",
+       "display": "Tooth presence"
+      }
+     ],
+     "text": "Tooth presence"
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-09-24",
+    "performer": [
+     {
+      "reference": "Practitioner/fhir-camp-dentist"
+     }
+    ],
+    "bodySite": {
+     "coding": [
+      {
+       "system": "https://fhir.cognovis.de/dental-core/CodeSystem/tooth-position-fdi",
+       "code": "41",
+       "display": "Permanent mandibular right central incisor"
+      }
+     ],
+     "text": "FDI-Zahnposition 41"
+    },
+    "note": [
+     {
+      "text": "Greta: Zahn 41 ist am 2026-09-24 vorhanden und ohne zahnschemarelevante Besonderheit."
+     }
+    ],
+    "component": [
+     {
+      "code": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+         "code": "tooth-presence",
+         "display": "Tooth presence"
+        }
+       ],
+       "text": "Tooth presence"
+      },
+      "valueCodeableConcept": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-chart-value",
+         "code": "tooth-present",
+         "display": "Tooth present"
+        },
+        {
+         "system": "https://fhir.cognovis.de/dental/CodeSystem/sws2-zahnstatus",
+         "version": "2024.0.0",
+         "code": "g",
+         "display": "gesund"
+        }
+       ],
+       "text": "SWS-2.0-Zahnstatus: gesund"
+      }
+     },
+     {
+      "code": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+         "code": "tooth-substrate",
+         "display": "Tooth substrate"
+        }
+       ],
+       "text": "Tooth substrate"
+      },
+      "valueCodeableConcept": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-chart-value",
+         "code": "natural-tooth-structure",
+         "display": "Natural tooth structure"
+        }
+       ],
+       "text": "Natural tooth structure"
+      }
+     }
+    ]
+   },
+   "request": {
+    "method": "PUT",
+    "url": "Observation/dent-051-obs-tooth-chart-41"
+   }
+  },
+  {
+   "fullUrl": "urn:uuid:Observation-dent-051-obs-tooth-chart-42",
+   "resource": {
+    "resourceType": "Observation",
+    "id": "dent-051-obs-tooth-chart-42",
+    "meta": {
+     "profile": [
+      "https://fhir.cognovis.de/dental-core/StructureDefinition/dental-tooth-state"
+     ],
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST",
+       "display": "test health data"
+      }
+     ]
+    },
+    "status": "final",
+    "category": [
+     {
+      "coding": [
+       {
+        "system": "https://fhir.cognovis.de/dental/CodeSystem/dental-category",
+        "code": "dental",
+        "display": "Dental"
+       }
+      ]
+     }
+    ],
+    "code": {
+     "coding": [
+      {
+       "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+       "code": "tooth-presence",
+       "display": "Tooth presence"
+      }
+     ],
+     "text": "Tooth presence"
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-09-24",
+    "performer": [
+     {
+      "reference": "Practitioner/fhir-camp-dentist"
+     }
+    ],
+    "bodySite": {
+     "coding": [
+      {
+       "system": "https://fhir.cognovis.de/dental-core/CodeSystem/tooth-position-fdi",
+       "code": "42",
+       "display": "Permanent mandibular right lateral incisor"
+      }
+     ],
+     "text": "FDI-Zahnposition 42"
+    },
+    "note": [
+     {
+      "text": "Greta: Zahn 42 ist am 2026-09-24 vorhanden und ohne zahnschemarelevante Besonderheit."
+     }
+    ],
+    "component": [
+     {
+      "code": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+         "code": "tooth-presence",
+         "display": "Tooth presence"
+        }
+       ],
+       "text": "Tooth presence"
+      },
+      "valueCodeableConcept": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-chart-value",
+         "code": "tooth-present",
+         "display": "Tooth present"
+        },
+        {
+         "system": "https://fhir.cognovis.de/dental/CodeSystem/sws2-zahnstatus",
+         "version": "2024.0.0",
+         "code": "g",
+         "display": "gesund"
+        }
+       ],
+       "text": "SWS-2.0-Zahnstatus: gesund"
+      }
+     },
+     {
+      "code": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+         "code": "tooth-substrate",
+         "display": "Tooth substrate"
+        }
+       ],
+       "text": "Tooth substrate"
+      },
+      "valueCodeableConcept": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-chart-value",
+         "code": "natural-tooth-structure",
+         "display": "Natural tooth structure"
+        }
+       ],
+       "text": "Natural tooth structure"
+      }
+     }
+    ]
+   },
+   "request": {
+    "method": "PUT",
+    "url": "Observation/dent-051-obs-tooth-chart-42"
+   }
+  },
+  {
+   "fullUrl": "urn:uuid:Observation-dent-051-obs-tooth-chart-43",
+   "resource": {
+    "resourceType": "Observation",
+    "id": "dent-051-obs-tooth-chart-43",
+    "meta": {
+     "profile": [
+      "https://fhir.cognovis.de/dental-core/StructureDefinition/dental-tooth-state"
+     ],
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST",
+       "display": "test health data"
+      }
+     ]
+    },
+    "status": "final",
+    "category": [
+     {
+      "coding": [
+       {
+        "system": "https://fhir.cognovis.de/dental/CodeSystem/dental-category",
+        "code": "dental",
+        "display": "Dental"
+       }
+      ]
+     }
+    ],
+    "code": {
+     "coding": [
+      {
+       "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+       "code": "tooth-presence",
+       "display": "Tooth presence"
+      }
+     ],
+     "text": "Tooth presence"
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-09-24",
+    "performer": [
+     {
+      "reference": "Practitioner/fhir-camp-dentist"
+     }
+    ],
+    "bodySite": {
+     "coding": [
+      {
+       "system": "https://fhir.cognovis.de/dental-core/CodeSystem/tooth-position-fdi",
+       "code": "43",
+       "display": "Permanent mandibular right canine"
+      }
+     ],
+     "text": "FDI-Zahnposition 43"
+    },
+    "note": [
+     {
+      "text": "Greta: Zahn 43 ist am 2026-09-24 vorhanden und ohne zahnschemarelevante Besonderheit."
+     }
+    ],
+    "component": [
+     {
+      "code": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+         "code": "tooth-presence",
+         "display": "Tooth presence"
+        }
+       ],
+       "text": "Tooth presence"
+      },
+      "valueCodeableConcept": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-chart-value",
+         "code": "tooth-present",
+         "display": "Tooth present"
+        },
+        {
+         "system": "https://fhir.cognovis.de/dental/CodeSystem/sws2-zahnstatus",
+         "version": "2024.0.0",
+         "code": "g",
+         "display": "gesund"
+        }
+       ],
+       "text": "SWS-2.0-Zahnstatus: gesund"
+      }
+     },
+     {
+      "code": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+         "code": "tooth-substrate",
+         "display": "Tooth substrate"
+        }
+       ],
+       "text": "Tooth substrate"
+      },
+      "valueCodeableConcept": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-chart-value",
+         "code": "natural-tooth-structure",
+         "display": "Natural tooth structure"
+        }
+       ],
+       "text": "Natural tooth structure"
+      }
+     }
+    ]
+   },
+   "request": {
+    "method": "PUT",
+    "url": "Observation/dent-051-obs-tooth-chart-43"
+   }
+  },
+  {
+   "fullUrl": "urn:uuid:Observation-dent-051-obs-tooth-chart-44",
+   "resource": {
+    "resourceType": "Observation",
+    "id": "dent-051-obs-tooth-chart-44",
+    "meta": {
+     "profile": [
+      "https://fhir.cognovis.de/dental-core/StructureDefinition/dental-tooth-state"
+     ],
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST",
+       "display": "test health data"
+      }
+     ]
+    },
+    "status": "final",
+    "category": [
+     {
+      "coding": [
+       {
+        "system": "https://fhir.cognovis.de/dental/CodeSystem/dental-category",
+        "code": "dental",
+        "display": "Dental"
+       }
+      ]
+     }
+    ],
+    "code": {
+     "coding": [
+      {
+       "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+       "code": "tooth-presence",
+       "display": "Tooth presence"
+      }
+     ],
+     "text": "Tooth presence"
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-09-24",
+    "performer": [
+     {
+      "reference": "Practitioner/fhir-camp-dentist"
+     }
+    ],
+    "bodySite": {
+     "coding": [
+      {
+       "system": "https://fhir.cognovis.de/dental-core/CodeSystem/tooth-position-fdi",
+       "code": "44",
+       "display": "Permanent mandibular right first premolar"
+      }
+     ],
+     "text": "FDI-Zahnposition 44"
+    },
+    "note": [
+     {
+      "text": "Greta: Zahn 44 ist am 2026-09-24 mit einer klinisch vorhandenen Krone versorgt."
+     }
+    ],
+    "component": [
+     {
+      "code": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+         "code": "tooth-presence",
+         "display": "Tooth presence"
+        }
+       ],
+       "text": "Tooth presence"
+      },
+      "valueCodeableConcept": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-chart-value",
+         "code": "tooth-present",
+         "display": "Tooth present"
+        },
+        {
+         "system": "https://fhir.cognovis.de/dental/CodeSystem/sws2-zahnstatus",
+         "version": "2024.0.0",
+         "code": "k",
+         "display": "Krone"
+        }
+       ],
+       "text": "SWS-2.0-Zahnstatus: Krone"
+      }
+     },
+     {
+      "code": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+         "code": "restoration-type",
+         "display": "Restoration type"
+        }
+       ],
+       "text": "Restoration type"
+      },
+      "valueCodeableConcept": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-chart-value",
+         "code": "crown",
+         "display": "Crown"
+        }
+       ],
+       "text": "Crown"
+      }
+     }
+    ]
+   },
+   "request": {
+    "method": "PUT",
+    "url": "Observation/dent-051-obs-tooth-chart-44"
+   }
+  },
+  {
+   "fullUrl": "urn:uuid:Observation-dent-051-obs-tooth-chart-45",
+   "resource": {
+    "resourceType": "Observation",
+    "id": "dent-051-obs-tooth-chart-45",
+    "meta": {
+     "profile": [
+      "https://fhir.cognovis.de/dental-core/StructureDefinition/dental-tooth-state"
+     ],
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST",
+       "display": "test health data"
+      }
+     ]
+    },
+    "status": "final",
+    "category": [
+     {
+      "coding": [
+       {
+        "system": "https://fhir.cognovis.de/dental/CodeSystem/dental-category",
+        "code": "dental",
+        "display": "Dental"
+       }
+      ]
+     }
+    ],
+    "code": {
+     "coding": [
+      {
+       "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+       "code": "tooth-presence",
+       "display": "Tooth presence"
+      }
+     ],
+     "text": "Tooth presence"
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-09-24",
+    "performer": [
+     {
+      "reference": "Practitioner/fhir-camp-dentist"
+     }
+    ],
+    "bodySite": {
+     "coding": [
+      {
+       "system": "https://fhir.cognovis.de/dental-core/CodeSystem/tooth-position-fdi",
+       "code": "45",
+       "display": "Permanent mandibular right second premolar"
+      }
+     ],
+     "text": "FDI-Zahnposition 45"
+    },
+    "note": [
+     {
+      "text": "Greta: Zahn 45 ist am 2026-09-24 vorhanden und ohne zahnschemarelevante Besonderheit."
+     }
+    ],
+    "component": [
+     {
+      "code": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+         "code": "tooth-presence",
+         "display": "Tooth presence"
+        }
+       ],
+       "text": "Tooth presence"
+      },
+      "valueCodeableConcept": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-chart-value",
+         "code": "tooth-present",
+         "display": "Tooth present"
+        },
+        {
+         "system": "https://fhir.cognovis.de/dental/CodeSystem/sws2-zahnstatus",
+         "version": "2024.0.0",
+         "code": "g",
+         "display": "gesund"
+        }
+       ],
+       "text": "SWS-2.0-Zahnstatus: gesund"
+      }
+     },
+     {
+      "code": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+         "code": "tooth-substrate",
+         "display": "Tooth substrate"
+        }
+       ],
+       "text": "Tooth substrate"
+      },
+      "valueCodeableConcept": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-chart-value",
+         "code": "natural-tooth-structure",
+         "display": "Natural tooth structure"
+        }
+       ],
+       "text": "Natural tooth structure"
+      }
+     }
+    ]
+   },
+   "request": {
+    "method": "PUT",
+    "url": "Observation/dent-051-obs-tooth-chart-45"
+   }
+  },
+  {
+   "fullUrl": "urn:uuid:Observation-dent-051-obs-tooth-chart-46",
+   "resource": {
+    "resourceType": "Observation",
+    "id": "dent-051-obs-tooth-chart-46",
+    "meta": {
+     "profile": [
+      "https://fhir.cognovis.de/dental-core/StructureDefinition/dental-tooth-state"
+     ],
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST",
+       "display": "test health data"
+      }
+     ]
+    },
+    "status": "final",
+    "category": [
+     {
+      "coding": [
+       {
+        "system": "https://fhir.cognovis.de/dental/CodeSystem/dental-category",
+        "code": "dental",
+        "display": "Dental"
+       }
+      ]
+     }
+    ],
+    "code": {
+     "coding": [
+      {
+       "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+       "code": "tooth-presence",
+       "display": "Tooth presence"
+      }
+     ],
+     "text": "Tooth presence"
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-09-24",
+    "performer": [
+     {
+      "reference": "Practitioner/fhir-camp-dentist"
+     }
+    ],
+    "bodySite": {
+     "coding": [
+      {
+       "system": "https://fhir.cognovis.de/dental-core/CodeSystem/tooth-position-fdi",
+       "code": "46",
+       "display": "Permanent mandibular right first molar"
+      }
+     ],
+     "text": "FDI-Zahnposition 46"
+    },
+    "note": [
+     {
+      "text": "Greta: Zahn 46 ist am 2026-09-24 vorhanden und ohne zahnschemarelevante Besonderheit."
+     }
+    ],
+    "component": [
+     {
+      "code": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+         "code": "tooth-presence",
+         "display": "Tooth presence"
+        }
+       ],
+       "text": "Tooth presence"
+      },
+      "valueCodeableConcept": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-chart-value",
+         "code": "tooth-present",
+         "display": "Tooth present"
+        },
+        {
+         "system": "https://fhir.cognovis.de/dental/CodeSystem/sws2-zahnstatus",
+         "version": "2024.0.0",
+         "code": "g",
+         "display": "gesund"
+        }
+       ],
+       "text": "SWS-2.0-Zahnstatus: gesund"
+      }
+     },
+     {
+      "code": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+         "code": "tooth-substrate",
+         "display": "Tooth substrate"
+        }
+       ],
+       "text": "Tooth substrate"
+      },
+      "valueCodeableConcept": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-chart-value",
+         "code": "natural-tooth-structure",
+         "display": "Natural tooth structure"
+        }
+       ],
+       "text": "Natural tooth structure"
+      }
+     }
+    ]
+   },
+   "request": {
+    "method": "PUT",
+    "url": "Observation/dent-051-obs-tooth-chart-46"
+   }
+  },
+  {
+   "fullUrl": "urn:uuid:Observation-dent-051-obs-tooth-chart-47",
+   "resource": {
+    "resourceType": "Observation",
+    "id": "dent-051-obs-tooth-chart-47",
+    "meta": {
+     "profile": [
+      "https://fhir.cognovis.de/dental-core/StructureDefinition/dental-tooth-state"
+     ],
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST",
+       "display": "test health data"
+      }
+     ]
+    },
+    "status": "final",
+    "category": [
+     {
+      "coding": [
+       {
+        "system": "https://fhir.cognovis.de/dental/CodeSystem/dental-category",
+        "code": "dental",
+        "display": "Dental"
+       }
+      ]
+     }
+    ],
+    "code": {
+     "coding": [
+      {
+       "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+       "code": "tooth-presence",
+       "display": "Tooth presence"
+      }
+     ],
+     "text": "Tooth presence"
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-09-24",
+    "performer": [
+     {
+      "reference": "Practitioner/fhir-camp-dentist"
+     }
+    ],
+    "bodySite": {
+     "coding": [
+      {
+       "system": "https://fhir.cognovis.de/dental-core/CodeSystem/tooth-position-fdi",
+       "code": "47",
+       "display": "Permanent mandibular right second molar"
+      }
+     ],
+     "text": "FDI-Zahnposition 47"
+    },
+    "note": [
+     {
+      "text": "Greta: Zahn 47 ist am 2026-09-24 vorhanden und ohne zahnschemarelevante Besonderheit."
+     }
+    ],
+    "component": [
+     {
+      "code": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+         "code": "tooth-presence",
+         "display": "Tooth presence"
+        }
+       ],
+       "text": "Tooth presence"
+      },
+      "valueCodeableConcept": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-chart-value",
+         "code": "tooth-present",
+         "display": "Tooth present"
+        },
+        {
+         "system": "https://fhir.cognovis.de/dental/CodeSystem/sws2-zahnstatus",
+         "version": "2024.0.0",
+         "code": "g",
+         "display": "gesund"
+        }
+       ],
+       "text": "SWS-2.0-Zahnstatus: gesund"
+      }
+     },
+     {
+      "code": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+         "code": "tooth-substrate",
+         "display": "Tooth substrate"
+        }
+       ],
+       "text": "Tooth substrate"
+      },
+      "valueCodeableConcept": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-chart-value",
+         "code": "natural-tooth-structure",
+         "display": "Natural tooth structure"
+        }
+       ],
+       "text": "Natural tooth structure"
+      }
+     }
+    ]
+   },
+   "request": {
+    "method": "PUT",
+    "url": "Observation/dent-051-obs-tooth-chart-47"
+   }
+  },
+  {
+   "fullUrl": "urn:uuid:Observation-dent-051-obs-tooth-chart-48",
+   "resource": {
+    "resourceType": "Observation",
+    "id": "dent-051-obs-tooth-chart-48",
+    "meta": {
+     "profile": [
+      "https://fhir.cognovis.de/dental-core/StructureDefinition/dental-tooth-state"
+     ],
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST",
+       "display": "test health data"
+      }
+     ]
+    },
+    "status": "final",
+    "category": [
+     {
+      "coding": [
+       {
+        "system": "https://fhir.cognovis.de/dental/CodeSystem/dental-category",
+        "code": "dental",
+        "display": "Dental"
+       }
+      ]
+     }
+    ],
+    "code": {
+     "coding": [
+      {
+       "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+       "code": "tooth-presence",
+       "display": "Tooth presence"
+      }
+     ],
+     "text": "Tooth presence"
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-09-24",
+    "performer": [
+     {
+      "reference": "Practitioner/fhir-camp-dentist"
+     }
+    ],
+    "bodySite": {
+     "coding": [
+      {
+       "system": "https://fhir.cognovis.de/dental-core/CodeSystem/tooth-position-fdi",
+       "code": "48",
+       "display": "Permanent mandibular right third molar"
+      }
+     ],
+     "text": "FDI-Zahnposition 48"
+    },
+    "note": [
+     {
+      "text": "Greta: Zahnposition 48 ist am 2026-09-24 nicht mit einem natürlichen Zahn besetzt."
+     }
+    ],
+    "component": [
+     {
+      "code": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-component",
+         "code": "tooth-presence",
+         "display": "Tooth presence"
+        }
+       ],
+       "text": "Tooth presence"
+      },
+      "valueCodeableConcept": {
+       "coding": [
+        {
+         "system": "https://fhir.cognovis.de/dental-core/CodeSystem/dental-chart-value",
+         "code": "tooth-absent",
+         "display": "Tooth absent"
+        },
+        {
+         "system": "https://fhir.cognovis.de/dental/CodeSystem/sws2-zahnstatus",
+         "version": "2024.0.0",
+         "code": "f",
+         "display": "fehlt"
+        }
+       ],
+       "text": "SWS-2.0-Zahnstatus: fehlt"
+      }
+     }
+    ]
+   },
+   "request": {
+    "method": "PUT",
+    "url": "Observation/dent-051-obs-tooth-chart-48"
+   }
+  },
+  {
+   "fullUrl": "urn:uuid:Observation-dent-051-obs-finding",
+   "resource": {
+    "resourceType": "Observation",
+    "id": "dent-051-obs-finding",
+    "meta": {
+     "profile": [
+      "https://fhir.cognovis.de/dental-core/StructureDefinition/dental-finding"
+     ],
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST",
+       "display": "test health data"
+      }
+     ]
+    },
+    "status": "final",
+    "category": [
+     {
+      "coding": [
+       {
+        "system": "https://fhir.cognovis.de/dental/CodeSystem/dental-category",
+        "code": "dental",
+        "display": "Dental"
+       }
+      ]
+     }
+    ],
+    "code": {
+     "text": "Prothetischer Versorgungsbedarf"
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-09-24T09:20:00+02:00",
+    "performer": [
+     {
+      "reference": "Practitioner/fhir-camp-dentist"
+     }
+    ],
+    "valueString": "Zahn 36 fehlt. Die Patientin wünscht eine festsitzende Versorgung der Lücke; Brücke 35–37 und Einzelimplantat regio 36 sind möglich."
+   },
+   "request": {
+    "method": "PUT",
+    "url": "Observation/dent-051-obs-finding"
+   }
+  },
+  {
+   "fullUrl": "urn:uuid:Condition-dent-051-cond-01",
+   "resource": {
+    "resourceType": "Condition",
+    "id": "dent-051-cond-01",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST",
+       "display": "test health data"
+      }
+     ]
+    },
+    "clinicalStatus": {
+     "coding": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+       "code": "active"
+      }
+     ]
+    },
+    "verificationStatus": {
+     "coding": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+       "code": "confirmed"
+      }
+     ]
+    },
+    "category": [
+     {
+      "coding": [
+       {
+        "system": "https://fhir.cognovis.de/dental/CodeSystem/dental-category",
+        "code": "dental",
+        "display": "Dental"
+       }
+      ]
+     }
+    ],
+    "code": {
+     "text": "Einzelzahnlücke regio 36 (fehlender Zahn 36)"
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "recordedDate": "2026-09-24",
+    "evidence": [
+     {
+      "detail": [
+       {
+        "reference": "Observation/dent-051-obs-finding"
+       }
+      ]
+     }
+    ],
+    "note": [
+     {
+      "text": "Seit Jahren fehlender unterer erster Molar links; Nachbarzähne 35 und 37 belastbar."
+     }
+    ],
+    "bodySite": [
+     {
+      "coding": [
+       {
+        "system": "https://fhir.cognovis.de/dental-core/CodeSystem/tooth-position-fdi",
+        "code": "36",
+        "display": "Permanent mandibular left first molar"
+       }
+      ],
+      "text": "FDI-Zahnposition 36"
+     }
+    ]
+   },
+   "request": {
+    "method": "PUT",
+    "url": "Condition/dent-051-cond-01"
+   }
+  },
+  {
+   "fullUrl": "urn:uuid:CarePlan-dent-051-hkp-alt-a",
+   "resource": {
+    "resourceType": "CarePlan",
+    "id": "dent-051-hkp-alt-a",
+    "meta": {
+     "profile": [
+      "https://fhir.cognovis.de/dental/StructureDefinition/dental-care-plan"
+     ],
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST",
+       "display": "test health data"
+      }
+     ]
+    },
+    "identifier": [
+     {
+      "system": "https://github.com/cognovis/fhir-camp-hackathon/sid/hkp",
+      "value": "HKP-2026-051-A"
+     }
+    ],
+    "status": "draft",
+    "intent": "plan",
+    "category": [
+     {
+      "coding": [
+       {
+        "system": "https://fhir.cognovis.de/dental/CodeSystem/dental-category",
+        "code": "dental",
+        "display": "Dental"
+       }
+      ]
+     },
+     {
+      "coding": [
+       {
+        "system": "https://fhir.cognovis.de/dental/CodeSystem/dental-care-plan-type",
+        "code": "hkp"
+       }
+      ]
+     }
+    ],
+    "title": "HKP Alternative A: Brücke 35–37, vollverblendet (gewählt)",
+    "description": "Dreigliedrige Brücke 35–37 mit zahnfarbener Vollverblendung; Pfeiler 35 und 37 mit Hohlkehl-/Stufenpräparation. Von Greta gewählt.",
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "period": {
+     "start": "2026-11-16"
+    },
+    "created": "2026-10-01",
+    "author": {
+     "reference": "Practitioner/fhir-camp-dentist"
+    },
+    "addresses": [
+     {
+      "reference": "Condition/dent-051-cond-01"
+     }
+    ],
+    "supportingInfo": [
+     {
+      "reference": "Observation/dent-051-obs-routine"
+     },
+     {
+      "reference": "Observation/dent-051-obs-finding"
+     }
+    ],
+    "activity": [
+     {
+      "detail": {
+       "kind": "ServiceRequest",
+       "code": {
+        "coding": [
+         {
+          "system": "http://fhir.de/CodeSystem/bzaek/goz",
+          "code": "0030",
+          "display": "Heil- und Kostenplan"
+         }
+        ],
+        "text": "GOZ 0030 Heil- und Kostenplan"
+       },
+       "status": "not-started",
+       "description": "GOZ 0030 Heil- und Kostenplan"
+      }
+     },
+     {
+      "detail": {
+       "kind": "ServiceRequest",
+       "code": {
+        "coding": [
+         {
+          "system": "http://fhir.de/CodeSystem/bzaek/goz",
+          "code": "0090",
+          "display": "Infiltrationsanästhesie"
+         }
+        ],
+        "text": "GOZ 0090 Infiltrationsanästhesie"
+       },
+       "status": "not-started",
+       "reasonReference": [
+        {
+         "reference": "Observation/dent-051-obs-tooth-chart-35"
+        }
+       ],
+       "description": "GOZ 0090 Infiltrationsanästhesie, Zahn 35"
+      }
+     },
+     {
+      "detail": {
+       "kind": "ServiceRequest",
+       "code": {
+        "coding": [
+         {
+          "system": "http://fhir.de/CodeSystem/bzaek/goz",
+          "code": "0090",
+          "display": "Infiltrationsanästhesie"
+         }
+        ],
+        "text": "GOZ 0090 Infiltrationsanästhesie"
+       },
+       "status": "not-started",
+       "reasonReference": [
+        {
+         "reference": "Observation/dent-051-obs-tooth-chart-37"
+        }
+       ],
+       "description": "GOZ 0090 Infiltrationsanästhesie, Zahn 37"
+      }
+     },
+     {
+      "detail": {
+       "kind": "ServiceRequest",
+       "code": {
+        "coding": [
+         {
+          "system": "http://fhir.de/CodeSystem/bzaek/goz",
+          "code": "5010",
+          "display": "Brückenanker Vollkrone (Hohlkehl-/Stufenpräparation)"
+         }
+        ],
+        "text": "GOZ 5010 Brückenanker Vollkrone (Hohlkehl-/Stufenpräparation)"
+       },
+       "status": "not-started",
+       "reasonReference": [
+        {
+         "reference": "Observation/dent-051-obs-tooth-chart-35"
+        }
+       ],
+       "description": "GOZ 5010 Brückenanker Vollkrone (Hohlkehl-/Stufenpräparation), Zahn 35"
+      }
+     },
+     {
+      "detail": {
+       "kind": "ServiceRequest",
+       "code": {
+        "coding": [
+         {
+          "system": "http://fhir.de/CodeSystem/bzaek/goz",
+          "code": "5010",
+          "display": "Brückenanker Vollkrone (Hohlkehl-/Stufenpräparation)"
+         }
+        ],
+        "text": "GOZ 5010 Brückenanker Vollkrone (Hohlkehl-/Stufenpräparation)"
+       },
+       "status": "not-started",
+       "reasonReference": [
+        {
+         "reference": "Observation/dent-051-obs-tooth-chart-37"
+        }
+       ],
+       "description": "GOZ 5010 Brückenanker Vollkrone (Hohlkehl-/Stufenpräparation), Zahn 37"
+      }
+     },
+     {
+      "detail": {
+       "kind": "ServiceRequest",
+       "code": {
+        "coding": [
+         {
+          "system": "http://fhir.de/CodeSystem/bzaek/goz",
+          "code": "5070",
+          "display": "Brückenspanne"
+         }
+        ],
+        "text": "GOZ 5070 Brückenspanne"
+       },
+       "status": "not-started",
+       "reasonReference": [
+        {
+         "reference": "Observation/dent-051-obs-tooth-chart-36"
+        }
+       ],
+       "description": "GOZ 5070 Brückenspanne, Zahn 36"
+      }
+     },
+     {
+      "detail": {
+       "kind": "ServiceRequest",
+       "code": {
+        "coding": [
+         {
+          "system": "http://fhir.de/CodeSystem/bzaek/goz",
+          "code": "5120",
+          "display": "Provisorische Brücke, je Zahn"
+         }
+        ],
+        "text": "GOZ 5120 Provisorische Brücke, je Zahn"
+       },
+       "status": "not-started",
+       "reasonReference": [
+        {
+         "reference": "Observation/dent-051-obs-tooth-chart-35"
+        }
+       ],
+       "description": "GOZ 5120 Provisorische Brücke, je Zahn, Zahn 35"
+      }
+     },
+     {
+      "detail": {
+       "kind": "ServiceRequest",
+       "code": {
+        "coding": [
+         {
+          "system": "http://fhir.de/CodeSystem/bzaek/goz",
+          "code": "5120",
+          "display": "Provisorische Brücke, je Zahn"
+         }
+        ],
+        "text": "GOZ 5120 Provisorische Brücke, je Zahn"
+       },
+       "status": "not-started",
+       "reasonReference": [
+        {
+         "reference": "Observation/dent-051-obs-tooth-chart-37"
+        }
+       ],
+       "description": "GOZ 5120 Provisorische Brücke, je Zahn, Zahn 37"
+      }
+     },
+     {
+      "detail": {
+       "kind": "ServiceRequest",
+       "code": {
+        "coding": [
+         {
+          "system": "http://fhir.de/CodeSystem/bzaek/goz",
+          "code": "5140",
+          "display": "Provisorische Brücke, je Spanne"
+         }
+        ],
+        "text": "GOZ 5140 Provisorische Brücke, je Spanne"
+       },
+       "status": "not-started",
+       "reasonReference": [
+        {
+         "reference": "Observation/dent-051-obs-tooth-chart-36"
+        }
+       ],
+       "description": "GOZ 5140 Provisorische Brücke, je Spanne, Zahn 36"
+      }
+     }
+    ]
+   },
+   "request": {
+    "method": "PUT",
+    "url": "CarePlan/dent-051-hkp-alt-a"
+   }
+  },
+  {
+   "fullUrl": "urn:uuid:CarePlan-dent-051-hkp-alt-b",
+   "resource": {
+    "resourceType": "CarePlan",
+    "id": "dent-051-hkp-alt-b",
+    "meta": {
+     "profile": [
+      "https://fhir.cognovis.de/dental/StructureDefinition/dental-care-plan"
+     ],
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST",
+       "display": "test health data"
+      }
+     ]
+    },
+    "identifier": [
+     {
+      "system": "https://github.com/cognovis/fhir-camp-hackathon/sid/hkp",
+      "value": "HKP-2026-051-B"
+     }
+    ],
+    "status": "draft",
+    "intent": "option",
+    "category": [
+     {
+      "coding": [
+       {
+        "system": "https://fhir.cognovis.de/dental/CodeSystem/dental-category",
+        "code": "dental",
+        "display": "Dental"
+       }
+      ]
+     },
+     {
+      "coding": [
+       {
+        "system": "https://fhir.cognovis.de/dental/CodeSystem/dental-care-plan-type",
+        "code": "hkp"
+       }
+      ]
+     }
+    ],
+    "title": "HKP Alternative B: Brücke 35–37, unverblendete Vollgussbrücke",
+    "description": "Dreigliedrige Vollgussbrücke 35–37 ohne zahnfarbene Verblendung; Pfeiler mit Tangentialpräparation.",
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "period": {
+     "start": "2026-11-16"
+    },
+    "created": "2026-10-01",
+    "author": {
+     "reference": "Practitioner/fhir-camp-dentist"
+    },
+    "addresses": [
+     {
+      "reference": "Condition/dent-051-cond-01"
+     }
+    ],
+    "supportingInfo": [
+     {
+      "reference": "Observation/dent-051-obs-routine"
+     },
+     {
+      "reference": "Observation/dent-051-obs-finding"
+     }
+    ],
+    "activity": [
+     {
+      "detail": {
+       "kind": "ServiceRequest",
+       "code": {
+        "coding": [
+         {
+          "system": "http://fhir.de/CodeSystem/bzaek/goz",
+          "code": "0030",
+          "display": "Heil- und Kostenplan"
+         }
+        ],
+        "text": "GOZ 0030 Heil- und Kostenplan"
+       },
+       "status": "not-started",
+       "description": "GOZ 0030 Heil- und Kostenplan"
+      }
+     },
+     {
+      "detail": {
+       "kind": "ServiceRequest",
+       "code": {
+        "coding": [
+         {
+          "system": "http://fhir.de/CodeSystem/bzaek/goz",
+          "code": "0090",
+          "display": "Infiltrationsanästhesie"
+         }
+        ],
+        "text": "GOZ 0090 Infiltrationsanästhesie"
+       },
+       "status": "not-started",
+       "reasonReference": [
+        {
+         "reference": "Observation/dent-051-obs-tooth-chart-35"
+        }
+       ],
+       "description": "GOZ 0090 Infiltrationsanästhesie, Zahn 35"
+      }
+     },
+     {
+      "detail": {
+       "kind": "ServiceRequest",
+       "code": {
+        "coding": [
+         {
+          "system": "http://fhir.de/CodeSystem/bzaek/goz",
+          "code": "0090",
+          "display": "Infiltrationsanästhesie"
+         }
+        ],
+        "text": "GOZ 0090 Infiltrationsanästhesie"
+       },
+       "status": "not-started",
+       "reasonReference": [
+        {
+         "reference": "Observation/dent-051-obs-tooth-chart-37"
+        }
+       ],
+       "description": "GOZ 0090 Infiltrationsanästhesie, Zahn 37"
+      }
+     },
+     {
+      "detail": {
+       "kind": "ServiceRequest",
+       "code": {
+        "coding": [
+         {
+          "system": "http://fhir.de/CodeSystem/bzaek/goz",
+          "code": "5000",
+          "display": "Brückenanker Vollkrone (Tangentialpräparation)"
+         }
+        ],
+        "text": "GOZ 5000 Brückenanker Vollkrone (Tangentialpräparation)"
+       },
+       "status": "not-started",
+       "reasonReference": [
+        {
+         "reference": "Observation/dent-051-obs-tooth-chart-35"
+        }
+       ],
+       "description": "GOZ 5000 Brückenanker Vollkrone (Tangentialpräparation), Zahn 35"
+      }
+     },
+     {
+      "detail": {
+       "kind": "ServiceRequest",
+       "code": {
+        "coding": [
+         {
+          "system": "http://fhir.de/CodeSystem/bzaek/goz",
+          "code": "5000",
+          "display": "Brückenanker Vollkrone (Tangentialpräparation)"
+         }
+        ],
+        "text": "GOZ 5000 Brückenanker Vollkrone (Tangentialpräparation)"
+       },
+       "status": "not-started",
+       "reasonReference": [
+        {
+         "reference": "Observation/dent-051-obs-tooth-chart-37"
+        }
+       ],
+       "description": "GOZ 5000 Brückenanker Vollkrone (Tangentialpräparation), Zahn 37"
+      }
+     },
+     {
+      "detail": {
+       "kind": "ServiceRequest",
+       "code": {
+        "coding": [
+         {
+          "system": "http://fhir.de/CodeSystem/bzaek/goz",
+          "code": "5070",
+          "display": "Brückenspanne"
+         }
+        ],
+        "text": "GOZ 5070 Brückenspanne"
+       },
+       "status": "not-started",
+       "reasonReference": [
+        {
+         "reference": "Observation/dent-051-obs-tooth-chart-36"
+        }
+       ],
+       "description": "GOZ 5070 Brückenspanne, Zahn 36"
+      }
+     },
+     {
+      "detail": {
+       "kind": "ServiceRequest",
+       "code": {
+        "coding": [
+         {
+          "system": "http://fhir.de/CodeSystem/bzaek/goz",
+          "code": "5120",
+          "display": "Provisorische Brücke, je Zahn"
+         }
+        ],
+        "text": "GOZ 5120 Provisorische Brücke, je Zahn"
+       },
+       "status": "not-started",
+       "reasonReference": [
+        {
+         "reference": "Observation/dent-051-obs-tooth-chart-35"
+        }
+       ],
+       "description": "GOZ 5120 Provisorische Brücke, je Zahn, Zahn 35"
+      }
+     },
+     {
+      "detail": {
+       "kind": "ServiceRequest",
+       "code": {
+        "coding": [
+         {
+          "system": "http://fhir.de/CodeSystem/bzaek/goz",
+          "code": "5120",
+          "display": "Provisorische Brücke, je Zahn"
+         }
+        ],
+        "text": "GOZ 5120 Provisorische Brücke, je Zahn"
+       },
+       "status": "not-started",
+       "reasonReference": [
+        {
+         "reference": "Observation/dent-051-obs-tooth-chart-37"
+        }
+       ],
+       "description": "GOZ 5120 Provisorische Brücke, je Zahn, Zahn 37"
+      }
+     },
+     {
+      "detail": {
+       "kind": "ServiceRequest",
+       "code": {
+        "coding": [
+         {
+          "system": "http://fhir.de/CodeSystem/bzaek/goz",
+          "code": "5140",
+          "display": "Provisorische Brücke, je Spanne"
+         }
+        ],
+        "text": "GOZ 5140 Provisorische Brücke, je Spanne"
+       },
+       "status": "not-started",
+       "reasonReference": [
+        {
+         "reference": "Observation/dent-051-obs-tooth-chart-36"
+        }
+       ],
+       "description": "GOZ 5140 Provisorische Brücke, je Spanne, Zahn 36"
+      }
+     }
+    ]
+   },
+   "request": {
+    "method": "PUT",
+    "url": "CarePlan/dent-051-hkp-alt-b"
+   }
+  },
+  {
+   "fullUrl": "urn:uuid:CarePlan-dent-051-hkp-alt-c",
+   "resource": {
+    "resourceType": "CarePlan",
+    "id": "dent-051-hkp-alt-c",
+    "meta": {
+     "profile": [
+      "https://fhir.cognovis.de/dental/StructureDefinition/dental-care-plan"
+     ],
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST",
+       "display": "test health data"
+      }
+     ]
+    },
+    "identifier": [
+     {
+      "system": "https://github.com/cognovis/fhir-camp-hackathon/sid/hkp",
+      "value": "HKP-2026-051-C"
+     }
+    ],
+    "status": "draft",
+    "intent": "option",
+    "category": [
+     {
+      "coding": [
+       {
+        "system": "https://fhir.cognovis.de/dental/CodeSystem/dental-category",
+        "code": "dental",
+        "display": "Dental"
+       }
+      ]
+     },
+     {
+      "coding": [
+       {
+        "system": "https://fhir.cognovis.de/dental/CodeSystem/dental-care-plan-type",
+        "code": "hkp"
+       }
+      ]
+     }
+    ],
+    "title": "HKP Alternative C: Einzelimplantat regio 36 mit Krone",
+    "description": "Enossales Einzelimplantat regio 36 mit Vollkrone; die Nachbarzähne werden nicht beschliffen. Implantatinsertion mit Faktor 3,0 geplant, Begründung noch offen.",
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "period": {
+     "start": "2026-11-16"
+    },
+    "created": "2026-10-01",
+    "author": {
+     "reference": "Practitioner/fhir-camp-dentist"
+    },
+    "addresses": [
+     {
+      "reference": "Condition/dent-051-cond-01"
+     }
+    ],
+    "supportingInfo": [
+     {
+      "reference": "Observation/dent-051-obs-routine"
+     },
+     {
+      "reference": "Observation/dent-051-obs-finding"
+     }
+    ],
+    "activity": [
+     {
+      "detail": {
+       "kind": "ServiceRequest",
+       "code": {
+        "coding": [
+         {
+          "system": "http://fhir.de/CodeSystem/bzaek/goz",
+          "code": "0030",
+          "display": "Heil- und Kostenplan"
+         }
+        ],
+        "text": "GOZ 0030 Heil- und Kostenplan"
+       },
+       "status": "not-started",
+       "description": "GOZ 0030 Heil- und Kostenplan"
+      }
+     },
+     {
+      "detail": {
+       "kind": "ServiceRequest",
+       "code": {
+        "coding": [
+         {
+          "system": "http://fhir.de/CodeSystem/bzaek/goz",
+          "code": "9000",
+          "display": "Implantatbezogene Analyse und Vermessung"
+         }
+        ],
+        "text": "GOZ 9000 Implantatbezogene Analyse und Vermessung"
+       },
+       "status": "not-started",
+       "description": "GOZ 9000 Implantatbezogene Analyse und Vermessung"
+      }
+     },
+     {
+      "detail": {
+       "kind": "ServiceRequest",
+       "code": {
+        "coding": [
+         {
+          "system": "http://fhir.de/CodeSystem/bzaek/goz",
+          "code": "9003",
+          "display": "Orientierungsschablone"
+         }
+        ],
+        "text": "GOZ 9003 Orientierungsschablone"
+       },
+       "status": "not-started",
+       "description": "GOZ 9003 Orientierungsschablone"
+      }
+     },
+     {
+      "detail": {
+       "kind": "ServiceRequest",
+       "code": {
+        "coding": [
+         {
+          "system": "http://fhir.de/CodeSystem/bzaek/goz",
+          "code": "0090",
+          "display": "Infiltrationsanästhesie"
+         }
+        ],
+        "text": "GOZ 0090 Infiltrationsanästhesie"
+       },
+       "status": "not-started",
+       "reasonReference": [
+        {
+         "reference": "Observation/dent-051-obs-tooth-chart-36"
+        }
+       ],
+       "description": "GOZ 0090 Infiltrationsanästhesie, Zahn 36"
+      }
+     },
+     {
+      "detail": {
+       "kind": "ServiceRequest",
+       "code": {
+        "coding": [
+         {
+          "system": "http://fhir.de/CodeSystem/bzaek/goz",
+          "code": "9010",
+          "display": "Implantatinsertion"
+         }
+        ],
+        "text": "GOZ 9010 Implantatinsertion"
+       },
+       "status": "not-started",
+       "reasonReference": [
+        {
+         "reference": "Observation/dent-051-obs-tooth-chart-36"
+        }
+       ],
+       "description": "GOZ 9010 Implantatinsertion, Zahn 36"
+      }
+     },
+     {
+      "detail": {
+       "kind": "ServiceRequest",
+       "code": {
+        "coding": [
+         {
+          "system": "http://fhir.de/CodeSystem/bzaek/goz",
+          "code": "9040",
+          "display": "Freilegen des Implantats"
+         }
+        ],
+        "text": "GOZ 9040 Freilegen des Implantats"
+       },
+       "status": "not-started",
+       "reasonReference": [
+        {
+         "reference": "Observation/dent-051-obs-tooth-chart-36"
+        }
+       ],
+       "description": "GOZ 9040 Freilegen des Implantats, Zahn 36"
+      }
+     },
+     {
+      "detail": {
+       "kind": "ServiceRequest",
+       "code": {
+        "coding": [
+         {
+          "system": "http://fhir.de/CodeSystem/bzaek/goz",
+          "code": "2200",
+          "display": "Vollkrone auf Implantat (Tangentialpräparation)"
+         }
+        ],
+        "text": "GOZ 2200 Vollkrone auf Implantat (Tangentialpräparation)"
+       },
+       "status": "not-started",
+       "reasonReference": [
+        {
+         "reference": "Observation/dent-051-obs-tooth-chart-36"
+        }
+       ],
+       "description": "GOZ 2200 Vollkrone auf Implantat (Tangentialpräparation), Zahn 36"
+      }
+     }
+    ]
+   },
+   "request": {
+    "method": "PUT",
+    "url": "CarePlan/dent-051-hkp-alt-c"
+   }
+  },
+  {
+   "fullUrl": "urn:uuid:Account-dent-051-cost-plan-a",
+   "resource": {
+    "resourceType": "Account",
+    "id": "dent-051-cost-plan-a",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST",
+       "display": "test health data"
+      }
+     ]
+    },
+    "status": "active",
+    "type": {
+     "coding": [
+      {
+       "system": "https://fhir.cognovis.de/dental/CodeSystem/dental-care-plan-type",
+       "code": "hkp"
+      }
+     ]
+    },
+    "name": "Kostenplan Alternative A: Brücke 35–37, vollverblendet (gewählt)",
+    "subject": [
+     {
+      "reference": "Patient/dent-051"
+     }
+    ],
+    "servicePeriod": {
+     "start": "2026-11-16"
+    },
+    "coverage": [
+     {
+      "coverage": {
+       "reference": "Coverage/dent-051-cov-01"
+      },
+      "priority": 1
+     }
+    ],
+    "owner": {
+     "reference": "Organization/fhir-camp-practice"
+    },
+    "description": "Geplante GOZ-Leistungen zu CarePlan/dent-051-hkp-alt-a"
+   },
+   "request": {
+    "method": "PUT",
+    "url": "Account/dent-051-cost-plan-a"
+   }
+  },
+  {
+   "fullUrl": "urn:uuid:Account-dent-051-cost-plan-b",
+   "resource": {
+    "resourceType": "Account",
+    "id": "dent-051-cost-plan-b",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST",
+       "display": "test health data"
+      }
+     ]
+    },
+    "status": "active",
+    "type": {
+     "coding": [
+      {
+       "system": "https://fhir.cognovis.de/dental/CodeSystem/dental-care-plan-type",
+       "code": "hkp"
+      }
+     ]
+    },
+    "name": "Kostenplan Alternative B: Brücke 35–37, unverblendete Vollgussbrücke",
+    "subject": [
+     {
+      "reference": "Patient/dent-051"
+     }
+    ],
+    "servicePeriod": {
+     "start": "2026-11-16"
+    },
+    "coverage": [
+     {
+      "coverage": {
+       "reference": "Coverage/dent-051-cov-01"
+      },
+      "priority": 1
+     }
+    ],
+    "owner": {
+     "reference": "Organization/fhir-camp-practice"
+    },
+    "description": "Geplante GOZ-Leistungen zu CarePlan/dent-051-hkp-alt-b"
+   },
+   "request": {
+    "method": "PUT",
+    "url": "Account/dent-051-cost-plan-b"
+   }
+  },
+  {
+   "fullUrl": "urn:uuid:Account-dent-051-cost-plan-c",
+   "resource": {
+    "resourceType": "Account",
+    "id": "dent-051-cost-plan-c",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST",
+       "display": "test health data"
+      }
+     ]
+    },
+    "status": "active",
+    "type": {
+     "coding": [
+      {
+       "system": "https://fhir.cognovis.de/dental/CodeSystem/dental-care-plan-type",
+       "code": "hkp"
+      }
+     ]
+    },
+    "name": "Kostenplan Alternative C: Einzelimplantat regio 36 mit Krone",
+    "subject": [
+     {
+      "reference": "Patient/dent-051"
+     }
+    ],
+    "servicePeriod": {
+     "start": "2026-11-16"
+    },
+    "coverage": [
+     {
+      "coverage": {
+       "reference": "Coverage/dent-051-cov-01"
+      },
+      "priority": 1
+     }
+    ],
+    "owner": {
+     "reference": "Organization/fhir-camp-practice"
+    },
+    "description": "Geplante GOZ-Leistungen zu CarePlan/dent-051-hkp-alt-c"
+   },
+   "request": {
+    "method": "PUT",
+    "url": "Account/dent-051-cost-plan-c"
+   }
+  },
+  {
+   "fullUrl": "urn:uuid:ChargeItem-dent-051-alt-a-01",
+   "resource": {
+    "resourceType": "ChargeItem",
+    "id": "dent-051-alt-a-01",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST",
+       "display": "test health data"
+      }
+     ]
+    },
+    "status": "planned",
+    "code": {
+     "coding": [
+      {
+       "system": "http://fhir.de/CodeSystem/bzaek/goz",
+       "code": "0030",
+       "display": "Heil- und Kostenplan"
+      }
+     ],
+     "text": "GOZ 0030 Heil- und Kostenplan"
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "occurrenceDateTime": "2026-11-16",
+    "quantity": {
+     "value": 1
+    },
+    "factorOverride": 2.3,
+    "account": [
+     {
+      "reference": "Account/dent-051-cost-plan-a"
+     }
+    ],
+    "supportingInformation": [
+     {
+      "reference": "CarePlan/dent-051-hkp-alt-a"
+     }
+    ]
+   },
+   "request": {
+    "method": "PUT",
+    "url": "ChargeItem/dent-051-alt-a-01"
+   }
+  },
+  {
+   "fullUrl": "urn:uuid:ChargeItem-dent-051-alt-a-02",
+   "resource": {
+    "resourceType": "ChargeItem",
+    "id": "dent-051-alt-a-02",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST",
+       "display": "test health data"
+      }
+     ]
+    },
+    "status": "planned",
+    "code": {
+     "coding": [
+      {
+       "system": "http://fhir.de/CodeSystem/bzaek/goz",
+       "code": "0090",
+       "display": "Infiltrationsanästhesie"
+      }
+     ],
+     "text": "GOZ 0090 Infiltrationsanästhesie"
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "occurrenceDateTime": "2026-11-16",
+    "quantity": {
+     "value": 1
+    },
+    "bodysite": [
+     {
+      "coding": [
+       {
+        "system": "https://fhir.cognovis.de/dental-core/CodeSystem/tooth-position-fdi",
+        "code": "35"
+       }
+      ],
+      "text": "Zahn 35"
+     }
+    ],
+    "factorOverride": 2.3,
+    "account": [
+     {
+      "reference": "Account/dent-051-cost-plan-a"
+     }
+    ],
+    "supportingInformation": [
+     {
+      "reference": "CarePlan/dent-051-hkp-alt-a"
+     }
+    ]
+   },
+   "request": {
+    "method": "PUT",
+    "url": "ChargeItem/dent-051-alt-a-02"
+   }
+  },
+  {
+   "fullUrl": "urn:uuid:ChargeItem-dent-051-alt-a-03",
+   "resource": {
+    "resourceType": "ChargeItem",
+    "id": "dent-051-alt-a-03",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST",
+       "display": "test health data"
+      }
+     ]
+    },
+    "status": "planned",
+    "code": {
+     "coding": [
+      {
+       "system": "http://fhir.de/CodeSystem/bzaek/goz",
+       "code": "0090",
+       "display": "Infiltrationsanästhesie"
+      }
+     ],
+     "text": "GOZ 0090 Infiltrationsanästhesie"
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "occurrenceDateTime": "2026-11-16",
+    "quantity": {
+     "value": 1
+    },
+    "bodysite": [
+     {
+      "coding": [
+       {
+        "system": "https://fhir.cognovis.de/dental-core/CodeSystem/tooth-position-fdi",
+        "code": "37"
+       }
+      ],
+      "text": "Zahn 37"
+     }
+    ],
+    "factorOverride": 2.3,
+    "account": [
+     {
+      "reference": "Account/dent-051-cost-plan-a"
+     }
+    ],
+    "supportingInformation": [
+     {
+      "reference": "CarePlan/dent-051-hkp-alt-a"
+     }
+    ]
+   },
+   "request": {
+    "method": "PUT",
+    "url": "ChargeItem/dent-051-alt-a-03"
+   }
+  },
+  {
+   "fullUrl": "urn:uuid:ChargeItem-dent-051-alt-a-04",
+   "resource": {
+    "resourceType": "ChargeItem",
+    "id": "dent-051-alt-a-04",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST",
+       "display": "test health data"
+      }
+     ]
+    },
+    "status": "planned",
+    "code": {
+     "coding": [
+      {
+       "system": "http://fhir.de/CodeSystem/bzaek/goz",
+       "code": "5010",
+       "display": "Brückenanker Vollkrone (Hohlkehl-/Stufenpräparation)"
+      }
+     ],
+     "text": "GOZ 5010 Brückenanker Vollkrone (Hohlkehl-/Stufenpräparation)"
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "occurrenceDateTime": "2026-11-16",
+    "quantity": {
+     "value": 1
+    },
+    "bodysite": [
+     {
+      "coding": [
+       {
+        "system": "https://fhir.cognovis.de/dental-core/CodeSystem/tooth-position-fdi",
+        "code": "35"
+       }
+      ],
+      "text": "Zahn 35"
+     }
+    ],
+    "factorOverride": 2.3,
+    "account": [
+     {
+      "reference": "Account/dent-051-cost-plan-a"
+     }
+    ],
+    "supportingInformation": [
+     {
+      "reference": "CarePlan/dent-051-hkp-alt-a"
+     }
+    ]
+   },
+   "request": {
+    "method": "PUT",
+    "url": "ChargeItem/dent-051-alt-a-04"
+   }
+  },
+  {
+   "fullUrl": "urn:uuid:ChargeItem-dent-051-alt-a-05",
+   "resource": {
+    "resourceType": "ChargeItem",
+    "id": "dent-051-alt-a-05",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST",
+       "display": "test health data"
+      }
+     ]
+    },
+    "status": "planned",
+    "code": {
+     "coding": [
+      {
+       "system": "http://fhir.de/CodeSystem/bzaek/goz",
+       "code": "5010",
+       "display": "Brückenanker Vollkrone (Hohlkehl-/Stufenpräparation)"
+      }
+     ],
+     "text": "GOZ 5010 Brückenanker Vollkrone (Hohlkehl-/Stufenpräparation)"
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "occurrenceDateTime": "2026-11-16",
+    "quantity": {
+     "value": 1
+    },
+    "bodysite": [
+     {
+      "coding": [
+       {
+        "system": "https://fhir.cognovis.de/dental-core/CodeSystem/tooth-position-fdi",
+        "code": "37"
+       }
+      ],
+      "text": "Zahn 37"
+     }
+    ],
+    "factorOverride": 2.3,
+    "account": [
+     {
+      "reference": "Account/dent-051-cost-plan-a"
+     }
+    ],
+    "supportingInformation": [
+     {
+      "reference": "CarePlan/dent-051-hkp-alt-a"
+     }
+    ]
+   },
+   "request": {
+    "method": "PUT",
+    "url": "ChargeItem/dent-051-alt-a-05"
+   }
+  },
+  {
+   "fullUrl": "urn:uuid:ChargeItem-dent-051-alt-a-06",
+   "resource": {
+    "resourceType": "ChargeItem",
+    "id": "dent-051-alt-a-06",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST",
+       "display": "test health data"
+      }
+     ]
+    },
+    "status": "planned",
+    "code": {
+     "coding": [
+      {
+       "system": "http://fhir.de/CodeSystem/bzaek/goz",
+       "code": "5070",
+       "display": "Brückenspanne"
+      }
+     ],
+     "text": "GOZ 5070 Brückenspanne"
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "occurrenceDateTime": "2026-11-16",
+    "quantity": {
+     "value": 1
+    },
+    "bodysite": [
+     {
+      "coding": [
+       {
+        "system": "https://fhir.cognovis.de/dental-core/CodeSystem/tooth-position-fdi",
+        "code": "36"
+       }
+      ],
+      "text": "Zahn 36"
+     }
+    ],
+    "factorOverride": 2.3,
+    "account": [
+     {
+      "reference": "Account/dent-051-cost-plan-a"
+     }
+    ],
+    "supportingInformation": [
+     {
+      "reference": "CarePlan/dent-051-hkp-alt-a"
+     }
+    ]
+   },
+   "request": {
+    "method": "PUT",
+    "url": "ChargeItem/dent-051-alt-a-06"
+   }
+  },
+  {
+   "fullUrl": "urn:uuid:ChargeItem-dent-051-alt-a-07",
+   "resource": {
+    "resourceType": "ChargeItem",
+    "id": "dent-051-alt-a-07",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST",
+       "display": "test health data"
+      }
+     ]
+    },
+    "status": "planned",
+    "code": {
+     "coding": [
+      {
+       "system": "http://fhir.de/CodeSystem/bzaek/goz",
+       "code": "5120",
+       "display": "Provisorische Brücke, je Zahn"
+      }
+     ],
+     "text": "GOZ 5120 Provisorische Brücke, je Zahn"
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "occurrenceDateTime": "2026-11-16",
+    "quantity": {
+     "value": 1
+    },
+    "bodysite": [
+     {
+      "coding": [
+       {
+        "system": "https://fhir.cognovis.de/dental-core/CodeSystem/tooth-position-fdi",
+        "code": "35"
+       }
+      ],
+      "text": "Zahn 35"
+     }
+    ],
+    "factorOverride": 2.3,
+    "account": [
+     {
+      "reference": "Account/dent-051-cost-plan-a"
+     }
+    ],
+    "supportingInformation": [
+     {
+      "reference": "CarePlan/dent-051-hkp-alt-a"
+     }
+    ]
+   },
+   "request": {
+    "method": "PUT",
+    "url": "ChargeItem/dent-051-alt-a-07"
+   }
+  },
+  {
+   "fullUrl": "urn:uuid:ChargeItem-dent-051-alt-a-08",
+   "resource": {
+    "resourceType": "ChargeItem",
+    "id": "dent-051-alt-a-08",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST",
+       "display": "test health data"
+      }
+     ]
+    },
+    "status": "planned",
+    "code": {
+     "coding": [
+      {
+       "system": "http://fhir.de/CodeSystem/bzaek/goz",
+       "code": "5120",
+       "display": "Provisorische Brücke, je Zahn"
+      }
+     ],
+     "text": "GOZ 5120 Provisorische Brücke, je Zahn"
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "occurrenceDateTime": "2026-11-16",
+    "quantity": {
+     "value": 1
+    },
+    "bodysite": [
+     {
+      "coding": [
+       {
+        "system": "https://fhir.cognovis.de/dental-core/CodeSystem/tooth-position-fdi",
+        "code": "37"
+       }
+      ],
+      "text": "Zahn 37"
+     }
+    ],
+    "factorOverride": 2.3,
+    "account": [
+     {
+      "reference": "Account/dent-051-cost-plan-a"
+     }
+    ],
+    "supportingInformation": [
+     {
+      "reference": "CarePlan/dent-051-hkp-alt-a"
+     }
+    ]
+   },
+   "request": {
+    "method": "PUT",
+    "url": "ChargeItem/dent-051-alt-a-08"
+   }
+  },
+  {
+   "fullUrl": "urn:uuid:ChargeItem-dent-051-alt-a-09",
+   "resource": {
+    "resourceType": "ChargeItem",
+    "id": "dent-051-alt-a-09",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST",
+       "display": "test health data"
+      }
+     ]
+    },
+    "status": "planned",
+    "code": {
+     "coding": [
+      {
+       "system": "http://fhir.de/CodeSystem/bzaek/goz",
+       "code": "5140",
+       "display": "Provisorische Brücke, je Spanne"
+      }
+     ],
+     "text": "GOZ 5140 Provisorische Brücke, je Spanne"
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "occurrenceDateTime": "2026-11-16",
+    "quantity": {
+     "value": 1
+    },
+    "bodysite": [
+     {
+      "coding": [
+       {
+        "system": "https://fhir.cognovis.de/dental-core/CodeSystem/tooth-position-fdi",
+        "code": "36"
+       }
+      ],
+      "text": "Zahn 36"
+     }
+    ],
+    "factorOverride": 2.3,
+    "account": [
+     {
+      "reference": "Account/dent-051-cost-plan-a"
+     }
+    ],
+    "supportingInformation": [
+     {
+      "reference": "CarePlan/dent-051-hkp-alt-a"
+     }
+    ]
+   },
+   "request": {
+    "method": "PUT",
+    "url": "ChargeItem/dent-051-alt-a-09"
+   }
+  },
+  {
+   "fullUrl": "urn:uuid:ChargeItem-dent-051-alt-b-01",
+   "resource": {
+    "resourceType": "ChargeItem",
+    "id": "dent-051-alt-b-01",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST",
+       "display": "test health data"
+      }
+     ]
+    },
+    "status": "planned",
+    "code": {
+     "coding": [
+      {
+       "system": "http://fhir.de/CodeSystem/bzaek/goz",
+       "code": "0030",
+       "display": "Heil- und Kostenplan"
+      }
+     ],
+     "text": "GOZ 0030 Heil- und Kostenplan"
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "occurrenceDateTime": "2026-11-16",
+    "quantity": {
+     "value": 1
+    },
+    "factorOverride": 2.3,
+    "account": [
+     {
+      "reference": "Account/dent-051-cost-plan-b"
+     }
+    ],
+    "supportingInformation": [
+     {
+      "reference": "CarePlan/dent-051-hkp-alt-b"
+     }
+    ]
+   },
+   "request": {
+    "method": "PUT",
+    "url": "ChargeItem/dent-051-alt-b-01"
+   }
+  },
+  {
+   "fullUrl": "urn:uuid:ChargeItem-dent-051-alt-b-02",
+   "resource": {
+    "resourceType": "ChargeItem",
+    "id": "dent-051-alt-b-02",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST",
+       "display": "test health data"
+      }
+     ]
+    },
+    "status": "planned",
+    "code": {
+     "coding": [
+      {
+       "system": "http://fhir.de/CodeSystem/bzaek/goz",
+       "code": "0090",
+       "display": "Infiltrationsanästhesie"
+      }
+     ],
+     "text": "GOZ 0090 Infiltrationsanästhesie"
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "occurrenceDateTime": "2026-11-16",
+    "quantity": {
+     "value": 1
+    },
+    "bodysite": [
+     {
+      "coding": [
+       {
+        "system": "https://fhir.cognovis.de/dental-core/CodeSystem/tooth-position-fdi",
+        "code": "35"
+       }
+      ],
+      "text": "Zahn 35"
+     }
+    ],
+    "factorOverride": 2.3,
+    "account": [
+     {
+      "reference": "Account/dent-051-cost-plan-b"
+     }
+    ],
+    "supportingInformation": [
+     {
+      "reference": "CarePlan/dent-051-hkp-alt-b"
+     }
+    ]
+   },
+   "request": {
+    "method": "PUT",
+    "url": "ChargeItem/dent-051-alt-b-02"
+   }
+  },
+  {
+   "fullUrl": "urn:uuid:ChargeItem-dent-051-alt-b-03",
+   "resource": {
+    "resourceType": "ChargeItem",
+    "id": "dent-051-alt-b-03",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST",
+       "display": "test health data"
+      }
+     ]
+    },
+    "status": "planned",
+    "code": {
+     "coding": [
+      {
+       "system": "http://fhir.de/CodeSystem/bzaek/goz",
+       "code": "0090",
+       "display": "Infiltrationsanästhesie"
+      }
+     ],
+     "text": "GOZ 0090 Infiltrationsanästhesie"
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "occurrenceDateTime": "2026-11-16",
+    "quantity": {
+     "value": 1
+    },
+    "bodysite": [
+     {
+      "coding": [
+       {
+        "system": "https://fhir.cognovis.de/dental-core/CodeSystem/tooth-position-fdi",
+        "code": "37"
+       }
+      ],
+      "text": "Zahn 37"
+     }
+    ],
+    "factorOverride": 2.3,
+    "account": [
+     {
+      "reference": "Account/dent-051-cost-plan-b"
+     }
+    ],
+    "supportingInformation": [
+     {
+      "reference": "CarePlan/dent-051-hkp-alt-b"
+     }
+    ]
+   },
+   "request": {
+    "method": "PUT",
+    "url": "ChargeItem/dent-051-alt-b-03"
+   }
+  },
+  {
+   "fullUrl": "urn:uuid:ChargeItem-dent-051-alt-b-04",
+   "resource": {
+    "resourceType": "ChargeItem",
+    "id": "dent-051-alt-b-04",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST",
+       "display": "test health data"
+      }
+     ]
+    },
+    "status": "planned",
+    "code": {
+     "coding": [
+      {
+       "system": "http://fhir.de/CodeSystem/bzaek/goz",
+       "code": "5000",
+       "display": "Brückenanker Vollkrone (Tangentialpräparation)"
+      }
+     ],
+     "text": "GOZ 5000 Brückenanker Vollkrone (Tangentialpräparation)"
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "occurrenceDateTime": "2026-11-16",
+    "quantity": {
+     "value": 1
+    },
+    "bodysite": [
+     {
+      "coding": [
+       {
+        "system": "https://fhir.cognovis.de/dental-core/CodeSystem/tooth-position-fdi",
+        "code": "35"
+       }
+      ],
+      "text": "Zahn 35"
+     }
+    ],
+    "factorOverride": 2.3,
+    "account": [
+     {
+      "reference": "Account/dent-051-cost-plan-b"
+     }
+    ],
+    "supportingInformation": [
+     {
+      "reference": "CarePlan/dent-051-hkp-alt-b"
+     }
+    ]
+   },
+   "request": {
+    "method": "PUT",
+    "url": "ChargeItem/dent-051-alt-b-04"
+   }
+  },
+  {
+   "fullUrl": "urn:uuid:ChargeItem-dent-051-alt-b-05",
+   "resource": {
+    "resourceType": "ChargeItem",
+    "id": "dent-051-alt-b-05",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST",
+       "display": "test health data"
+      }
+     ]
+    },
+    "status": "planned",
+    "code": {
+     "coding": [
+      {
+       "system": "http://fhir.de/CodeSystem/bzaek/goz",
+       "code": "5000",
+       "display": "Brückenanker Vollkrone (Tangentialpräparation)"
+      }
+     ],
+     "text": "GOZ 5000 Brückenanker Vollkrone (Tangentialpräparation)"
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "occurrenceDateTime": "2026-11-16",
+    "quantity": {
+     "value": 1
+    },
+    "bodysite": [
+     {
+      "coding": [
+       {
+        "system": "https://fhir.cognovis.de/dental-core/CodeSystem/tooth-position-fdi",
+        "code": "37"
+       }
+      ],
+      "text": "Zahn 37"
+     }
+    ],
+    "factorOverride": 2.3,
+    "account": [
+     {
+      "reference": "Account/dent-051-cost-plan-b"
+     }
+    ],
+    "supportingInformation": [
+     {
+      "reference": "CarePlan/dent-051-hkp-alt-b"
+     }
+    ]
+   },
+   "request": {
+    "method": "PUT",
+    "url": "ChargeItem/dent-051-alt-b-05"
+   }
+  },
+  {
+   "fullUrl": "urn:uuid:ChargeItem-dent-051-alt-b-06",
+   "resource": {
+    "resourceType": "ChargeItem",
+    "id": "dent-051-alt-b-06",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST",
+       "display": "test health data"
+      }
+     ]
+    },
+    "status": "planned",
+    "code": {
+     "coding": [
+      {
+       "system": "http://fhir.de/CodeSystem/bzaek/goz",
+       "code": "5070",
+       "display": "Brückenspanne"
+      }
+     ],
+     "text": "GOZ 5070 Brückenspanne"
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "occurrenceDateTime": "2026-11-16",
+    "quantity": {
+     "value": 1
+    },
+    "bodysite": [
+     {
+      "coding": [
+       {
+        "system": "https://fhir.cognovis.de/dental-core/CodeSystem/tooth-position-fdi",
+        "code": "36"
+       }
+      ],
+      "text": "Zahn 36"
+     }
+    ],
+    "factorOverride": 2.3,
+    "account": [
+     {
+      "reference": "Account/dent-051-cost-plan-b"
+     }
+    ],
+    "supportingInformation": [
+     {
+      "reference": "CarePlan/dent-051-hkp-alt-b"
+     }
+    ]
+   },
+   "request": {
+    "method": "PUT",
+    "url": "ChargeItem/dent-051-alt-b-06"
+   }
+  },
+  {
+   "fullUrl": "urn:uuid:ChargeItem-dent-051-alt-b-07",
+   "resource": {
+    "resourceType": "ChargeItem",
+    "id": "dent-051-alt-b-07",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST",
+       "display": "test health data"
+      }
+     ]
+    },
+    "status": "planned",
+    "code": {
+     "coding": [
+      {
+       "system": "http://fhir.de/CodeSystem/bzaek/goz",
+       "code": "5120",
+       "display": "Provisorische Brücke, je Zahn"
+      }
+     ],
+     "text": "GOZ 5120 Provisorische Brücke, je Zahn"
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "occurrenceDateTime": "2026-11-16",
+    "quantity": {
+     "value": 1
+    },
+    "bodysite": [
+     {
+      "coding": [
+       {
+        "system": "https://fhir.cognovis.de/dental-core/CodeSystem/tooth-position-fdi",
+        "code": "35"
+       }
+      ],
+      "text": "Zahn 35"
+     }
+    ],
+    "factorOverride": 2.3,
+    "account": [
+     {
+      "reference": "Account/dent-051-cost-plan-b"
+     }
+    ],
+    "supportingInformation": [
+     {
+      "reference": "CarePlan/dent-051-hkp-alt-b"
+     }
+    ]
+   },
+   "request": {
+    "method": "PUT",
+    "url": "ChargeItem/dent-051-alt-b-07"
+   }
+  },
+  {
+   "fullUrl": "urn:uuid:ChargeItem-dent-051-alt-b-08",
+   "resource": {
+    "resourceType": "ChargeItem",
+    "id": "dent-051-alt-b-08",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST",
+       "display": "test health data"
+      }
+     ]
+    },
+    "status": "planned",
+    "code": {
+     "coding": [
+      {
+       "system": "http://fhir.de/CodeSystem/bzaek/goz",
+       "code": "5120",
+       "display": "Provisorische Brücke, je Zahn"
+      }
+     ],
+     "text": "GOZ 5120 Provisorische Brücke, je Zahn"
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "occurrenceDateTime": "2026-11-16",
+    "quantity": {
+     "value": 1
+    },
+    "bodysite": [
+     {
+      "coding": [
+       {
+        "system": "https://fhir.cognovis.de/dental-core/CodeSystem/tooth-position-fdi",
+        "code": "37"
+       }
+      ],
+      "text": "Zahn 37"
+     }
+    ],
+    "factorOverride": 2.3,
+    "account": [
+     {
+      "reference": "Account/dent-051-cost-plan-b"
+     }
+    ],
+    "supportingInformation": [
+     {
+      "reference": "CarePlan/dent-051-hkp-alt-b"
+     }
+    ]
+   },
+   "request": {
+    "method": "PUT",
+    "url": "ChargeItem/dent-051-alt-b-08"
+   }
+  },
+  {
+   "fullUrl": "urn:uuid:ChargeItem-dent-051-alt-b-09",
+   "resource": {
+    "resourceType": "ChargeItem",
+    "id": "dent-051-alt-b-09",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST",
+       "display": "test health data"
+      }
+     ]
+    },
+    "status": "planned",
+    "code": {
+     "coding": [
+      {
+       "system": "http://fhir.de/CodeSystem/bzaek/goz",
+       "code": "5140",
+       "display": "Provisorische Brücke, je Spanne"
+      }
+     ],
+     "text": "GOZ 5140 Provisorische Brücke, je Spanne"
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "occurrenceDateTime": "2026-11-16",
+    "quantity": {
+     "value": 1
+    },
+    "bodysite": [
+     {
+      "coding": [
+       {
+        "system": "https://fhir.cognovis.de/dental-core/CodeSystem/tooth-position-fdi",
+        "code": "36"
+       }
+      ],
+      "text": "Zahn 36"
+     }
+    ],
+    "factorOverride": 2.3,
+    "account": [
+     {
+      "reference": "Account/dent-051-cost-plan-b"
+     }
+    ],
+    "supportingInformation": [
+     {
+      "reference": "CarePlan/dent-051-hkp-alt-b"
+     }
+    ]
+   },
+   "request": {
+    "method": "PUT",
+    "url": "ChargeItem/dent-051-alt-b-09"
+   }
+  },
+  {
+   "fullUrl": "urn:uuid:ChargeItem-dent-051-alt-c-01",
+   "resource": {
+    "resourceType": "ChargeItem",
+    "id": "dent-051-alt-c-01",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST",
+       "display": "test health data"
+      }
+     ]
+    },
+    "status": "planned",
+    "code": {
+     "coding": [
+      {
+       "system": "http://fhir.de/CodeSystem/bzaek/goz",
+       "code": "0030",
+       "display": "Heil- und Kostenplan"
+      }
+     ],
+     "text": "GOZ 0030 Heil- und Kostenplan"
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "occurrenceDateTime": "2026-11-16",
+    "quantity": {
+     "value": 1
+    },
+    "factorOverride": 2.3,
+    "account": [
+     {
+      "reference": "Account/dent-051-cost-plan-c"
+     }
+    ],
+    "supportingInformation": [
+     {
+      "reference": "CarePlan/dent-051-hkp-alt-c"
+     }
+    ]
+   },
+   "request": {
+    "method": "PUT",
+    "url": "ChargeItem/dent-051-alt-c-01"
+   }
+  },
+  {
+   "fullUrl": "urn:uuid:ChargeItem-dent-051-alt-c-02",
+   "resource": {
+    "resourceType": "ChargeItem",
+    "id": "dent-051-alt-c-02",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST",
+       "display": "test health data"
+      }
+     ]
+    },
+    "status": "planned",
+    "code": {
+     "coding": [
+      {
+       "system": "http://fhir.de/CodeSystem/bzaek/goz",
+       "code": "9000",
+       "display": "Implantatbezogene Analyse und Vermessung"
+      }
+     ],
+     "text": "GOZ 9000 Implantatbezogene Analyse und Vermessung"
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "occurrenceDateTime": "2026-11-16",
+    "quantity": {
+     "value": 1
+    },
+    "factorOverride": 2.3,
+    "account": [
+     {
+      "reference": "Account/dent-051-cost-plan-c"
+     }
+    ],
+    "supportingInformation": [
+     {
+      "reference": "CarePlan/dent-051-hkp-alt-c"
+     }
+    ]
+   },
+   "request": {
+    "method": "PUT",
+    "url": "ChargeItem/dent-051-alt-c-02"
+   }
+  },
+  {
+   "fullUrl": "urn:uuid:ChargeItem-dent-051-alt-c-03",
+   "resource": {
+    "resourceType": "ChargeItem",
+    "id": "dent-051-alt-c-03",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST",
+       "display": "test health data"
+      }
+     ]
+    },
+    "status": "planned",
+    "code": {
+     "coding": [
+      {
+       "system": "http://fhir.de/CodeSystem/bzaek/goz",
+       "code": "9003",
+       "display": "Orientierungsschablone"
+      }
+     ],
+     "text": "GOZ 9003 Orientierungsschablone"
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "occurrenceDateTime": "2026-11-16",
+    "quantity": {
+     "value": 1
+    },
+    "factorOverride": 2.3,
+    "account": [
+     {
+      "reference": "Account/dent-051-cost-plan-c"
+     }
+    ],
+    "supportingInformation": [
+     {
+      "reference": "CarePlan/dent-051-hkp-alt-c"
+     }
+    ]
+   },
+   "request": {
+    "method": "PUT",
+    "url": "ChargeItem/dent-051-alt-c-03"
+   }
+  },
+  {
+   "fullUrl": "urn:uuid:ChargeItem-dent-051-alt-c-04",
+   "resource": {
+    "resourceType": "ChargeItem",
+    "id": "dent-051-alt-c-04",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST",
+       "display": "test health data"
+      }
+     ]
+    },
+    "status": "planned",
+    "code": {
+     "coding": [
+      {
+       "system": "http://fhir.de/CodeSystem/bzaek/goz",
+       "code": "0090",
+       "display": "Infiltrationsanästhesie"
+      }
+     ],
+     "text": "GOZ 0090 Infiltrationsanästhesie"
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "occurrenceDateTime": "2026-11-16",
+    "quantity": {
+     "value": 1
+    },
+    "bodysite": [
+     {
+      "coding": [
+       {
+        "system": "https://fhir.cognovis.de/dental-core/CodeSystem/tooth-position-fdi",
+        "code": "36"
+       }
+      ],
+      "text": "Zahn 36"
+     }
+    ],
+    "factorOverride": 2.3,
+    "account": [
+     {
+      "reference": "Account/dent-051-cost-plan-c"
+     }
+    ],
+    "supportingInformation": [
+     {
+      "reference": "CarePlan/dent-051-hkp-alt-c"
+     }
+    ]
+   },
+   "request": {
+    "method": "PUT",
+    "url": "ChargeItem/dent-051-alt-c-04"
+   }
+  },
+  {
+   "fullUrl": "urn:uuid:ChargeItem-dent-051-alt-c-05",
+   "resource": {
+    "resourceType": "ChargeItem",
+    "id": "dent-051-alt-c-05",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST",
+       "display": "test health data"
+      }
+     ]
+    },
+    "status": "planned",
+    "code": {
+     "coding": [
+      {
+       "system": "http://fhir.de/CodeSystem/bzaek/goz",
+       "code": "9010",
+       "display": "Implantatinsertion"
+      }
+     ],
+     "text": "GOZ 9010 Implantatinsertion"
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "occurrenceDateTime": "2026-11-16",
+    "quantity": {
+     "value": 1
+    },
+    "bodysite": [
+     {
+      "coding": [
+       {
+        "system": "https://fhir.cognovis.de/dental-core/CodeSystem/tooth-position-fdi",
+        "code": "36"
+       }
+      ],
+      "text": "Zahn 36"
+     }
+    ],
+    "factorOverride": 3,
+    "account": [
+     {
+      "reference": "Account/dent-051-cost-plan-c"
+     }
+    ],
+    "supportingInformation": [
+     {
+      "reference": "CarePlan/dent-051-hkp-alt-c"
+     }
+    ]
+   },
+   "request": {
+    "method": "PUT",
+    "url": "ChargeItem/dent-051-alt-c-05"
+   }
+  },
+  {
+   "fullUrl": "urn:uuid:ChargeItem-dent-051-alt-c-06",
+   "resource": {
+    "resourceType": "ChargeItem",
+    "id": "dent-051-alt-c-06",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST",
+       "display": "test health data"
+      }
+     ]
+    },
+    "status": "planned",
+    "code": {
+     "coding": [
+      {
+       "system": "http://fhir.de/CodeSystem/bzaek/goz",
+       "code": "9040",
+       "display": "Freilegen des Implantats"
+      }
+     ],
+     "text": "GOZ 9040 Freilegen des Implantats"
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "occurrenceDateTime": "2026-11-16",
+    "quantity": {
+     "value": 1
+    },
+    "bodysite": [
+     {
+      "coding": [
+       {
+        "system": "https://fhir.cognovis.de/dental-core/CodeSystem/tooth-position-fdi",
+        "code": "36"
+       }
+      ],
+      "text": "Zahn 36"
+     }
+    ],
+    "factorOverride": 2.3,
+    "account": [
+     {
+      "reference": "Account/dent-051-cost-plan-c"
+     }
+    ],
+    "supportingInformation": [
+     {
+      "reference": "CarePlan/dent-051-hkp-alt-c"
+     }
+    ]
+   },
+   "request": {
+    "method": "PUT",
+    "url": "ChargeItem/dent-051-alt-c-06"
+   }
+  },
+  {
+   "fullUrl": "urn:uuid:ChargeItem-dent-051-alt-c-07",
+   "resource": {
+    "resourceType": "ChargeItem",
+    "id": "dent-051-alt-c-07",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST",
+       "display": "test health data"
+      }
+     ]
+    },
+    "status": "planned",
+    "code": {
+     "coding": [
+      {
+       "system": "http://fhir.de/CodeSystem/bzaek/goz",
+       "code": "2200",
+       "display": "Vollkrone auf Implantat (Tangentialpräparation)"
+      }
+     ],
+     "text": "GOZ 2200 Vollkrone auf Implantat (Tangentialpräparation)"
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "occurrenceDateTime": "2026-11-16",
+    "quantity": {
+     "value": 1
+    },
+    "bodysite": [
+     {
+      "coding": [
+       {
+        "system": "https://fhir.cognovis.de/dental-core/CodeSystem/tooth-position-fdi",
+        "code": "36"
+       }
+      ],
+      "text": "Zahn 36"
+     }
+    ],
+    "factorOverride": 2.3,
+    "account": [
+     {
+      "reference": "Account/dent-051-cost-plan-c"
+     }
+    ],
+    "supportingInformation": [
+     {
+      "reference": "CarePlan/dent-051-hkp-alt-c"
+     }
+    ]
+   },
+   "request": {
+    "method": "PUT",
+    "url": "ChargeItem/dent-051-alt-c-07"
+   }
+  }
+ ]
+}

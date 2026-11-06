@@ -146,7 +146,7 @@ Aidbox and PostgreSQL restart automatically with Docker unless explicitly stoppe
 
 ### Working on the host instead
 
-For the billing tools, the scripts, or an app outside Docker you need Node.js 22.12 or newer:
+For the billing tools, the scripts, or an app outside Docker you need Node.js 24 or newer (the odontogram package requires it):
 
 ```sh
 docker compose up -d aidbox   # Aidbox and its database only
@@ -192,8 +192,11 @@ justification), totals 549.26, 428.44 and 673.59 EUR.
   (`goz-charge-item` and others) cannot be validated: they require an extension from the
   billing package. The planned ChargeItems are therefore plain FHIR R4. The Billing SDK does
   not need the package.
-- **The cognovis fork of the odontogram** (FHIR mapping, bridges, plan alternatives) is not
-  published. The starter app uses the public upstream and maps FHIR to the chart itself.
+- **The odontogram's own Aidbox session** is not used: `@cognovis/react-odontogram` can load
+  and save dental-core charts itself (`createOdontogramSession()` with `loadFromAidbox` and
+  `saveToAidbox`) through the Aidbox transport `@cognovis/react-odontogram-fhir`, which in a
+  Vite browser build still hits a `node:crypto` import from `@cognovis/fhir-sdk`. The starter app maps FHIR to the chart in its
+  own adapter (`app/src/odontogram/`).
 - **GOZ catalog prices**: a single fee per number, rounded to cents, with points and point value
   kept alongside; numbers priced as a share of another have no price. See
   [catalog/README.md](catalog/README.md).

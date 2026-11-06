@@ -17,7 +17,7 @@ docker compose up --build    # Aidbox + Postgres, one-shot setup, starter app on
   `app` starts only after `setup` exited successfully. Follow them with
   `docker compose logs -f setup app`.
 - Working on the host instead: `docker compose up -d aidbox`, then `npm install`,
-  `npm run setup`, `npm run app` (Node.js 22.12 or newer).
+  `npm run setup`, `npm run app` (Node.js 24 or newer).
 - The setup is safe to repeat (`docker compose up` again, or `npm run setup`); it reloads
   the seed data and keeps your own resources.
 - App changes outside `app/src` (dependencies, `vite.config.ts`) need

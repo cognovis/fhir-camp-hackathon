@@ -5,7 +5,7 @@
 // only one chart can be mounted at a time.
 
 import { useEffect } from 'react'
-import { OdontogramShell, importStatus, setChartMode, setPlanChart } from '@cognovis/react-odontogram'
+import { OdontogramShell, importStatus, setChartMode, setImportAsBaseline, setPlanChart } from '@cognovis/react-odontogram'
 import { PAYLOAD_VERSION, type ChartTeeth } from './chartAdapter'
 
 export interface OdontogramViewProps {
@@ -31,6 +31,9 @@ function whenGridReady(callback: () => void): () => void {
 
 export function OdontogramView({ status, plan, mode }: OdontogramViewProps) {
   useEffect(() => whenGridReady(() => {
+    // The chart only displays what FHIR holds. By default the library files every import as the
+    // initial examination dated today; this view re-imports on every patient or plan change.
+    setImportAsBaseline(false)
     // importStatus loads the status chart and switches the chart back to status mode.
     importStatus({ version: PAYLOAD_VERSION, teeth: status })
     if (plan && mode === 'plan') {

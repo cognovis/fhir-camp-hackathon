@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent, type ReactNode } from 'react'
 import { DECISIONS, euro, findingExplanation, findingText, loadCostPlans, saveJustification, type CostPlan, type CostPlanLine } from './costPlan'
-import { display, loadPatientRecord, patientName, search, type CarePlan, type ChargeItem, type Patient, type PatientRecord } from './fhir'
+import { display, loadPatientRecord, patientName, search, toothOf, type CarePlan, type ChargeItem, type Patient, type PatientRecord, type Resource } from './fhir'
+import { FhirPanel } from './inspector/FhirPanel'
 import { toChartStatus, toPlanChart } from './odontogram/chartAdapter'
 import { OdontogramView } from './odontogram/OdontogramView'
 import { downloadPatient, downloadPlan } from './download'
@@ -22,6 +23,17 @@ export function App() {
   const [costPlanError, setCostPlanError] = useState<string>()
   const [checking, setChecking] = useState(false)
   const [error, setError] = useState<string>()
+  // The FHIR panel: what the app reads and writes, live from Aidbox.
+  const [panelOpen, setPanelOpen] = useState(false)
+  const [inspected, setInspected] = useState<Resource>()
+  const [inspection, setInspection] = useState(0)
+  const inspect = useCallback((resource: Resource) => {
+    setInspected(resource)
+    setInspection((n) => n + 1)
+    setPanelOpen(true)
+  }, [])
+  // Follow the app (plan tabs, chart, writes) only while the panel is open.
+  const follow = useCallback((resource: Resource | undefined) => { if (resource && panelOpen) inspect(resource) }, [panelOpen, inspect])
 
   useEffect(() => {
     search<Patient>(`Patient?identifier=${encodeURIComponent(`${DENTAL_PATIENT}|`)}&_sort=_id&_count=50`)
@@ -37,6 +49,7 @@ export function App() {
     setPlanView(undefined)
     setCostPlans(undefined)
     setCostPlanError(undefined)
+    setInspected(undefined)
     // Ignore the answer of a load that a newer patient selection has superseded.
     let current = true
     loadPatientRecord(patient)
@@ -61,8 +74,9 @@ export function App() {
   const justify = useCallback(async (chargeItemId: string, text: string) => {
     const saved = await saveJustification(chargeItemId, text)
     setRecord((r) => (r ? { ...r, chargeItems: r.chargeItems.map((c) => (c.id === saved.id ? saved : c)) } : r))
+    follow(saved)
     await recheck()
-  }, [recheck])
+  }, [recheck, follow])
 
   // Write a new alternative (blank, or a copy of `source` with its cost plan), then reload and show it.
   const addPlan = useCallback(async (source?: CarePlan) => {
@@ -70,8 +84,9 @@ export function App() {
     const created = await createPlan(record.patient, record.carePlans, record.chargeItems, source)
     setRecord(await loadPatientRecord(record.patient))
     setPlanView(created.id)
+    follow(created)
     await recheck()
-  }, [record, recheck])
+  }, [record, recheck, follow])
 
   // Delete an alternative with its cost plan, then show the chosen one again.
   const removePlan = useCallback(async (carePlan: CarePlan) => {
@@ -110,7 +125,7 @@ export function App() {
   const chartDate = record?.toothStates[0]?.effectiveDateTime ?? ''
 
   return (
-    <div className="app-page">
+    <div className={panelOpen ? 'app-page with-fhir-panel' : 'app-page'}>
       <div className="appbar">
         <ToothIcon />
         <div>
@@ -125,12 +140,17 @@ export function App() {
             ))}
           </select>
         </label>
+        <button type="button" className="secondary fhir-toggle" aria-pressed={panelOpen} title="Show the FHIR resources and requests behind the app" onClick={() => setPanelOpen((open) => !open)}>
+          FHIR
+        </button>
       </div>
+
+      <FhirPanel open={panelOpen} onOpenChange={setPanelOpen} resource={inspected} inspection={inspection} />
 
       <main className="content">
         {error && <p className="error">{error}</p>}
 
-        {patient && <PatientCard patient={patient} mode={mode} onMode={setMode} />}
+        {patient && <PatientCard patient={patient} mode={mode} onMode={setMode} onInspect={inspect} />}
 
         {record && status && (
           <section className="app-card plans-card" aria-label={mode === 'plan' ? 'Treatment plans and dental chart' : 'Dental chart'}>
@@ -160,7 +180,7 @@ export function App() {
                       <Tab
                         key={carePlan.id}
                         selected={carePlan.id === selectedPlan?.id}
-                        onClick={() => setPlanView(carePlan.id)}
+                        onClick={() => { setPlanView(carePlan.id); follow(carePlan) }}
                         name={shortTitle(carePlan)}
                         badge={<PlanBadge carePlan={carePlan} />}
                         meta={costPlan ? `${costPlan.lines.length} services · ${euro(costPlan.total)}` : `${carePlan.activity?.length ?? 0} activities`}
@@ -189,6 +209,7 @@ export function App() {
                 onJustify={justify}
                 onOpen={setPlanView}
                 onDelete={removePlan}
+                onInspect={inspect}
               />
             ) : (
               <>
@@ -197,7 +218,12 @@ export function App() {
                   <div className="muted">{selectedPlan ? selectedPlan.description : `Status ${chartDate}. Click a tooth to change it; chart changes are not saved yet (task 1).`}</div>
                 </div>
                 <div className="app-chart">
-                  <OdontogramView status={status} plan={plan} mode={plan ? 'plan' : 'status'} />
+                  <OdontogramView
+                    status={status}
+                    plan={plan}
+                    mode={plan ? 'plan' : 'status'}
+                    onToothSelect={(tooth) => follow(record.toothStates.find((o) => toothOf(o.bodySite) === tooth))}
+                  />
                 </div>
               </>
             )}
@@ -213,6 +239,7 @@ export function App() {
               loading={!costPlans && !costPlanError}
               onJustify={justify}
               onDelete={removePlan}
+              onInspect={inspect}
             />
           </section>
         )}
@@ -305,7 +332,7 @@ function age(birthDate?: string): string {
   return String(years)
 }
 
-function PatientCard({ patient, mode, onMode }: { patient: Patient; mode: Mode; onMode: (mode: Mode) => void }) {
+function PatientCard({ patient, mode, onMode, onInspect }: { patient: Patient; mode: Mode; onMode: (mode: Mode) => void; onInspect: (resource: Resource) => void }) {
   const name = patient.name?.[0]
   const initials = `${name?.given?.[0]?.[0] ?? ''}${name?.family?.[0] ?? ''}`.toUpperCase() || '?'
   const gender = { female: 'Female', male: 'Male', other: 'Other', unknown: 'Unknown' }[patient.gender ?? ''] ?? '–'
@@ -322,7 +349,10 @@ function PatientCard({ patient, mode, onMode }: { patient: Patient; mode: Mode; 
       <Field label="Date of birth" value={patient.birthDate ? new Date(patient.birthDate).toLocaleDateString('de-DE') : '–'} />
       <Field label="Age" value={`${age(patient.birthDate)} yrs`} />
       <Field label="FHIR id" value={patient.id} mono />
-      <DownloadButton label="Download FHIR" title="The patient's resources as a FHIR Bundle (JSON)" onDownload={() => downloadPatient(patient)} />
+      <span className="download">
+        <DownloadButton label="Download FHIR" title="The patient's resources as a FHIR Bundle (JSON)" onDownload={() => downloadPatient(patient)} />
+        <InspectButton resource={patient} onInspect={onInspect} />
+      </span>
       <div className="field view-switch">
         <div className="field-label" id="view-label">View</div>
         <div role="group" aria-labelledby="view-label" className="segmented">
@@ -374,11 +404,13 @@ interface PlanProps {
   chargeItems: ChargeItem[]
   loading: boolean
   onJustify: (chargeItemId: string, text: string) => Promise<void>
+  onInspect: (resource: Resource) => void
 }
 
-function ComparePlans({ carePlans, costPlanOf, chargeItems, loading, onJustify, onOpen, onDelete }: {
+function ComparePlans({ carePlans, costPlanOf, chargeItems, loading, onJustify, onOpen, onDelete, onInspect }: {
   carePlans: CarePlan[]; costPlanOf: Map<string, CostPlan>; chargeItems: ChargeItem[]; loading: boolean
   onJustify: PlanProps['onJustify']; onOpen: (id: string) => void; onDelete: (carePlan: CarePlan) => Promise<void>
+  onInspect: PlanProps['onInspect']
 }) {
   const totals = carePlans.map((p) => costPlanOf.get(p.id)?.total).filter((t): t is number => typeof t === 'number')
   const lowest = totals.length > 1 ? Math.min(...totals) : undefined
@@ -407,10 +439,11 @@ function ComparePlans({ carePlans, costPlanOf, chargeItems, loading, onJustify, 
                 {costPlan && costPlan.total === lowest && <span className="app-pill">Lowest total</span>}
               </div>
               <div className="muted">{carePlan.title?.split(':').slice(1).join(':').trim()}</div>
-              <PlanBody carePlan={carePlan} costPlan={costPlan} chargeItems={chargeItems} loading={loading} onJustify={onJustify} compact />
+              <PlanBody carePlan={carePlan} costPlan={costPlan} chargeItems={chargeItems} loading={loading} onJustify={onJustify} onInspect={onInspect} compact />
               <div className="plan-col-actions">
                 <button type="button" className="secondary" onClick={() => onOpen(carePlan.id)}>Show on the chart</button>
                 <DownloadButton label="FHIR" title="CarePlan, cost plan Account and ChargeItems as a FHIR Bundle (JSON)" onDownload={() => downloadPlan(carePlan)} />
+                <InspectButton resource={carePlan} onInspect={onInspect} />
                 <DeleteButton carePlan={carePlan} onDelete={onDelete} iconOnly />
               </div>
             </article>
@@ -430,6 +463,7 @@ function CostPlanDetail(props: PlanProps & { onDelete: (carePlan: CarePlan) => P
         <PlanBadge carePlan={props.carePlan} />
         <span className="detail-actions">
           <DownloadButton label="Download FHIR" title="CarePlan, cost plan Account and ChargeItems as a FHIR Bundle (JSON)" onDownload={() => downloadPlan(props.carePlan)} />
+          <InspectButton resource={props.carePlan} onInspect={props.onInspect} />
           <DeleteButton carePlan={props.carePlan} onDelete={props.onDelete} />
         </span>
       </div>
@@ -439,7 +473,7 @@ function CostPlanDetail(props: PlanProps & { onDelete: (carePlan: CarePlan) => P
   )
 }
 
-function PlanBody({ costPlan, chargeItems, loading, onJustify, compact }: PlanProps & { compact?: boolean }) {
+function PlanBody({ costPlan, chargeItems, loading, onJustify, onInspect, compact }: PlanProps & { compact?: boolean }) {
   if (!costPlan) return <div className="muted pad-y">{loading ? 'Pricing with the Billing SDK…' : 'No cost plan Account for this alternative.'}</div>
   const lineOf = (id?: string) => costPlan.lines.find((l) => l.id === id)
   return (
@@ -498,7 +532,7 @@ function PlanBody({ costPlan, chargeItems, loading, onJustify, compact }: PlanPr
         </thead>
         <tbody>
           {costPlan.lines.map((line) => (
-            <LineRow key={line.id} line={line} chargeItem={chargeItems.find((c) => c.id === line.id)} flagged={costPlan.findings.some((f) => f.line === line.id)} compact={compact} />
+            <LineRow key={line.id} line={line} chargeItem={chargeItems.find((c) => c.id === line.id)} flagged={costPlan.findings.some((f) => f.line === line.id)} compact={compact} onInspect={onInspect} />
           ))}
         </tbody>
         <tfoot>
@@ -513,11 +547,17 @@ function PlanBody({ costPlan, chargeItems, loading, onJustify, compact }: PlanPr
   )
 }
 
-function LineRow({ line, chargeItem, flagged, compact }: { line: CostPlanLine; chargeItem?: ChargeItem; flagged: boolean; compact?: boolean }) {
+function LineRow({ line, chargeItem, flagged, compact, onInspect }: { line: CostPlanLine; chargeItem?: ChargeItem; flagged: boolean; compact?: boolean; onInspect: (resource: Resource) => void }) {
   const reason = chargeItem?.reason?.map((r) => r.text ?? display(r)).filter(Boolean).join('; ')
   return (
     <tr className={flagged ? 'flagged' : undefined} title={compact ? line.display : undefined}>
-      <td><code>{line.code}</code>{compact && <div className="line-display">{line.display}</div>}</td>
+      <td>
+        {/* The GOZ number opens the planned ChargeItem in the FHIR panel. */}
+        {chargeItem
+          ? <button type="button" className="code-link" title={`ChargeItem/${chargeItem.id} in the FHIR panel`} onClick={() => onInspect(chargeItem)}><code>{line.code}</code></button>
+          : <code>{line.code}</code>}
+        {compact && <div className="line-display">{line.display}</div>}
+      </td>
       <td>{line.tooth || '–'}</td>
       {!compact && <td className="num">{line.quantity}</td>}
       <td className="num">{line.factor.toFixed(1)}{reason && <div className="reason" title={reason}>justified</div>}</td>
@@ -553,6 +593,16 @@ function JustificationForm({ chargeItemId, onSave }: { chargeItemId: string; onS
         {error && <span className="error">{error}</span>}
       </div>
     </form>
+  )
+}
+
+// Opens a resource in the FHIR panel.
+function InspectButton({ resource, onInspect }: { resource: Resource; onInspect: (resource: Resource) => void }) {
+  return (
+    <button type="button" className="secondary with-icon" title={`${resource.resourceType}/${resource.id} in the FHIR panel`} onClick={() => onInspect(resource)}>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M8 6l-5 6 5 6M16 6l5 6-5 6" /></svg>
+      View FHIR
+    </button>
   )
 }
 

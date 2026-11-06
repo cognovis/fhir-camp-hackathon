@@ -169,6 +169,24 @@ npm run cost-plan                # line prices and totals per treatment alternat
 Expected: alternatives A and B `allow`, C `unavailable` (multiplier 3.0 without a
 justification), totals 549.26, 428.44 and 673.59 EUR.
 
+### The FHIR panel: show the FHIR layer in the demo
+
+The **FHIR** button at the top right of the starter app opens a side panel that shows what
+happens underneath, live from Aidbox:
+
+- **Ressource**: click a patient ("Patient als FHIR"), a finding, a treatment alternative
+  ("CarePlan als FHIR"), a planned charge, or a tooth in the chart, and the panel shows that
+  resource as FHIR JSON with its profiles. `$validate` checks it against its `meta.profile` in
+  Aidbox and shows the OperationOutcome; "In Aidbox öffnen" opens the same resource in the
+  Aidbox UI.
+- **Requests**: every FHIR request the app sent, with status, duration and response. Send your
+  own requests through `fhirRequest` in `app/src/fhir.ts`, and they appear here too.
+
+The panel is built from [`@health-samurai/react-components`](https://github.com/HealthSamurai/aidbox-ts-sdk/tree/master/packages/react-components)
+(MIT), the component library the Aidbox UI itself is made of, so it looks like the Aidbox
+console. The code is in `app/src/inspector/FhirPanel.tsx`. After pulling this change, start the
+stack with `docker compose up --build` once so the app image installs the new dependency.
+
 ## What is in the kit
 
 | Folder | What it is |
@@ -178,7 +196,7 @@ justification), totals 549.26, 428.44 and 673.59 EUR.
 | `data/` | Four synthetic dental patients. **Greta Palmried (`dent-051`)** has the complete chain: chart, finding, three treatment alternatives as `CarePlan`, 25 planned `ChargeItem`s, one cost plan `Account` per alternative. See [data/README.md](data/README.md) |
 | `catalog/` | The GOZ fee catalog as 215 FHIR `ChargeItemDefinition`s, generated from the official BMJV XML. Generated for the hackathon, not a billing-grade catalog. See [catalog/README.md](catalog/README.md) |
 | `billing/` | A synthetic GOZ rule set as a FHIR `Library`, the billing check with `@cognovis/fhir-billing-sdk` 0.42.1, and the cost plan calculation. See [billing/README.md](billing/README.md) |
-| `app/` | The starter app: Vite, React and TypeScript, with the MIT odontogram `@cognovis/react-odontogram`. Shows the chart of a seeded patient, findings and treatment alternatives, and the planned chart of each alternative. The chart code sits behind one integration point (`app/src/odontogram/`), so another chart component can replace it |
+| `app/` | The starter app: Vite, React and TypeScript, with the MIT odontogram `@cognovis/react-odontogram`. Shows the chart of a seeded patient, findings and treatment alternatives, and the planned chart of each alternative. A FHIR panel (`app/src/inspector/`) shows the resources and requests behind it. The chart code sits behind one integration point (`app/src/odontogram/`), so another chart component can replace it |
 | [TASKS.md](TASKS.md) | Seven ready-to-pick tasks along the chain |
 | [AGENTS.md](AGENTS.md), `.agents/skills/` | Instructions and skills for coding agents (Claude Code reads them through `CLAUDE.md` and `.claude/skills`): Aidbox in the kit, writing valid FHIR, FHIR IG development in FSH, and the Billing SDK |
 | `docs/slides.html` | Pitch slides for the project |

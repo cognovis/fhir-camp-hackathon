@@ -73,11 +73,85 @@ export interface ChargeItem extends Resource {
 
 interface Bundle<T> { entry?: { resource: T }[] }
 
+// Every FHIR call of the app goes through fhirRequest, which records it in the request log that
+// the FHIR panel shows. Call it for your own writes too, so they appear there.
+export interface FhirLogEntry {
+  id: number
+  method: string
+  url: string
+  status?: number
+  durationMs?: number
+  requestBody?: unknown
+  responseBody?: unknown
+  error?: string
+  at: string
+}
+
+type LogListener = (entries: readonly FhirLogEntry[]) => void
+const LOG_LIMIT = 200
+let logEntries: readonly FhirLogEntry[] = []
+let nextLogId = 1
+const logListeners = new Set<LogListener>()
+
+function writeLog(entry: FhirLogEntry) {
+  const rest = logEntries.filter((e) => e.id !== entry.id)
+  logEntries = [entry, ...rest].slice(0, LOG_LIMIT)
+  for (const listener of logListeners) listener(logEntries)
+}
+
+export function subscribeFhirLog(listener: LogListener): () => void {
+  logListeners.add(listener)
+  listener(logEntries)
+  return () => { logListeners.delete(listener) }
+}
+
+export function clearFhirLog() {
+  logEntries = []
+  for (const listener of logListeners) listener(logEntries)
+}
+
+// body is the parsed JSON, or undefined when the server answered with something else (for example
+// a proxy error page); text is the raw answer in both cases.
+export async function fhirRequest<T>(method: string, path: string, body?: unknown): Promise<{ status: number; body: T | undefined; text: string }> {
+  const url = path ? `/fhir/${path}` : '/fhir'
+  const entry: FhirLogEntry = { id: nextLogId++, method, url, requestBody: body, at: new Date().toISOString() }
+  writeLog(entry)
+  const started = performance.now()
+  try {
+    const response = await fetch(url, {
+      method,
+      headers: { accept: 'application/fhir+json', ...(body === undefined ? {} : { 'content-type': 'application/fhir+json' }) },
+      ...(body === undefined ? {} : { body: JSON.stringify(body) }),
+    })
+    const text = await response.text()
+    let parsed: T | undefined
+    try { parsed = text ? (JSON.parse(text) as T) : undefined } catch { parsed = undefined }
+    writeLog({ ...entry, status: response.status, durationMs: Math.round(performance.now() - started), responseBody: parsed ?? text })
+    return { status: response.status, body: parsed, text }
+  } catch (e) {
+    writeLog({ ...entry, durationMs: Math.round(performance.now() - started), error: (e as Error).message })
+    throw e
+  }
+}
+
 export async function search<T extends Resource>(query: string): Promise<T[]> {
-  const response = await fetch(`/fhir/${query}`, { headers: { accept: 'application/fhir+json' } })
-  if (!response.ok) throw new Error(`GET /fhir/${query}: HTTP ${response.status}`)
-  const bundle = (await response.json()) as Bundle<T>
-  return (bundle.entry ?? []).map((entry) => entry.resource)
+  const { status, body, text } = await fhirRequest<Bundle<T>>('GET', query)
+  if (status >= 400 || !body) throw new Error(`GET /fhir/${query}: HTTP ${status}${body ? '' : `, not FHIR JSON: ${text.slice(0, 120)}`}`)
+  return (body.entry ?? []).map((entry) => entry.resource)
+}
+
+export interface OperationOutcome {
+  resourceType: 'OperationOutcome'
+  issue: { severity: 'fatal' | 'error' | 'warning' | 'information'; code: string; diagnostics?: string; expression?: string[]; details?: CodeableConcept }[]
+}
+
+// $validate against the resource's own meta.profile; Aidbox answers with an OperationOutcome
+// for a valid and for an invalid resource alike.
+export async function validateResource(resource: Resource): Promise<OperationOutcome> {
+  const path = `${resource.resourceType}/$validate`
+  const { status, body, text } = await fhirRequest<OperationOutcome>('POST', path, resource)
+  if (body?.resourceType !== 'OperationOutcome') throw new Error(`POST /fhir/${path}: HTTP ${status}, no OperationOutcome: ${text.slice(0, 120)}`)
+  return body
 }
 
 export interface PatientRecord {

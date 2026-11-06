@@ -6,11 +6,20 @@ import { language } from '../i18n.ts'
 // into it. The upstream engine is a module-level singleton driven by imperative functions, so
 // only one chart can be mounted at a time.
 
-import { useEffect, type KeyboardEvent, type MouseEvent } from 'react'
-import { OdontogramShell, getSelectedTeeth, importStatus, setChartMode, setImportAsBaseline, setPlanChart } from '@cognovis/react-odontogram'
+import { memo, useEffect, type KeyboardEvent, type MouseEvent } from 'react'
+import { OdontogramShell, getSelectedTeeth, getStatusChart, getPlanChart, selectToothInChart, importStatus, setChartMode, setImportAsBaseline, setPlanChart, type OdontogramThemeConfig } from '@cognovis/react-odontogram'
 import { PAYLOAD_VERSION, type ChartTeeth } from './chartAdapter'
 
+const CHART_THEME: OdontogramThemeConfig = { colors: { accent: 'var(--blue-9)', accent2: 'var(--green-9)' } }
+
+export const captureChart = () => ({
+  status: structuredClone(getStatusChart()),
+  plan: structuredClone(getPlanChart()),
+  selected: getSelectedTeeth(),
+})
+
 export interface OdontogramViewProps {
+  resume?: ReturnType<typeof captureChart>
   status: ChartTeeth
   plan?: ChartTeeth
   mode: 'status' | 'plan'
@@ -33,23 +42,24 @@ function whenGridReady(callback: () => void): () => void {
   return () => { cancelled = true; cancelAnimationFrame(frame) }
 }
 
-export function OdontogramView({ status, plan, mode, onToothSelect }: OdontogramViewProps) {
+export const OdontogramView = memo(({ status, plan, mode, onToothSelect, resume }: OdontogramViewProps) => {
   useTranslation()
   useEffect(() => whenGridReady(() => {
     // The chart only displays what FHIR holds. By default the library files every import as the
     // initial examination dated today; this view re-imports on every patient or plan change.
     setImportAsBaseline(false)
     // importStatus loads the status chart and switches the chart back to status mode.
-    importStatus({ version: PAYLOAD_VERSION, teeth: status })
+    importStatus(resume?.status ?? { version: PAYLOAD_VERSION, teeth: status })
     if (plan && mode === 'plan') {
       // Hydrate the plan chart first, then switch to it: setChartMode repaints on the switch, so
       // the chart shows the selected alternative also when the previous one was a plan too.
-      setPlanChart({ version: PAYLOAD_VERSION, teeth: plan })
+      setPlanChart(resume?.plan ?? { version: PAYLOAD_VERSION, teeth: plan })
       setChartMode('plan')
     } else {
       setChartMode('status')
     }
-  }), [status, plan, mode])
+    if (resume?.selected.length === 1) selectToothInChart(resume.selected[0])
+  }), [status, plan, mode, resume])
 
   // Editable: teeth can be clicked and changed. Changes stay in the browser until they are
   // written back as FHIR Observations (TASKS.md, task 1: subscribe with onStateChange and read
@@ -74,7 +84,7 @@ export function OdontogramView({ status, plan, mode, onToothSelect }: Odontogram
 
   return (
     <div onClick={handleClick} onKeyUp={handleKeyUp}>
-      <OdontogramShell language={language()} numberingSystem="FDI" />
+      <OdontogramShell language={language()} numberingSystem="FDI" themeConfig={CHART_THEME} />
     </div>
   )
-}
+})

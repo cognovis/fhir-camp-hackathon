@@ -30,9 +30,6 @@
   "alternatives": "{{count}} alternatives",
   "noAlternatives": "No alternatives yet. Add a plan to start.",
   "chartHint": "Status {{date}}. Click a tooth to change it; chart changes are not saved yet (task 1).",
-  "planCount": "Plan {{index}} of {{count}}",
-  "previousPlan": "Previous plan",
-  "nextPlan": "Next plan",
   "adding": "Adding…",
   "addPlan": "Add plan",
   "blankPlan": "Blank plan",
@@ -78,6 +75,7 @@
   "saveRecheck": "Save and re-check",
   "preparing": "Preparing…",
   "chosenNoDelete": "The chosen alternative cannot be deleted",
+  "cancel": "Cancel",
   "deleteTitle": "Delete this alternative and its cost plan",
   "deleting": "Deleting…",
   "deletePlan": "Delete plan",
@@ -186,7 +184,7 @@
   "findingCount_one": "{{count}} finding",
   "findingCount_other": "{{count}} findings",
   "originalContent": "Original FHIR text",
-  "panelDescription": "The FHIR layer behind the app, live from Aidbox.",
+  "panelDescription": "Resources and requests from Aidbox.",
   "panelResource": "Resource",
   "panelProfile": "Profile",
   "panelRequests": "Requests",
@@ -204,5 +202,8 @@
   "profileMissing": "No StructureDefinition with a snapshot for {{url}} in Aidbox.",
   "viewFhir": "View FHIR",
   "panelToggle": "Show the FHIR resources and requests behind the app",
-  "inspectResource": "{{resource}} in the FHIR panel"
+  "inspectResource": "{{resource}} in the FHIR panel",
+  "resizeFhirPanel": "Resize FHIR panel",
+  "loading": "Loading…",
+  "panelDownloads": "Downloads"
 }

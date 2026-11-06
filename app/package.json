@@ -12,9 +12,11 @@
   },
   "dependencies": {
     "@cognovis/react-odontogram": "5.2.6",
+    "@health-samurai/react-components": "0.0.0-alpha.21",
+    "@radix-ui/themes": "3.3.0",
     "i18next": "26.7.2",
     "i18next-browser-languagedetector": "8.3.0",
-    "@health-samurai/react-components": "0.0.0-alpha.21",
+    "lucide-react": "0.577.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-i18next": "17.1.13"

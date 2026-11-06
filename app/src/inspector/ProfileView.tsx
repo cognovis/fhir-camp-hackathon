@@ -1,3 +1,4 @@
+import { Select, Spinner } from '@radix-ui/themes'
 import { useTranslation } from 'react-i18next'
 import { t } from '../i18n.ts'
 // The profile of the inspected resource as a tree, drawn with FhirStructureView from
@@ -125,9 +126,10 @@ export function ProfileView({ resource }: { resource: Resource }) {
     <div className="fhir-panel-body">
       <div className="fhir-panel-toolbar">
         {urls.length > 1 ? (
-          <select value={url} onChange={(e) => setUrl(e.target.value)} className="fhir-panel-select">
-            {urls.map((u) => <option key={u} value={u}>{tail(u)}</option>)}
-          </select>
+          <Select.Root value={url} onValueChange={setUrl}>
+            <Select.Trigger aria-label={t('panelProfile')} />
+            <Select.Content>{urls.map((u) => <Select.Item key={u} value={u}>{tail(u)}</Select.Item>)}</Select.Content>
+          </Select.Root>
         ) : (
           <code className="fhir-panel-ref">{tail(url)}</code>
         )}
@@ -137,7 +139,7 @@ export function ProfileView({ resource }: { resource: Resource }) {
         {t('profileInfo')}
       </p>
       {error && <p className="fhir-panel-error">{error}</p>}
-      {!sd && !error && <p className="fhir-panel-muted">{t('profileLoading')}</p>}
+      {!sd && !error && <p className="fhir-panel-muted loading-state"><Spinner className="app-spinner" role="status" aria-label={t('profileLoading')} />{t('profileLoading')}</p>}
       {sd && (
         <div className="fhir-panel-structure">
           <FhirStructureView key={sd.url} tree={toStructureTree(sd)} />

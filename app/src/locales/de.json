@@ -30,9 +30,6 @@
   "alternatives": "{{count}} Alternativen",
   "noAlternatives": "Noch keine Alternativen. Fügen Sie einen Plan hinzu.",
   "chartHint": "Befund {{date}}. Zahn zum Bearbeiten anklicken; Änderungen am Zahnschema werden noch nicht gespeichert (Aufgabe 1).",
-  "planCount": "Plan {{index}} von {{count}}",
-  "previousPlan": "Vorheriger Plan",
-  "nextPlan": "Nächster Plan",
   "adding": "Wird hinzugefügt…",
   "addPlan": "Plan hinzufügen",
   "blankPlan": "Leerer Plan",
@@ -78,6 +75,7 @@
   "saveRecheck": "Speichern und erneut prüfen",
   "preparing": "Wird vorbereitet…",
   "chosenNoDelete": "Die gewählte Alternative kann nicht gelöscht werden",
+  "cancel": "Abbrechen",
   "deleteTitle": "Diese Alternative mit ihrem Kostenplan löschen",
   "deleting": "Wird gelöscht…",
   "deletePlan": "Plan löschen",
@@ -186,7 +184,7 @@
   "findingCount_one": "{{count}} Hinweis",
   "findingCount_other": "{{count}} Hinweise",
   "originalContent": "Originaltext aus FHIR",
-  "panelDescription": "Die FHIR-Ebene hinter der Anwendung, live aus Aidbox.",
+  "panelDescription": "Ressourcen und Anfragen aus Aidbox.",
   "panelResource": "Ressource",
   "panelProfile": "Profil",
   "panelRequests": "Anfragen",
@@ -204,5 +202,8 @@
   "profileMissing": "Keine StructureDefinition mit Snapshot für {{url}} in Aidbox gefunden.",
   "viewFhir": "FHIR ansehen",
   "panelToggle": "FHIR-Ressourcen und Anfragen der Anwendung anzeigen",
-  "inspectResource": "{{resource}} im FHIR-Panel"
+  "inspectResource": "{{resource}} im FHIR-Panel",
+  "resizeFhirPanel": "Breite des FHIR-Panels ändern",
+  "loading": "Wird geladen…",
+  "panelDownloads": "Downloads"
 }

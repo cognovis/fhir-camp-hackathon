@@ -56,10 +56,11 @@ export interface ToothRecord {
   // tooth-state code for either.
   endoResection?: boolean
   rootResection?: 'none' | 'hemisection' | 'amputation' | 'premolarisation'
+  prosthesis?: 'none' | 'removable-partial' | 'removable-full'
 }
 
 /** A tooth (natural, primary, implant, retained or unerupted) stands in the position. */
-function isToothPresent(record: ToothRecord): boolean {
+export function isToothPresent(record: ToothRecord): boolean {
   return !['none', 'no-tooth-after-extraction'].includes(record.toothSelection ?? 'tooth-base')
 }
 
@@ -339,6 +340,8 @@ export function toPlanChart(status: ChartTeeth, carePlan: CarePlan, toothStates:
   return plan
 }
 
+const REMOVABLE_PARTIAL: ToothRecord = { toothSelection: 'none', prosthesis: 'removable-partial', restorationType: 'none', restorationMaterial: undefined, bridgePillar: false }
+
 const PLANNED_EFFECT: Record<string, (current: ToothRecord) => ToothRecord> = {
   // 5000 bridge anchor, full crown (tangential preparation): full-cast gold bridge
   '5000': () => ({ toothSubstrate: 'crownprep', restorationType: 'crown', restorationMaterial: 'gold', bridgePillar: true, fillingSurfaces: [], fillingSurfaceMaterials: {} }),
@@ -350,4 +353,9 @@ const PLANNED_EFFECT: Record<string, (current: ToothRecord) => ToothRecord> = {
   '9010': () => ({ toothSelection: 'implant' }),
   // 2200 full crown (on the implant in the seeded plan)
   '2200': (current) => ({ restorationType: 'crown', restorationMaterial: 'metal-ceramic', toothSubstrate: current.toothSelection === 'implant' ? undefined : 'crownprep' }),
+  // 5200 partial denture with bent clasps, 5210 cast partial denture: the missing tooth is replaced
+  // by a removable denture tooth. The chart draws it only on an absent tooth position without a
+  // fixed restoration, so a bridge pontic recorded there is replaced.
+  '5200': () => REMOVABLE_PARTIAL,
+  '5210': () => REMOVABLE_PARTIAL,
 }

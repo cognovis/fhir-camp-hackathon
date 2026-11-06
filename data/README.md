@@ -34,6 +34,12 @@ Each patient has:
 | Cost plan per alternative | `Account/dent-051-cost-plan-a/-b/-c`, each linked to the private `Coverage` and its treatment `Contract` |
 | Pre-authorization | Not seeded. That is a task (`../TASKS.md`) |
 
+In the starter app, "Add plan" offers "Zahn 36 fehlt: ..." for each missing tooth. That creates
+another alternative of the same shape (`status = draft`, `intent = option`) with its cost plan.
+"Choose this plan" sets the chosen one to `intent = plan` and the others to `intent = option`.
+The status stays `draft` until the patient agrees; see
+[docs/adr/0001-chosen-alternative-stays-draft.md](../docs/adr/0001-chosen-alternative-stays-draft.md).
+
 Prices and the billing check: see `../billing/README.md`.
 
 ## What was changed from the source corpus

@@ -2,8 +2,9 @@ import { useTranslation } from 'react-i18next'
 import { t, date, number } from './i18n.ts'
 import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent, type ReactNode } from 'react'
 import { DECISIONS, euro, findingExplanation, findingText, loadCostPlans, saveJustification, type CostPlan, type CostPlanLine } from './costPlan'
-import { create, display, latestPerTooth, loadPatientRecord, patientName, search, toothOf, type CarePlan, type ChargeItem, type Observation, type Patient, type PatientRecord, type Resource } from './fhir'
+import { create, display, latestPerTooth, loadPatientRecord, patientName, search, toothOf, updateAll, type CarePlan, type ChargeItem, type Observation, type Patient, type PatientRecord, type Resource } from './fhir'
 import { FhirPanel } from './inspector/FhirPanel'
+import { ALTERNATIVE_TEMPLATES, chooseAlternative, createAlternative, findGaps, isChoosable, type AlternativeTemplate, type Gap } from './planAlternatives'
 import { toChartStatus, toPlanChart, toToothState, type ChartTeeth } from './odontogram/chartAdapter'
 import { OdontogramView } from './odontogram/OdontogramView'
 import { downloadPatient, downloadPlan } from './download'
@@ -49,6 +50,11 @@ export function App() {
   const panelOpenRef = useRef(panelOpen)
   panelOpenRef.current = panelOpen
   const follow = useCallback((resource: Resource | undefined) => { if (resource && panelOpenRef.current) inspect(resource) }, [inspect])
+  // Every record load gets a number; only the newest one may set the record, so a slow load
+  // cannot overwrite a newer one or the record of a patient selected in between.
+  const loadGeneration = useRef(0)
+  const shownPatientId = useRef<string>(undefined)
+  shownPatientId.current = patientId
 
   useEffect(() => {
     search<Patient>(`Patient?identifier=${encodeURIComponent(`${DENTAL_PATIENT}|`)}&_sort=_id&_count=50`)
@@ -67,8 +73,9 @@ export function App() {
     setInspected(undefined)
     // Ignore the answer of a load that a newer patient selection has superseded.
     let current = true
+    const generation = ++loadGeneration.current
     loadPatientRecord(patient)
-      .then((loaded) => { if (current) setRecord(loaded) })
+      .then((loaded) => { if (current && generation === loadGeneration.current) setRecord(loaded) })
       .catch((e: Error) => { if (current) setError(e.message) })
     setChecking(true)
     loadCostPlans(patient.id)
@@ -93,25 +100,59 @@ export function App() {
     await recheck()
   }, [recheck, follow])
 
+  // Reload the record after a write. A write for a patient no longer on screen reloads nothing,
+  // and a load superseded by a newer one is dropped.
+  const reloadRecord = useCallback(async (patient: Patient) => {
+    if (shownPatientId.current !== patient.id) return
+    const generation = ++loadGeneration.current
+    const loaded = await loadPatientRecord(patient)
+    if (generation === loadGeneration.current && shownPatientId.current === patient.id) setRecord(loaded)
+  }, [])
+
   // Write a new alternative (blank, or a copy of `source` with its cost plan), then reload and show it.
   const addPlan = useCallback(async (source?: CarePlan) => {
     if (!record) return
     const created = await createPlan(record.patient, record.carePlans, record.chargeItems, source)
-    setRecord(await loadPatientRecord(record.patient))
+    await reloadRecord(record.patient)
     setPlanView(created.id)
     follow(created)
     await recheck()
-  }, [record, recheck, follow])
+  }, [record, recheck, follow, reloadRecord])
+
+  // Write a new alternative for a finding (a missing tooth) with its cost plan, then show it.
+  // It joins the record before the reload, so a failed reload or cost plan does not hide it.
+  const addFromFinding = useCallback(async (gap: Gap, template: AlternativeTemplate) => {
+    if (!record) return
+    const patient = record.patient
+    const { created, costPlanError } = await createAlternative(patient, gap, template)
+    setRecord((r) => (r && r.patient.id === patient.id ? { ...r, carePlans: [...r.carePlans, created] } : r))
+    setPlanView(created.id)
+    follow(created)
+    await reloadRecord(patient)
+    if (costPlanError) throw costPlanError
+    await recheck()
+  }, [record, recheck, follow, reloadRecord])
+
+  // The patient chooses an alternative: it gets intent = plan, the other draft alternatives
+  // intent = option, in one transaction. The status stays draft (docs/adr/0001).
+  const choosePlan = useCallback(async (carePlan: CarePlan) => {
+    if (!record) return
+    try {
+      await updateAll(chooseAlternative(record.carePlans, carePlan.id))
+    } finally {
+      await reloadRecord(record.patient)
+    }
+  }, [record, reloadRecord])
 
   // Delete an alternative with its cost plan, then show the chosen one again.
   const removePlan = useCallback(async (carePlan: CarePlan) => {
     if (!record) return
     if (!window.confirm(t('confirmDelete', { name: carePlan.title ?? carePlan.id }))) return
     await deletePlan(carePlan, record.chargeItems)
-    setRecord(await loadPatientRecord(record.patient))
+    await reloadRecord(record.patient)
     setPlanView((current) => (current === COMPARE ? COMPARE : undefined))
     await recheck()
-  }, [record, recheck])
+  }, [record, recheck, reloadRecord])
 
   // The alternative on screen: the one picked, else the one the patient chose, else the first.
   const carePlans = record?.carePlans ?? []
@@ -120,6 +161,7 @@ export function App() {
     ? carePlans.find((p) => p.id === planView) ?? carePlans.find((p) => p.intent === 'plan') ?? carePlans[0]
     : undefined
 
+  const gaps = useMemo(() => (record ? findGaps(record.toothStates, record.conditions) : []), [record])
   const status = useMemo(() => (record ? toChartStatus(record.toothStates) : undefined), [record])
   const plan = useMemo(
     () => (record && status && selectedPlan ? toPlanChart(status, selectedPlan, record.toothStateHistory) : undefined),
@@ -235,7 +277,7 @@ export function App() {
                       />
                     )}
                     <button type="button" className="secondary" onClick={recheck} disabled={checking}>{checking ? t('checking') : t('recheck')}</button>
-                    <AddPlanMenu activePlan={selectedPlan} onAdd={addPlan} />
+                    <AddPlanMenu activePlan={selectedPlan} gaps={gaps} onAdd={addPlan} onAddFromFinding={addFromFinding} />
                   </div>
                 </div>
                 <div role="tablist" aria-label={t('plans')} className="tabs">
@@ -273,6 +315,7 @@ export function App() {
                 loading={!costPlans && !costPlanError}
                 onJustify={justify}
                 onOpen={setPlanView}
+                onChoose={choosePlan}
                 onDelete={removePlan}
                 onInspect={inspect}
               />
@@ -305,6 +348,7 @@ export function App() {
               chargeItems={record.chargeItems}
               loading={!costPlans && !costPlanError}
               onJustify={justify}
+              onChoose={choosePlan}
               onDelete={removePlan}
               onInspect={inspect}
             />
@@ -329,7 +373,10 @@ function PlanStepper({ index, count, onStep }: { index: number; count: number; o
   )
 }
 
-function AddPlanMenu({ activePlan, onAdd }: { activePlan?: CarePlan; onAdd: (source?: CarePlan) => Promise<void> }) {
+function AddPlanMenu({ activePlan, gaps, onAdd, onAddFromFinding }: {
+  activePlan?: CarePlan; gaps: Gap[]; onAdd: (source?: CarePlan) => Promise<void>
+  onAddFromFinding: (gap: Gap, template: AlternativeTemplate) => Promise<void>
+}) {
   const [open, setOpen] = useState(false)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string>()
@@ -345,12 +392,13 @@ function AddPlanMenu({ activePlan, onAdd }: { activePlan?: CarePlan; onAdd: (sou
     return () => { document.removeEventListener('mousedown', close); document.removeEventListener('keydown', close) }
   }, [open])
 
-  const add = async (source?: CarePlan) => {
+  const run = async (write: () => Promise<void>) => {
     setOpen(false)
     setBusy(true)
     setError(undefined)
-    try { await onAdd(source) } catch (e) { setError((e as Error).message) } finally { setBusy(false) }
+    try { await write() } catch (e) { setError((e as Error).message) } finally { setBusy(false) }
   }
+  const add = (source?: CarePlan) => run(() => onAdd(source))
 
   return (
     <div className="add-plan" ref={ref}>
@@ -370,6 +418,12 @@ function AddPlanMenu({ activePlan, onAdd }: { activePlan?: CarePlan; onAdd: (sou
               <span className="muted">{t('duplicateHint')}</span>
             </button>
           )}
+          {gaps.flatMap((gap) => ALTERNATIVE_TEMPLATES.map((template) => (
+            <button key={`${gap.tooth}-${template.key}`} type="button" role="menuitem" onClick={() => run(() => onAddFromFinding(gap, template))}>
+              <span className="menu-title">{t('missingToothPlan', { tooth: gap.tooth, treatment: t(template.labelKey) })}</span>
+              <span className="muted">{gap.condition ? `${display(gap.condition.code)}. ` : ''}{t('findingPlanHint')}</span>
+            </button>
+          )))}
         </div>
       )}
       {error && <div role="alert" className="error add-plan-error">{error}</div>}
@@ -474,9 +528,10 @@ interface PlanProps {
   onInspect: (resource: Resource) => void
 }
 
-function ComparePlans({ carePlans, costPlanOf, chargeItems, loading, onJustify, onOpen, onDelete, onInspect }: {
+function ComparePlans({ carePlans, costPlanOf, chargeItems, loading, onJustify, onOpen, onChoose, onDelete, onInspect }: {
   carePlans: CarePlan[]; costPlanOf: Map<string, CostPlan>; chargeItems: ChargeItem[]; loading: boolean
-  onJustify: PlanProps['onJustify']; onOpen: (id: string) => void; onDelete: (carePlan: CarePlan) => Promise<void>
+  onJustify: PlanProps['onJustify']; onOpen: (id: string) => void
+  onChoose: (carePlan: CarePlan) => Promise<void>; onDelete: (carePlan: CarePlan) => Promise<void>
   onInspect: PlanProps['onInspect']
 }) {
   const totals = carePlans.map((p) => costPlanOf.get(p.id)?.total).filter((t): t is number => typeof t === 'number')
@@ -509,6 +564,7 @@ function ComparePlans({ carePlans, costPlanOf, chargeItems, loading, onJustify, 
               <PlanBody carePlan={carePlan} costPlan={costPlan} chargeItems={chargeItems} loading={loading} onJustify={onJustify} onInspect={onInspect} compact />
               <div className="plan-col-actions">
                 <button type="button" className="secondary" onClick={() => onOpen(carePlan.id)}>{t('showChart')}</button>
+                <ChooseButton carePlan={carePlan} onChoose={onChoose} />
                 <DownloadButton label="FHIR" title={t('downloadPlanTitle')} onDownload={() => downloadPlan(carePlan)} />
                 <InspectButton resource={carePlan} onInspect={onInspect} />
                 <DeleteButton carePlan={carePlan} onDelete={onDelete} iconOnly />
@@ -522,13 +578,14 @@ function ComparePlans({ carePlans, costPlanOf, chargeItems, loading, onJustify, 
   )
 }
 
-function CostPlanDetail(props: PlanProps & { onDelete: (carePlan: CarePlan) => Promise<void> }) {
+function CostPlanDetail(props: PlanProps & { onChoose: (carePlan: CarePlan) => Promise<void>; onDelete: (carePlan: CarePlan) => Promise<void> }) {
   return (
     <>
       <div className="detail-head">
         <h2>{t('costPlan')} <span className="muted-strong">· {shortTitle(props.carePlan)}</span></h2>
         <PlanBadge carePlan={props.carePlan} />
         <span className="detail-actions">
+          <ChooseButton carePlan={props.carePlan} onChoose={props.onChoose} />
           <DownloadButton label={t('downloadFhir')} title={t('downloadPlanTitle')} onDownload={() => downloadPlan(props.carePlan)} />
           <InspectButton resource={props.carePlan} onInspect={props.onInspect} />
           <DeleteButton carePlan={props.carePlan} onDelete={props.onDelete} />
@@ -686,6 +743,27 @@ function DownloadButton({ label, title, onDownload }: { label: string; title: st
       <button type="button" className="secondary with-icon" title={title} onClick={click} disabled={busy}>
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14" /></svg>
         {busy ? t('preparing') : label}
+      </button>
+      {error && <span role="alert" className="error">{error}</span>}
+    </span>
+  )
+}
+
+// Choosing marks this alternative as the patient's choice; shown only on a draft plan that is not
+// chosen yet (planAlternatives.ts, chooseAlternative).
+function ChooseButton({ carePlan, onChoose }: { carePlan: CarePlan; onChoose: (carePlan: CarePlan) => Promise<void> }) {
+  const [busy, setBusy] = useState(false)
+  const [error, setError] = useState<string>()
+  if (carePlan.intent === 'plan' || !isChoosable(carePlan)) return null
+  const click = async () => {
+    setBusy(true)
+    setError(undefined)
+    try { await onChoose(carePlan) } catch (e) { setError((e as Error).message) } finally { setBusy(false) }
+  }
+  return (
+    <span className="download">
+      <button type="button" className="secondary" title={t('choosePlanTitle')} onClick={click} disabled={busy}>
+        {busy ? t('choosing') : t('choosePlan')}
       </button>
       {error && <span role="alert" className="error">{error}</span>}
     </span>

@@ -205,5 +205,13 @@
   "profileMissing": "No StructureDefinition with a snapshot for {{url}} in Aidbox.",
   "viewFhir": "View FHIR",
   "panelToggle": "Show the FHIR resources and requests behind the app",
-  "inspectResource": "{{resource}} in the FHIR panel"
+  "inspectResource": "{{resource}} in the FHIR panel",
+  "missingToothPlan": "Tooth {{tooth}} missing: {{treatment}}",
+  "findingPlanHint": "A new alternative from this finding, with its cost plan.",
+  "template.cast-partial-denture": "Cast partial denture (removable)",
+  "choosePlan": "Choose this plan",
+  "choosing": "Choosing…",
+  "choosePlanTitle": "The patient chooses this alternative; the others become options",
+  "chooseUnknownPlan": "CarePlan/{{id}} is not one of the patient's plans.",
+  "chooseNotDraft": "CarePlan/{{id}} has status {{status}}; only a draft alternative can be chosen."
 }

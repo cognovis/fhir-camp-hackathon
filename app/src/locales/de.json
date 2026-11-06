@@ -205,5 +205,13 @@
   "profileMissing": "Keine StructureDefinition mit Snapshot für {{url}} in Aidbox gefunden.",
   "viewFhir": "FHIR ansehen",
   "panelToggle": "FHIR-Ressourcen und Anfragen der Anwendung anzeigen",
-  "inspectResource": "{{resource}} im FHIR-Panel"
+  "inspectResource": "{{resource}} im FHIR-Panel",
+  "missingToothPlan": "Zahn {{tooth}} fehlt: {{treatment}}",
+  "findingPlanHint": "Neue Alternative aus diesem Befund, mit eigenem Kostenplan.",
+  "template.cast-partial-denture": "Modellgussprothese (herausnehmbar)",
+  "choosePlan": "Diese Alternative wählen",
+  "choosing": "Wird gewählt…",
+  "choosePlanTitle": "Diese Alternative wird gewählt; die anderen werden wieder Optionen",
+  "chooseUnknownPlan": "CarePlan/{{id}} gehört nicht zu den Plänen dieses Patienten.",
+  "chooseNotDraft": "CarePlan/{{id}} hat den Status {{status}}; nur eine Alternative im Entwurf kann gewählt werden."
 }

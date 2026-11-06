@@ -144,7 +144,7 @@ table.lines { border-collapse: collapse; width: 100%; font-size: 13px; }
 .icon-btn { width: 40px; height: 40px; border-radius: 10px; border: 1px solid var(--input); background: #fff; display: flex; align-items: center; justify-content: center; color: var(--text); }
 button.with-icon { display: flex; align-items: center; gap: 8px; padding: 0 16px 0 12px; }
 .add-plan { position: relative; }
-.menu { position: absolute; top: 48px; right: 0; z-index: 30; width: 300px; background: #fff; border: 1px solid var(--input); border-radius: 12px; box-shadow: 0 12px 32px rgba(27, 35, 51, .16); padding: 6px; }
+.menu { position: absolute; top: 48px; right: 0; z-index: 30; width: 300px; background: #fff; border: 1px solid var(--input); border-radius: 12px; box-shadow: 0 12px 32px rgba(27, 35, 51, .16); padding: 6px; max-height: 320px; overflow-y: auto; }
 .menu button { width: 100%; text-align: left; border: 0; background: transparent; border-radius: 8px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px; color: var(--text); }
 .menu button:hover, .menu button:focus-visible { background: var(--surface-2); }
 .menu-title { font-size: 14px; font-weight: 600; }

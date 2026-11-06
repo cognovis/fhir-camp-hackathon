@@ -127,7 +127,8 @@ reloads the data and keeps your own resources.
 **Aidbox UI:** <http://localhost:8080>, user `admin`, password `hackathon`. The REST API takes
 Basic auth with client `root`, secret `hackathon`, for example
 `curl -u root:hackathon http://localhost:8080/fhir/Patient`. These are local throw-away
-credentials; do not reuse them. Port 8080 taken? Set `AIDBOX_PORT` in `.env`.
+credentials; do not reuse them. Port 8080 taken? Set `AIDBOX_PORT` in `.env`; Docker Compose, the setup script, the
+app and the cost plan all read it.
 
 ### Billing check and cost plan
 
@@ -151,6 +152,8 @@ justification), totals 549.26, 428.44 and 673.59 EUR.
 | `billing/` | A synthetic GOZ rule set as a FHIR `Library`, the billing check with `@cognovis/fhir-billing-sdk` 0.35.0, and the cost plan calculation. See [billing/README.md](billing/README.md) |
 | `app/` | The starter app: Vite, React and TypeScript, with the MIT odontogram `react-advanced-odontogram`. Shows the chart of a seeded patient, findings and treatment alternatives, and the planned chart of each alternative. The chart code sits behind one integration point (`app/src/odontogram/`), so another chart component can replace it |
 | [TASKS.md](TASKS.md) | Seven ready-to-pick tasks along the chain |
+| [AGENTS.md](AGENTS.md), `.agents/skills/` | Instructions and skills for coding agents (Claude Code reads them through `CLAUDE.md` and `.claude/skills`): Aidbox in the kit, writing valid FHIR, FHIR IG development in FSH, and the Billing SDK |
+| `docs/slides.html` | Pitch slides for the project |
 
 ## Known gaps
 

@@ -53,15 +53,28 @@ The cognovis Billing SDK (Apache-2.0) evaluates billing rules over FHIR
 resources: ChargeItems, ChargeItemDefinitions and rule sets carried as
 `Library` resources. It also runs offline on FHIR bundles, without a server.
 
+The packages are on the cognovis npm registry, readable without a login; they are not on
+npmjs.org. Point the `@cognovis` scope there (this repository's `.npmrc` already does):
+
 ```sh
 npm config set @cognovis:registry https://npm.cognovis.de
-npx -p @cognovis/fhir-billing-sdk fhir-billing-check --help
+npx -p @cognovis/fhir-billing-sdk@0.42.1 fhir-billing-check --help
 ```
 
-| Package | Link |
-|---|---|
-| `@cognovis/fhir-billing-sdk` | https://npm.cognovis.de/@cognovis%2Ffhir-billing-sdk |
-| `@cognovis/fhir-sdk` (FHIR client and types) | https://npm.cognovis.de/@cognovis%2Ffhir-sdk |
+| Package | Newest | In this kit | What it is |
+|---|---|---|---|
+| [`@cognovis/fhir-billing-sdk`](https://npm.cognovis.de/@cognovis%2Ffhir-billing-sdk) | 0.42.1 | 0.42.1 | `fhir-billing-check` CLI and `evaluateBillingAccount` |
+| [`@cognovis/fhir-billing-rules`](https://npm.cognovis.de/@cognovis%2Ffhir-billing-rules) | 0.41.1 | 0.40.0 | Rule-set format and the rule classes |
+| [`@cognovis/fhir-billing-engine`](https://npm.cognovis.de/@cognovis%2Ffhir-billing-engine) | 0.41.1 | 0.40.0 (via the SDK) | The rule engine |
+| [`@cognovis/fhir-billing-types`](https://npm.cognovis.de/@cognovis%2Ffhir-billing-types) | 0.41.1 | 0.40.0 (via the SDK) | Shared types |
+| [`@cognovis/fhir-sdk`](https://npm.cognovis.de/@cognovis%2Ffhir-sdk) | 0.24.0 | 0.23.3 | FHIR client and profile types |
+
+Pin the versions. `fhir-billing-sdk` 0.42.1 requires engine, rules and types `^0.40.0` (that
+is 0.40.x) and accepts `fhir-sdk` `^0.23.3` but not 0.24, so the kit pins that set. The
+registry's `latest` tag of `fhir-billing-sdk` still points to 0.37.1, so an unpinned
+`npm install @cognovis/fhir-billing-sdk` gets the older SDK. Installing the 0.41 engine
+packages next to the SDK gives you a second copy that the SDK does not use. Engine source:
+<https://github.com/cognovis/fhir-billing-core>.
 
 ### Odontogram
 
@@ -161,7 +174,7 @@ justification), totals 549.26, 428.44 and 673.59 EUR.
 | `scripts/setup.mjs` | Installs `de.cognovis.fhir.dental.core#0.10.2` and `de.cognovis.fhir.dental#0.57.2` with their public dependencies, loads catalog and patients, validates against the installed profiles |
 | `data/` | Four synthetic dental patients. **Greta Palmried (`dent-051`)** has the complete chain: chart, finding, three treatment alternatives as `CarePlan`, 25 planned `ChargeItem`s, one cost plan `Account` per alternative. See [data/README.md](data/README.md) |
 | `catalog/` | The GOZ fee catalog as 215 FHIR `ChargeItemDefinition`s, generated from the official BMJV XML. Generated for the hackathon, not a billing-grade catalog. See [catalog/README.md](catalog/README.md) |
-| `billing/` | A synthetic GOZ rule set as a FHIR `Library`, the billing check with `@cognovis/fhir-billing-sdk` 0.35.0, and the cost plan calculation. See [billing/README.md](billing/README.md) |
+| `billing/` | A synthetic GOZ rule set as a FHIR `Library`, the billing check with `@cognovis/fhir-billing-sdk` 0.42.1, and the cost plan calculation. See [billing/README.md](billing/README.md) |
 | `app/` | The starter app: Vite, React and TypeScript, with the MIT odontogram `react-advanced-odontogram`. Shows the chart of a seeded patient, findings and treatment alternatives, and the planned chart of each alternative. The chart code sits behind one integration point (`app/src/odontogram/`), so another chart component can replace it |
 | [TASKS.md](TASKS.md) | Seven ready-to-pick tasks along the chain |
 | [AGENTS.md](AGENTS.md), `.agents/skills/` | Instructions and skills for coding agents (Claude Code reads them through `CLAUDE.md` and `.claude/skills`): Aidbox in the kit, writing valid FHIR, FHIR IG development in FSH, and the Billing SDK |

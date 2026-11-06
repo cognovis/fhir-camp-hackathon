@@ -51,7 +51,7 @@ round(200 x 0.0562421 x 2.3, 2) = 25.87 EUR.
 ### Why not the converter's representation
 
 The converter writes the points as `factor` and the point value as `amount`
-(`{ "type": "base", "factor": 200, "amount": { "value": 0.0562421 } }`). Billing SDK 0.35.0
+(`{ "type": "base", "factor": 200, "amount": { "value": 0.0562421 } }`). Billing SDK 0.35.0, the version the kit was first built with,
 reads that differently from what it means:
 
 1. The SDK accepts money values with at most two decimals. 0.0562421 has seven, so every

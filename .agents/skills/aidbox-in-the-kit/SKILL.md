@@ -53,7 +53,7 @@ Observation?subject=Patient/dent-051&_profile=https://fhir.cognovis.de/dental-co
 CarePlan?subject=Patient/dent-051
 ChargeItem?subject=Patient/dent-051
 Account?subject=Patient/dent-051
-ChargeItemDefinition?code=5010
+ChargeItemDefinition/goz-5010            (R4 has no `code` search on ChargeItemDefinition)
 ```
 
 ## Packages and validation

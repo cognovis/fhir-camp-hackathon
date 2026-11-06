@@ -65,6 +65,39 @@ What the rule classes cannot express today: a limit per tooth (the SDK counts pe
 not per tooth), and the price of the six GOZ numbers that are a share of another number. See
 `../TASKS.md`.
 
+## Cost plan from a CarePlan
+
+`charges-from-plan.mjs` generates the cost plan of one treatment alternative in the local
+Aidbox: one `Account` and one planned `ChargeItem` per CarePlan activity, in the shape of the
+seeded ones.
+
+```sh
+npm run charges-from-plan -- <CarePlan id>                       # write to Aidbox
+npm run charges-from-plan -- dent-051-hkp-alt-c --factor 9010=3.0  # multiplier per GOZ number
+npm run charges-from-plan -- <CarePlan id> --dry-run --out plan.json  # validate only, keep the Bundle
+npm run cost-plan -- --aidbox dent-051                           # price it
+```
+
+| ChargeItem | From |
+|---|---|
+| `code` | the GOZ coding of `activity.detail.code`; refused unless the catalog has a `ChargeItemDefinition` for it |
+| `bodysite` | the FDI tooth of the `detail.reasonReference` (an Observation or Condition with `bodySite`); none without a reasonReference |
+| `quantity` | `detail.quantity`, else 1 |
+| `factorOverride` | 2.3, or `--factor <GOZ>=<multiplier>` for every activity with that number |
+| `occurrenceDateTime`, `subject` | `CarePlan.period.start`, `CarePlan.subject` |
+| `account`, `supportingInformation` | the generated Account, the CarePlan |
+
+The Account takes its name from the CarePlan title ("HKP ..." becomes "Kostenplan ..."), the
+plan type from the CarePlan category, and the patient's only active `Coverage` (or
+`--coverage <id>`); the owner is `Organization/fhir-camp-practice` (or `--owner <id>`).
+
+Ids are stable: `<CarePlan id>-cost-plan` and `<CarePlan id>-charge-NN`. Running it again
+replaces the cost plan and deletes ChargeItems of that Account the plan no longer has. Every
+resource passes `$validate` (base R4) before the write and again after it is read back.
+Running it on a seeded CarePlan adds a second cost plan next to the seeded one; for
+`dent-051-hkp-alt-a/-b/-c` (with `--factor 9010=3.0` for C) the totals and decisions match the
+seeded plans. `npm --workspace billing test` checks the mapping against the seed offline.
+
 ## Line prices from `evaluateBillingAccount`
 
 The CLI prints decisions only. For prices, call the SDK directly, as `cost-plan.mjs` does:

@@ -56,8 +56,8 @@ writing them by hand as the seed data does.
   with `status = planned`, `code` = the GOZ number, `bodysite` = the tooth of the
   `reasonReference`, `factorOverride` = 2.3 by default, `account` and
   `supportingInformation` (the CarePlan). Copy the shape from `dent-051-alt-a-04`.
-- Look the GOZ number up in the catalog (`ChargeItemDefinition?code=...`) and refuse unknown
-  numbers.
+- Look the GOZ number up in the catalog (the `ChargeItemDefinition` whose `code.coding` has
+  it; R4 has no `code` search parameter there) and refuse unknown numbers.
 - Run it for the alternative from task 2 and check it with
   `node billing/cost-plan.mjs --aidbox dent-051`.
 - Done when: the generated ChargeItems for `dent-051-hkp-alt-a` match the seeded ones, and the

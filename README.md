@@ -87,48 +87,60 @@ npx -p @cognovis/fhir-billing-sdk fhir-billing-check --help
 
 ## Getting started
 
-You need Docker (with Compose), Node.js 22.12 or newer, and a free Aidbox account.
-Everything runs on your machine; all data is synthetic.
+You need Docker (with Compose) and a free Aidbox account. Everything runs on your machine;
+all data is synthetic.
 
 ```sh
 git clone https://github.com/cognovis/fhir-camp-hackathon.git
 cd fhir-camp-hackathon
-
-# 1. Aidbox license (optional here, see below)
-cp .env.example .env          # then paste your key into BOX_LICENSE, or skip it
-
-# 2. Start Aidbox and its database (the first start pulls about 1.1 GB of images)
-docker compose up -d
-
-# 3. Install the Node dependencies (the starter app and the billing tools)
-npm install
-
-# 4. Install the dental FHIR packages, load catalog and patients, validate
-npm run setup
-
-# 5. The starter app: odontogram on FHIR data from your Aidbox
-npm run app                   # http://localhost:5173
+cp .env.example .env          # optional: paste your Aidbox key into BOX_LICENSE (see below)
+docker compose up --build     # first start pulls and builds about 1.5 GB
 ```
+
+That one command starts the whole kit:
+
+1. **Aidbox** and its database.
+2. **`setup`**, a one-shot container: installs the dental FHIR packages, loads the GOZ
+   catalog and the synthetic patients, validates them, and exits. It ends with
+   `Validation: 141 profile checks passed, 0 errors.`
+3. **`app`**, the starter app with the odontogram, on <http://localhost:5173>, as soon as
+   the setup has finished. `app/src` is mounted into the container, so your edits reload in
+   the browser.
+
+Add `-d` to run it in the background; `docker compose logs -f setup app` shows the progress.
+`docker compose up` again later re-runs the setup, which reloads the seed data and keeps
+your own resources.
 
 **Aidbox license.** Aidbox needs a license; a development license is free. Either:
 
 - create a free account in the [Aidbox user portal](https://aidbox.app/ui/portal), create a
   *Development* license for a *self-hosted* instance, and put the key into `.env` as
-  `BOX_LICENSE=...` before `docker compose up -d`, or
-- leave `BOX_LICENSE` out, run `docker compose up -d`, open <http://localhost:8080> and log in
-  with your Aidbox account to activate. `npm run setup` tells you if this step is missing.
+  `BOX_LICENSE=...` before `docker compose up`, or
+- leave `BOX_LICENSE` out, start the stack, open <http://localhost:8080> and log in with your
+  Aidbox account to activate. The setup container waits for the activation and says so in its
+  log.
 
 The development license allows no real patient data, which suits this kit.
-
-`npm run setup` takes about a minute on a fresh instance and ends with
-`Validation: 141 profile checks passed, 0 errors.` It can be run again at any time; it
-reloads the data and keeps your own resources.
 
 **Aidbox UI:** <http://localhost:8080>, user `admin`, password `hackathon`. The REST API takes
 Basic auth with client `root`, secret `hackathon`, for example
 `curl -u root:hackathon http://localhost:8080/fhir/Patient`. These are local throw-away
-credentials; do not reuse them. Port 8080 taken? Set `AIDBOX_PORT` in `.env`; Docker Compose, the setup script, the
-app and the cost plan all read it.
+credentials; do not reuse them. Port 8080 or 5173 taken? Set `AIDBOX_PORT` or `APP_PORT` in
+`.env`.
+
+### Working on the host instead
+
+For the billing tools, the scripts, or an app outside Docker you need Node.js 22.12 or newer:
+
+```sh
+docker compose up -d aidbox   # Aidbox and its database only
+npm install
+npm run setup                 # packages, catalog, patients, validation
+npm run app                   # http://localhost:5173
+```
+
+On the host, `npm run setup` fails at once with instructions if Aidbox is not activated yet.
+The setup script, the app and the cost plan read `AIDBOX_PORT` from `.env` as Compose does.
 
 ### Billing check and cost plan
 
@@ -145,7 +157,7 @@ justification), totals 549.26, 428.44 and 673.59 EUR.
 
 | Folder | What it is |
 |---|---|
-| `docker-compose.yml` | Aidbox 2610 (latest stable) and PostgreSQL 18 |
+| `docker-compose.yml`, `Dockerfile` | The whole kit in one stack: Aidbox 2610 (latest stable) and PostgreSQL 18, the one-shot `setup`, and the starter `app`. The Node tools run from one image built from this repository |
 | `scripts/setup.mjs` | Installs `de.cognovis.fhir.dental.core#0.10.2` and `de.cognovis.fhir.dental#0.57.2` with their public dependencies, loads catalog and patients, validates against the installed profiles |
 | `data/` | Four synthetic dental patients. **Greta Palmried (`dent-051`)** has the complete chain: chart, finding, three treatment alternatives as `CarePlan`, 25 planned `ChargeItem`s, one cost plan `Account` per alternative. See [data/README.md](data/README.md) |
 | `catalog/` | The GOZ fee catalog as 215 FHIR `ChargeItemDefinition`s, generated from the official BMJV XML. Generated for the hackathon, not a billing-grade catalog. See [catalog/README.md](catalog/README.md) |

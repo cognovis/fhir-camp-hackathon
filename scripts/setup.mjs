@@ -67,13 +67,27 @@ function fail(message) {
   process.exit(1)
 }
 
+// In the all-in-one Compose stack the setup container waits until Aidbox is activated in the
+// browser instead of failing; run on the host, it fails at once with instructions.
+const WAIT_FOR_ACTIVATION = process.env.SETUP_WAIT_FOR_ACTIVATION === 'true'
+const BROWSER_URL = process.env.AIDBOX_BROWSER_URL ?? BASE
+
 async function waitForAidbox() {
   process.stdout.write(`Waiting for Aidbox at ${BASE} `)
+  let activationNotice = 0
   for (let attempt = 0; attempt < 120; attempt += 1) {
     try {
       const health = await fetch(`${BASE}/health`, { redirect: 'manual' })
       if (health.status >= 300 && health.status < 400) {
-        fail(`Aidbox is not activated yet. Open ${BASE} in the browser and log in with your Aidbox account, or set BOX_LICENSE in .env and run docker compose up -d again. Then rerun npm run setup.`)
+        const message = `Aidbox is not activated yet. Open ${BROWSER_URL} in the browser and log in with your Aidbox account, or set BOX_LICENSE in .env`
+        if (!WAIT_FOR_ACTIVATION) fail(`${message} and run docker compose up -d again. Then rerun npm run setup.`)
+        // Up to 30 minutes for the activation; repeat the hint every 30 seconds.
+        if (activationNotice % 15 === 0) console.log(`\n${message}. Waiting for the activation ...`)
+        activationNotice += 1
+        if (activationNotice > 900) fail(`${message}, then run docker compose up again.`)
+        attempt -= 1
+        await new Promise((resolve) => setTimeout(resolve, 2000))
+        continue
       }
       if (health.ok) {
         const probe = await fhir('GET', '/fhir/metadata?_summary=true')
@@ -154,4 +168,4 @@ if (!validateOnly) {
   await loadBundles()
 }
 await validate()
-console.log(`\nDone. Aidbox UI: ${BASE} (admin / hackathon). Starter app: npm run app`)
+console.log(`\nDone. Aidbox UI: ${BROWSER_URL} (admin / hackathon). Starter app: ${process.env.APP_BROWSER_URL ?? 'npm run app'}`)

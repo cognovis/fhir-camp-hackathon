@@ -8,21 +8,31 @@ description: Start, load, query, validate and debug the kit's local Aidbox (Dock
 ## Start and load
 
 ```sh
-cp .env.example .env     # optional: BOX_LICENSE=... (never an empty value)
-docker compose up -d     # Aidbox 2610 + Postgres
-npm run setup            # installs packages, loads catalog and patients, validates
+cp .env.example .env         # optional: BOX_LICENSE=... (never an empty value)
+docker compose up --build    # Aidbox + Postgres, one-shot setup, starter app on :5173
 ```
 
-- `npm run setup` is safe to repeat; it reloads the seed data and keeps your own resources.
+- The stack has four services: `postgres`, `aidbox`, `setup` (installs packages, loads
+  catalog and patients, validates, exits) and `app` (Vite dev server, `app/src` mounted).
+  `app` starts only after `setup` exited successfully. Follow them with
+  `docker compose logs -f setup app`.
+- Working on the host instead: `docker compose up -d aidbox`, then `npm install`,
+  `npm run setup`, `npm run app` (Node.js 22.12 or newer).
+- The setup is safe to repeat (`docker compose up` again, or `npm run setup`); it reloads
+  the seed data and keeps your own resources.
+- App changes outside `app/src` (dependencies, `vite.config.ts`) need
+  `docker compose up --build`.
 - `npm run validate` re-runs the profile checks of the seeded resources only. Expected end:
   `Validation: 141 profile checks passed, 0 errors.` Resources you create are not in it;
   check them with `$validate` (below).
-- Not activated yet: every request answers with a redirect, and `npm run setup` says so.
-  Open http://localhost:8080 and log in with your Aidbox account, or put a development
-  licence from https://aidbox.app/ui/portal into `.env` as `BOX_LICENSE`.
+- Not activated yet: every request answers with a redirect. The `setup` container waits
+  and says so in its log; `npm run setup` on the host fails with the same hint. Open
+  http://localhost:8080 and log in with your Aidbox account, or put a development licence
+  from https://aidbox.app/ui/portal into `.env` as `BOX_LICENSE`.
 - An empty `BOX_LICENSE=` makes Aidbox crash at start ("License is invalid"). Remove the
   line or fill it.
-- Port taken: set `AIDBOX_PORT` in `.env`; the app and the scripts follow it.
+- Port taken: set `AIDBOX_PORT` or `APP_PORT` in `.env`; Compose, the app and the scripts
+  follow it.
 
 ## Access
 
@@ -61,10 +71,10 @@ ChargeItemDefinition?code=5010
 
 ## Resetting
 
-- Reload the seed: `npm run setup`.
+- Reload the seed: `docker compose up` (re-runs `setup`) or `npm run setup`.
 - Start from an empty database: `docker compose down`, then remove the Postgres volume
   with `docker volume ls` / `docker volume rm <project>_postgres_data`, and
-  `docker compose up -d`. This deletes everything you created.
+  `docker compose up`. This deletes everything you created.
 
 ## Docs
 

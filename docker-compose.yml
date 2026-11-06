@@ -1,5 +1,8 @@
-# Local Aidbox for the FHIR Camp hackathon.
-# Start:  docker compose up -d   (then: npm run setup)
+# The FHIR Camp starter kit in one stack: Aidbox, a one-shot setup that loads the packages,
+# the catalog and the synthetic patients, and the starter app with the odontogram.
+#
+# Everything:      docker compose up --build     (app on http://localhost:5173)
+# Aidbox only:     docker compose up -d aidbox   (then on the host: npm run setup, npm run app)
 # Aidbox UI: http://localhost:8080  (user: admin, password: see BOX_ADMIN_PASSWORD below)
 #
 # License: put your free Aidbox development license into .env as BOX_LICENSE=...
@@ -68,3 +71,35 @@ services:
       timeout: 5s
       retries: 90
       start_period: 30s
+
+  # One-shot: installs the dental packages, loads catalog and patients, validates, then exits.
+  # Without a licence in .env it waits until you activate Aidbox in the browser.
+  setup:
+    build: .
+    image: fhir-camp-kit:local
+    command: ["node", "scripts/setup.mjs"]
+    depends_on:
+      aidbox:
+        condition: service_healthy
+    environment:
+      AIDBOX_URL: http://aidbox:8080
+      AIDBOX_BROWSER_URL: http://localhost:${AIDBOX_PORT:-8080}
+      APP_BROWSER_URL: http://localhost:${APP_PORT:-5173}
+      SETUP_WAIT_FOR_ACTIVATION: "true"
+    restart: "no"
+    mem_limit: 512m
+
+  # The starter app (Vite dev server). app/src is mounted, so your edits reload in the browser.
+  app:
+    build: .
+    image: fhir-camp-kit:local
+    depends_on:
+      setup:
+        condition: service_completed_successfully
+    environment:
+      AIDBOX_URL: http://aidbox:8080
+    ports:
+      - "${APP_PORT:-5173}:5173"
+    volumes:
+      - ./app/src:/kit/app/src
+    mem_limit: 1g

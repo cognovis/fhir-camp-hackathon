@@ -15,9 +15,14 @@
 //
 // Generated for the hackathon, not a billing-grade calculation.
 
-import { readFileSync } from 'node:fs'
+import { existsSync, readFileSync } from 'node:fs'
 import { bundleAdmissionRecords, createBundleFhirClient, evaluateBillingAccount } from '@cognovis/fhir-billing-sdk'
 import { defineProfile } from '@cognovis/fhir-sdk/client'
+
+// Read AIDBOX_PORT and the other settings from the repository's .env, as Docker Compose does.
+// Variables already set in the environment win.
+const envFile = new URL('../.env', import.meta.url)
+if (existsSync(envFile)) process.loadEnvFile?.(envFile)
 
 const args = process.argv.slice(2)
 const option = (name) => { const i = args.indexOf(name); return i >= 0 ? args[i + 1] : undefined }
@@ -35,7 +40,7 @@ const profiles = {
 }
 
 async function fromAidbox(patientId) {
-  const url = (process.env.AIDBOX_URL ?? 'http://localhost:8080').replace(/\/$/, '')
+  const url = (process.env.AIDBOX_URL ?? `http://localhost:${process.env.AIDBOX_PORT ?? '8080'}`).replace(/\/$/, '')
   const auth = `Basic ${Buffer.from(`${process.env.AIDBOX_CLIENT ?? 'root'}:${process.env.AIDBOX_SECRET ?? 'hackathon'}`).toString('base64')}`
   const search = async (query) => {
     const response = await fetch(`${url}/fhir/${query}`, { headers: { authorization: auth, accept: 'application/fhir+json' } })

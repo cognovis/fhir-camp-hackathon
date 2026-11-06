@@ -6,10 +6,15 @@
 //   4. validates every loaded resource that claims a profile against that profile.
 //
 // Usage: node scripts/setup.mjs [--validate-only]
-// Environment: AIDBOX_URL (default http://localhost:8080), AIDBOX_CLIENT / AIDBOX_SECRET
+// Environment (or .env): AIDBOX_URL (default http://localhost:${AIDBOX_PORT:-8080}), AIDBOX_CLIENT / AIDBOX_SECRET
 // (default root / hackathon, as set in docker-compose.yml).
 
-import { readFileSync, readdirSync } from 'node:fs'
+import { existsSync, readFileSync, readdirSync } from 'node:fs'
+
+// Read AIDBOX_PORT and the other settings from the repository's .env, as Docker Compose does.
+// Variables already set in the environment win.
+const envFile = new URL('../.env', import.meta.url)
+if (existsSync(envFile)) process.loadEnvFile?.(envFile)
 
 const BASE = (process.env.AIDBOX_URL ?? `http://localhost:${process.env.AIDBOX_PORT ?? '8080'}`).replace(/\/$/, '')
 const AUTH = `Basic ${Buffer.from(`${process.env.AIDBOX_CLIENT ?? 'root'}:${process.env.AIDBOX_SECRET ?? 'hackathon'}`).toString('base64')}`

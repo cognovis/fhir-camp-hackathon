@@ -44,13 +44,15 @@ export async function loadCostPlans(patientId: string): Promise<CostPlan[]> {
 }
 
 // Writes the justification for a raised multiplier into ChargeItem.reason (GOZ § 10) and keeps
-// the rest of the resource, including its HTEST tag, as it is.
+// the rest of the resource, including its HTEST tag and any coded reasons, as it is. The
+// justification is the one text-only reason; saving again replaces it.
 export async function saveJustification(chargeItemId: string, text: string): Promise<ChargeItem> {
   const url = `/fhir/ChargeItem/${encodeURIComponent(chargeItemId)}`
   const current = await fetch(url, { headers: { accept: 'application/fhir+json' } })
   if (!current.ok) throw new Error(`GET ChargeItem/${chargeItemId}: HTTP ${current.status}`)
   const item = (await current.json()) as ChargeItem
-  const updated: ChargeItem = { ...item, reason: [{ text: text.trim() }] }
+  const coded = (item.reason ?? []).filter((reason) => reason.coding?.length)
+  const updated: ChargeItem = { ...item, reason: [...coded, { text: text.trim() }] }
   const response = await fetch(url, {
     method: 'PUT',
     headers: { 'content-type': 'application/fhir+json', accept: 'application/fhir+json' },

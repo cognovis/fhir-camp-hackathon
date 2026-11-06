@@ -6,7 +6,7 @@ export interface CodeableConcept { coding?: Coding[]; text?: string }
 export interface Reference { reference?: string; display?: string }
 export interface Extension { url: string; valueCoding?: Coding; valueString?: string }
 
-export interface Resource { resourceType: string; id: string; meta?: { profile?: string[] } }
+export interface Resource { resourceType: string; id: string; meta?: { profile?: string[]; versionId?: string } }
 
 export interface Patient extends Resource {
   resourceType: 'Patient'

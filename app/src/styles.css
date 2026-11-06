@@ -1,0 +1,16 @@
+body { margin: 0; font-family: system-ui, sans-serif; color: #1f2933; background: #f7f8fa; }
+.layout { display: grid; grid-template-columns: minmax(0, 1fr); grid-template-areas: "header" "error" "side" "chart"; gap: 16px; padding: 16px; }
+header { grid-area: header; display: flex; align-items: center; gap: 24px; flex-wrap: wrap; }
+header h1 { font-size: 20px; margin: 0; }
+.error { grid-area: error; color: #b42318; margin: 0; }
+.chart { grid-area: chart; background: #fff; border-radius: 8px; padding: 12px; min-width: 0; }
+.side { grid-area: side; background: #fff; border-radius: 8px; padding: 12px; display: grid; grid-template-columns: minmax(240px, 1fr) minmax(0, 3fr); gap: 0 24px; align-items: start; }
+.side ul { padding-left: 18px; margin: 0 0 12px; }
+.plans { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 8px; align-items: start; }
+h2 { font-size: 15px; margin: 8px 0; }
+.plan { display: block; margin: 6px 0; cursor: pointer; }
+.plan-card { border: 1px solid #d9dee5; border-radius: 6px; padding: 8px; }
+.plan-card.selected { border-color: #2563eb; }
+.meta, .note { font-size: 12px; color: #52606d; }
+table { border-collapse: collapse; width: 100%; font-size: 12px; margin-top: 6px; }
+th, td { text-align: left; padding: 2px 4px; border-bottom: 1px solid #eef1f4; }

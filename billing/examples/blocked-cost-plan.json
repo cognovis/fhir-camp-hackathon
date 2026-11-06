@@ -1,0 +1,90 @@
+{
+ "resourceType": "Bundle",
+ "id": "example-blocked-cost-plan",
+ "type": "collection",
+ "entry": [
+  {
+   "resource": {
+    "resourceType": "Coverage",
+    "id": "example-blocked-coverage",
+    "status": "active",
+    "beneficiary": { "reference": "Patient/example-patient" },
+    "period": { "start": "2026-01-01" },
+    "contract": [{ "reference": "Contract/example-blocked-contract" }]
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Contract",
+    "id": "example-blocked-contract",
+    "status": "executed",
+    "url": "https://github.com/cognovis/fhir-camp-hackathon/Contract/goz-private-treatment",
+    "subject": [{ "reference": "Patient/example-patient" }],
+    "applies": { "start": "2026-01-01" }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Account",
+    "id": "example-blocked",
+    "status": "active",
+    "name": "Cost plan that breaks all three hackathon rules",
+    "subject": [{ "reference": "Patient/example-patient" }],
+    "coverage": [{ "coverage": { "reference": "Coverage/example-blocked-coverage" }, "priority": 1 }]
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "ChargeItem",
+    "id": "example-blocked-1",
+    "status": "planned",
+    "code": { "coding": [{ "system": "http://fhir.de/CodeSystem/bzaek/goz", "code": "0030" }] },
+    "subject": { "reference": "Patient/example-patient" },
+    "occurrenceDateTime": "2026-11-16",
+    "quantity": { "value": 2 },
+    "factorOverride": 2.3,
+    "account": [{ "reference": "Account/example-blocked" }]
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "ChargeItem",
+    "id": "example-blocked-2",
+    "status": "planned",
+    "code": { "coding": [{ "system": "http://fhir.de/CodeSystem/bzaek/goz", "code": "9010" }] },
+    "subject": { "reference": "Patient/example-patient" },
+    "occurrenceDateTime": "2026-11-16",
+    "quantity": { "value": 1 },
+    "factorOverride": 2.3,
+    "account": [{ "reference": "Account/example-blocked" }]
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "ChargeItem",
+    "id": "example-blocked-3",
+    "status": "planned",
+    "code": { "coding": [{ "system": "http://fhir.de/CodeSystem/bzaek/goz", "code": "9050" }] },
+    "subject": { "reference": "Patient/example-patient" },
+    "occurrenceDateTime": "2026-11-16",
+    "quantity": { "value": 1 },
+    "factorOverride": 2.3,
+    "account": [{ "reference": "Account/example-blocked" }]
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "ChargeItem",
+    "id": "example-blocked-4",
+    "status": "planned",
+    "code": { "coding": [{ "system": "http://fhir.de/CodeSystem/bzaek/goz", "code": "5010" }] },
+    "subject": { "reference": "Patient/example-patient" },
+    "occurrenceDateTime": "2026-11-16",
+    "quantity": { "value": 1 },
+    "factorOverride": 4.0,
+    "reason": [{ "text": "Erhöhter Zeitaufwand (Beispiel)" }],
+    "account": [{ "reference": "Account/example-blocked" }]
+   }
+  }
+ ]
+}

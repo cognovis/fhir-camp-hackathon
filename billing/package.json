@@ -1,0 +1,18 @@
+{
+  "name": "fhir-camp-billing",
+  "private": true,
+  "version": "0.0.0",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "build-catalog": "node build-catalog.mjs",
+    "check": "fhir-billing-check evaluate --bundle ../catalog/goz-catalog.bundle.json --bundle ../data/dent-051-palmried.json --as-of 2026-11-16",
+    "check:blocked": "fhir-billing-check evaluate --bundle ../catalog/goz-catalog.bundle.json --bundle examples/blocked-cost-plan.json --as-of 2026-11-16",
+    "cost-plan": "node cost-plan.mjs"
+  },
+  "dependencies": {
+    "@cognovis/fhir-billing-rules": "0.35.0",
+    "@cognovis/fhir-billing-sdk": "0.35.0",
+    "@cognovis/fhir-sdk": "0.23.3"
+  }
+}

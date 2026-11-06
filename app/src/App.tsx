@@ -28,6 +28,14 @@ export function App() {
   const [error, setError] = useState<string>()
   const [saveErrors, setSaveErrors] = useState<{ patientId: string; tooth: string; message: string }[]>([])
   const saveAttempts = useRef({ count: 0, latest: new Map<string, number>() })
+  // Tooth states being written. A page unload cancels these requests, so it resends them as
+  // keepalive requests: a duplicate Observation if the first one also arrives, never a lost one.
+  const pendingWrites = useRef(new Set<Omit<Observation, 'id'>>())
+  useEffect(() => {
+    const resend = () => { for (const observation of pendingWrites.current) create(observation, { keepalive: true }).catch(() => {}) }
+    window.addEventListener('beforeunload', resend)
+    return () => window.removeEventListener('beforeunload', resend)
+  }, [])
   // The FHIR panel: what the app reads and writes, live from Aidbox.
   const [panelOpen, setPanelOpen] = useState(false)
   const [inspected, setInspected] = useState<Resource>()
@@ -156,8 +164,13 @@ export function App() {
     }
     const effective = new Date().toISOString()
     const previous = (tooth: string) => record.toothStates.find((o) => toothOf(o.bodySite) === tooth)
+    let observations: Omit<Observation, 'id'>[] = []
     try {
-      const created = await Promise.all(Object.entries(changed).map(([tooth, t]) => create<Observation>(toToothState(record.patient, tooth, t, effective, previous(tooth)), options)))
+      // Throws for a tooth state the profile cannot carry; the error names the gap.
+      observations = Object.entries(changed).map(([tooth, t]) => toToothState(record.patient, tooth, t, effective, previous(tooth)))
+      // Saves started as the page unloads are keepalive requests already.
+      if (!options.keepalive) for (const o of observations) pendingWrites.current.add(o)
+      const created = await Promise.all(observations.map((o) => create<Observation>(o, options)))
       setRecord((r) => {
         if (r?.patient.id !== record.patient.id) return r
         const toothStateHistory = [...r.toothStateHistory, ...created]
@@ -168,6 +181,8 @@ export function App() {
     } catch (e) {
       settle((e as Error).message)
       throw e
+    } finally {
+      for (const o of observations) pendingWrites.current.delete(o)
     }
   }
 

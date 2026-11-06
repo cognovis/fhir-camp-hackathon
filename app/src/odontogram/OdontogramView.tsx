@@ -123,7 +123,8 @@ export function OdontogramView({ status, plan, mode, onToothSelect, onStatusChan
       timer = setTimeout(() => flush(), SAVE_DELAY_MS)
     })
     // A page reload or close runs no React cleanup: start the saves now, as keepalive requests so
-    // they outlive the page (within the browser's 64 KiB keepalive budget, a few dozen teeth).
+    // they outlive the page (within the browser's 64 KiB keepalive budget, a few dozen teeth). Saves
+    // already in flight are the app's to resend (onStatusChange).
     const leave = () => flush(true)
     window.addEventListener('beforeunload', leave)
     // Leaving the chart (another patient) saves what is still waiting for the pause.

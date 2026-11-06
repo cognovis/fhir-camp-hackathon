@@ -112,7 +112,10 @@ function invert<K extends string>(table: Partial<Record<K, string>>): Partial<Re
   return Object.fromEntries(Object.entries(table).map(([key, code]) => [code, key]))
 }
 const PRESENCE_FROM_FHIR = invert(PRESENCE_TO_FHIR)
-const SUBSTRATE_FROM_FHIR = invert(SUBSTRATE_TO_FHIR)
+// A crown or telescope reads as built on a prepared tooth unless the substrate says otherwise, so a
+// crown on natural tooth structure carries that substrate explicitly (see toToothStateComponents).
+const NATURAL_SUBSTRATE = 'natural-tooth-structure'
+const SUBSTRATE_FROM_FHIR: Partial<Record<string, ToothSubstrate>> = { ...invert(SUBSTRATE_TO_FHIR), [NATURAL_SUBSTRATE]: 'natural' }
 const MATERIAL_FROM_FHIR = invert(MATERIAL_TO_FHIR)
 const FILLING_FROM_FHIR = invert(FILLING_TO_FHIR)
 const ENDO_FROM_FHIR = invert(ENDO_TO_FHIR)
@@ -165,7 +168,7 @@ export function toToothRecord(observation: Observation): ToothRecord {
     case 'telescopic-crown':
       // A telescopic bridge anchor reads as a bridge tooth with telescope material, as before.
       if (bridgeUnit) Object.assign(record, { restorationType: 'bridge', restorationMaterial: 'telescope', bridgePillar: isToothPresent(record) })
-      else Object.assign(record, { toothSubstrate: 'crownprep', restorationType: 'crown', restorationMaterial: 'telescope' })
+      else Object.assign(record, { toothSubstrate: substrate ?? 'crownprep', restorationType: 'crown', restorationMaterial: 'telescope' })
       break
     case 'bridge-unit':
       Object.assign(record, { restorationType: 'bridge', restorationMaterial: MATERIAL_FROM_FHIR[material ?? ''] ?? 'metal-ceramic', bridgePillar: isToothPresent(record) })
@@ -209,7 +212,8 @@ export function toToothStateComponents(tooth: string, record: ToothRecord): Obse
   const selection = record.toothSelection ?? 'tooth-base'
   const components = [chartComponent('tooth-presence', PRESENCE_TO_FHIR[selection] ?? 'tooth-present')]
   const hasTooth = isToothPresent(record)
-  const substrate = hasTooth && selection !== 'implant' ? SUBSTRATE_TO_FHIR[record.toothSubstrate ?? 'natural'] : undefined
+  const crowned = record.restorationType === 'crown' && record.toothSubstrate === 'natural'
+  const substrate = hasTooth && selection !== 'implant' ? (crowned ? NATURAL_SUBSTRATE : SUBSTRATE_TO_FHIR[record.toothSubstrate ?? 'natural']) : undefined
   if (substrate) components.push(chartComponent('tooth-substrate', substrate))
   const material = record.restorationMaterial ?? 'none'
   const type = record.restorationType ?? 'none'

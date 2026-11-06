@@ -35,5 +35,8 @@ export function OdontogramView({ status, plan, mode }: OdontogramViewProps) {
     setChartMode(plan ? mode : 'status')
   }), [status, plan, mode])
 
-  return <OdontogramShell language="de" numberingSystem="FDI" readOnly />
+  // Editable: teeth can be clicked and changed. Changes stay in the browser until they are
+  // written back as FHIR Observations (TASKS.md, task 1: subscribe with onStateChange and read
+  // the chart with getStatusChart). Selecting another patient or plan reloads the chart from FHIR.
+  return <OdontogramShell language="de" numberingSystem="FDI" />
 }

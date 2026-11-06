@@ -80,7 +80,7 @@ npx -p @cognovis/fhir-billing-sdk fhir-billing-check --help
 | Aidbox, free dev instance or local Docker | https://aidbox.app |
 | Aidbox documentation | https://www.health-samurai.io/docs/aidbox |
 
-## Coming before the camp
+## Available when the session starts
 
 - The cognovis fork of the odontogram with FHIR mapping, bridges and plan
   alternatives (MIT)

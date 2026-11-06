@@ -9,7 +9,7 @@
     "billing"
   ],
   "engines": {
-    "node": ">=20"
+    "node": ">=22.12"
   },
   "scripts": {
     "setup": "node scripts/setup.mjs",
@@ -17,7 +17,7 @@
     "app": "npm --workspace app run dev",
     "billing:check": "npm --workspace billing run check",
     "billing:check:blocked": "npm --workspace billing run check:blocked",
-    "cost-plan": "npm --workspace billing run cost-plan",
+    "cost-plan": "node billing/cost-plan.mjs",
     "build-catalog": "npm --workspace billing run build-catalog"
   }
 }

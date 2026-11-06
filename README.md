@@ -87,7 +87,7 @@ npx -p @cognovis/fhir-billing-sdk fhir-billing-check --help
 
 ## Getting started
 
-You need Docker (with Compose), Node.js 20 or newer, and a free Aidbox account.
+You need Docker (with Compose), Node.js 22.12 or newer, and a free Aidbox account.
 Everything runs on your machine; all data is synthetic.
 
 ```sh

@@ -14,8 +14,9 @@ npm run setup            # installs packages, loads catalog and patients, valida
 ```
 
 - `npm run setup` is safe to repeat; it reloads the seed data and keeps your own resources.
-- `npm run validate` re-runs only the profile checks. Expected end:
-  `Validation: 141 profile checks passed, 0 errors.` (more if you added profiled resources).
+- `npm run validate` re-runs the profile checks of the seeded resources only. Expected end:
+  `Validation: 141 profile checks passed, 0 errors.` Resources you create are not in it;
+  check them with `$validate` (below).
 - Not activated yet: every request answers with a redirect, and `npm run setup` says so.
   Open http://localhost:8080 and log in with your Aidbox account, or put a development
   licence from https://aidbox.app/ui/portal into `.env` as `BOX_LICENSE`.

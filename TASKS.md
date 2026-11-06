@@ -26,7 +26,9 @@ odontogram, save it as a dental-core tooth-state `Observation` in Aidbox.
 - Write a new Observation per changed tooth (new `effectiveDateTime`) rather than overwriting:
   the old chart is history.
 - Done when: you mark tooth 46 as missing in the app, reload, and it is still missing; the new
-  Observation passes `npm run validate` (or `$validate` against `dental-tooth-state`).
+  Observation passes `$validate` against `dental-tooth-state`
+  (`POST /fhir/Observation/$validate?profile=https://fhir.cognovis.de/dental-core/StructureDefinition/dental-tooth-state`).
+  `npm run validate` checks only the seeded resources, not the ones you create.
 
 ## 2. Plan alternatives: create and choose a treatment alternative (M)
 

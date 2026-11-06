@@ -31,7 +31,7 @@ Load the skill that fits the task from `.agents/skills/` (`.claude/skills` point
 ## Checks before you hand over
 
 ```sh
-npm run validate                       # 0 errors
+npm run validate                       # 0 errors (seeded resources only)
 npm run billing:check                  # A, B allow; C unavailable
 npm --workspace app run typecheck
 ```

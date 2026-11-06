@@ -23,7 +23,12 @@ export function App() {
     if (!patient) return
     setRecord(undefined)
     setPlanId(undefined)
-    loadPatientRecord(patient).then(setRecord).catch((e: Error) => setError(e.message))
+    // Ignore the answer of a load that a newer patient selection has superseded.
+    let current = true
+    loadPatientRecord(patient)
+      .then((loaded) => { if (current) setRecord(loaded) })
+      .catch((e: Error) => { if (current) setError(e.message) })
+    return () => { current = false }
   }, [patients, patientId])
 
   const status = useMemo(() => (record ? toChartStatus(record.toothStates) : undefined), [record])

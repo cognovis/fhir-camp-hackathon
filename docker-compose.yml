@@ -1,5 +1,5 @@
 # Local Aidbox for the FHIR Camp hackathon.
-# Start:  docker compose up -d   (then: ./scripts/setup.sh)
+# Start:  docker compose up -d   (then: npm run setup)
 # Aidbox UI: http://localhost:8080  (user: admin, password: see BOX_ADMIN_PASSWORD below)
 #
 # License: put your free Aidbox development license into .env as BOX_LICENSE=...

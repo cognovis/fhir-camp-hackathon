@@ -1,0 +1,109 @@
+{
+  "schemaVersion": 2,
+  "semanticMajor": 4,
+  "id": "fhir-camp-goz-hackathon-rules",
+  "rules": [
+    {
+      "id": "goz-multiplier-bounds",
+      "class": "bounded-multiplier",
+      "mustUnderstand": true,
+      "effect": "reject",
+      "priority": 1,
+      "parameters": {
+        "selector": {
+          "system": "http://fhir.de/CodeSystem/bzaek/goz",
+          "codes": [
+            "*"
+          ]
+        },
+        "minimum": 1,
+        "maximum": 3.5,
+        "standardThreshold": 2.3,
+        "aboveThresholdEffect": "needs-review",
+        "justificationWaivesThreshold": true
+      },
+      "provenance": {
+        "sources": [
+          {
+            "kind": "fee-schedule",
+            "citation": "GOZ § 5 (multiplier range 1.0 to 3.5, justification above 2.3), simplified for the FHIR Camp hackathon",
+            "uri": "https://www.gesetze-im-internet.de/goz_1987/__5.html"
+          }
+        ],
+        "evidenceLevel": {
+          "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/evidence-level",
+          "code": "statutory-text-simplified",
+          "display": "Statutory text, simplified"
+        },
+        "note": "Hand-written hackathon rule. Not a complete or billing-grade reading of GOZ § 5."
+      }
+    },
+    {
+      "id": "goz-0030-once-per-cost-plan",
+      "class": "quantity-limit",
+      "mustUnderstand": true,
+      "effect": "reject",
+      "priority": 2,
+      "parameters": {
+        "selector": {
+          "system": "http://fhir.de/CodeSystem/bzaek/goz",
+          "codes": [
+            "0030"
+          ]
+        },
+        "maximum": 1
+      },
+      "provenance": {
+        "sources": [
+          {
+            "kind": "author-assessment",
+            "citation": "FHIR Camp hackathon example: one written treatment and cost plan per cost plan Account"
+          }
+        ],
+        "evidenceLevel": {
+          "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/evidence-level",
+          "code": "invented",
+          "display": "Invented for the hackathon"
+        },
+        "note": "Invented for the hackathon to show a quantity limit."
+      }
+    },
+    {
+      "id": "goz-9050-not-with-9010-9040",
+      "class": "mutual-exclusion",
+      "mustUnderstand": true,
+      "effect": "reject",
+      "priority": 3,
+      "parameters": {
+        "selector": {
+          "system": "http://fhir.de/CodeSystem/bzaek/goz",
+          "codes": [
+            "9050"
+          ]
+        },
+        "excluded": {
+          "system": "http://fhir.de/CodeSystem/bzaek/goz",
+          "codes": [
+            "9010",
+            "9040"
+          ]
+        }
+      },
+      "provenance": {
+        "sources": [
+          {
+            "kind": "fee-schedule",
+            "citation": "GOZ Anlage 1, Anmerkung 1 to number 9050",
+            "uri": "https://www.gesetze-im-internet.de/goz_1987/anlage_1.html"
+          }
+        ],
+        "evidenceLevel": {
+          "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/evidence-level",
+          "code": "statutory-text",
+          "display": "Statutory text"
+        },
+        "note": "Hand-written hackathon rule taken from the statutory text."
+      }
+    }
+  ]
+}

@@ -9,7 +9,8 @@
     "check": "node check-goz.mjs",
     "check:blocked": "node check-goz.mjs --bundle examples/goz-real-invalid.json",
     "cost-plan": "node cost-plan.mjs",
-    "test": "node --test companion-rule.test.mjs",
+    "charges-from-plan": "node charges-from-plan.mjs",
+    "test": "node --test",
     "check:companion": "node check-goz.mjs --bundle examples/companion-cost-plans.json"
   },
   "dependencies": {

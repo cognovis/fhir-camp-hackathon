@@ -1,9 +1,9 @@
 // INTEGRATION POINT: odontogram adapter.
 //
-// The starter app draws the chart with the public MIT upstream `react-advanced-odontogram`
-// (https://github.com/ZoliQua/React-Advanced-Odontogram, npm 2.8.0). Every FHIR-to-chart
-// decision lives in this folder, so a team can swap the chart component (for example the
-// cognovis fork, once it is published) by replacing this module and `OdontogramView.tsx`,
+// The starter app draws the chart with `@cognovis/react-odontogram` (MIT, 5.2.6 on
+// npm.cognovis.de, source https://github.com/cognovis/React-Odontogram-Modul), the cognovis fork
+// of React Advanced Odontogram by Zoltán Dul. Every FHIR-to-chart decision lives in this folder,
+// so a team can swap the chart component by replacing this module and `OdontogramView.tsx`,
 // keeping the rest of the app as it is.
 //
 // The contract the rest of the app relies on:
@@ -43,7 +43,8 @@ export interface ChartPayload {
   plan?: ChartTeeth
 }
 
-// The upstream payload version this mapping was written against (react-advanced-odontogram 2.8).
+// The payload version this mapping was written against (react-advanced-odontogram 2.8); the
+// cognovis fork still reads it.
 export const PAYLOAD_VERSION = '2.3'
 
 const FDI_SURFACE: Record<string, Surface> = { M: 'mesial', O: 'occlusal', I: 'occlusal', D: 'distal', B: 'buccal', V: 'buccal', L: 'lingual', P: 'lingual' }

@@ -14,7 +14,7 @@ Size: **S** fits in an hour or two, **M** half a day, **L** the whole day.
 
 ## 1. Chart to FHIR: write findings back from the odontogram (M)
 
-Today the starter app only reads the chart. Make it write: when a tooth is changed in the
+Today you can click and change teeth in the starter app, but nothing is saved. Make it write: when a tooth is changed in the
 odontogram, save it as a dental-core tooth-state `Observation` in Aidbox.
 
 - Start: `app/src/odontogram/chartAdapter.ts` maps FHIR to the chart (`toToothRecord`).
@@ -22,7 +22,7 @@ odontogram, save it as a dental-core tooth-state `Observation` in Aidbox.
   (`tooth-presence`, `restoration-type`, `restoration-material`, surfaces as the
   `tooth-surface` extension).
 - Listen with `onStateChange` and read the chart with `getStatusChart()` from
-  `react-advanced-odontogram`; switch off `readOnly` in `OdontogramView.tsx`.
+  `@cognovis/react-odontogram` (the chart is already editable in `OdontogramView.tsx`).
 - Write a new Observation per changed tooth (new `effectiveDateTime`) rather than overwriting:
   the old chart is history.
 - Done when: you mark tooth 46 as missing in the app, reload, and it is still missing; the new
@@ -56,8 +56,8 @@ writing them by hand as the seed data does.
   with `status = planned`, `code` = the GOZ number, `bodysite` = the tooth of the
   `reasonReference`, `factorOverride` = 2.3 by default, `account` and
   `supportingInformation` (the CarePlan). Copy the shape from `dent-051-alt-a-04`.
-- Look the GOZ number up in the catalog (`ChargeItemDefinition?code=...`) and refuse unknown
-  numbers.
+- Look the GOZ number up in the catalog (the `ChargeItemDefinition` whose `code.coding` has
+  it; R4 has no `code` search parameter there) and refuse unknown numbers.
 - Run it for the alternative from task 2 and check it with
   `node billing/cost-plan.mjs --aidbox dent-051`.
 - Done when: the generated ChargeItems for `dent-051-hkp-alt-a` match the seeded ones, and the

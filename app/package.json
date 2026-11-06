@@ -10,8 +10,8 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@cognovis/react-odontogram": "5.2.6",
     "react": "^19.2.0",
-    "react-advanced-odontogram": "2.8.0",
     "react-dom": "^19.2.0"
   },
   "devDependencies": {

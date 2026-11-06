@@ -1,6 +1,6 @@
 # The kit's Node tools (setup script, billing check, starter app) in one image, for the
 # all-in-one Compose stack. Built by `docker compose up`; see docker-compose.yml.
-FROM docker.io/library/node:22-slim
+FROM docker.io/library/node:24-slim
 
 WORKDIR /kit
 

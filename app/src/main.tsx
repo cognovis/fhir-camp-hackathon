@@ -1,6 +1,6 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import 'react-advanced-odontogram/style.css'
+import '@cognovis/react-odontogram/style.css'
 import './styles.css'
 import { App } from './App'
 

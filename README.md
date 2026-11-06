@@ -80,8 +80,8 @@ packages next to the SDK gives you a second copy that the SDK does not use. Engi
 
 | Resource | Link |
 |---|---|
-| React Advanced Odontogram by Zoltán Dul (MIT), the upstream project the starter app uses | https://github.com/ZoliQua/React-Advanced-Odontogram |
-| The same, as npm package `react-advanced-odontogram` | https://www.npmjs.com/package/react-advanced-odontogram |
+| `@cognovis/react-odontogram` (MIT), the chart the starter app uses; installed from `npm.cognovis.de` through the kit's `.npmrc` | https://github.com/cognovis/React-Odontogram-Modul |
+| React Advanced Odontogram by Zoltán Dul (MIT), the original project the cognovis package is forked from | https://github.com/ZoliQua/React-Advanced-Odontogram |
 
 ### Fee catalog
 
@@ -146,7 +146,7 @@ Aidbox and PostgreSQL restart automatically with Docker unless explicitly stoppe
 
 ### Working on the host instead
 
-For the billing tools, the scripts, or an app outside Docker you need Node.js 22.12 or newer:
+For the billing tools, the scripts, or an app outside Docker you need Node.js 24 or newer (`nvm use 24`):
 
 ```sh
 docker compose up -d aidbox   # Aidbox and its database only
@@ -178,7 +178,7 @@ justification), totals 549.26, 428.44 and 673.59 EUR.
 | `data/` | Four synthetic dental patients. **Greta Palmried (`dent-051`)** has the complete chain: chart, finding, three treatment alternatives as `CarePlan`, 25 planned `ChargeItem`s, one cost plan `Account` per alternative. See [data/README.md](data/README.md) |
 | `catalog/` | The GOZ fee catalog as 215 FHIR `ChargeItemDefinition`s, generated from the official BMJV XML. Generated for the hackathon, not a billing-grade catalog. See [catalog/README.md](catalog/README.md) |
 | `billing/` | A synthetic GOZ rule set as a FHIR `Library`, the billing check with `@cognovis/fhir-billing-sdk` 0.42.1, and the cost plan calculation. See [billing/README.md](billing/README.md) |
-| `app/` | The starter app: Vite, React and TypeScript, with the MIT odontogram `react-advanced-odontogram`. Shows the chart of a seeded patient, findings and treatment alternatives, and the planned chart of each alternative. The chart code sits behind one integration point (`app/src/odontogram/`), so another chart component can replace it |
+| `app/` | The starter app: Vite, React and TypeScript, with the MIT odontogram `@cognovis/react-odontogram`. Shows the chart of a seeded patient, findings and treatment alternatives, and the planned chart of each alternative. The chart code sits behind one integration point (`app/src/odontogram/`), so another chart component can replace it |
 | [TASKS.md](TASKS.md) | Seven ready-to-pick tasks along the chain |
 | [AGENTS.md](AGENTS.md), `.agents/skills/` | Instructions and skills for coding agents (Claude Code reads them through `CLAUDE.md` and `.claude/skills`): Aidbox in the kit, writing valid FHIR, FHIR IG development in FSH, and the Billing SDK |
 | `docs/slides.html` | Pitch slides for the project |

@@ -2,9 +2,9 @@ import { useTranslation } from 'react-i18next'
 import { t, date, number } from './i18n.ts'
 import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent, type ReactNode } from 'react'
 import { DECISIONS, euro, findingExplanation, findingText, loadCostPlans, saveJustification, type CostPlan, type CostPlanLine } from './costPlan'
-import { display, loadPatientRecord, patientName, search, toothOf, type CarePlan, type ChargeItem, type Patient, type PatientRecord, type Resource } from './fhir'
+import { create, display, latestPerTooth, loadPatientRecord, patientName, search, toothOf, type CarePlan, type ChargeItem, type Observation, type Patient, type PatientRecord, type Resource } from './fhir'
 import { FhirPanel } from './inspector/FhirPanel'
-import { toChartStatus, toPlanChart } from './odontogram/chartAdapter'
+import { toChartStatus, toPlanChart, toToothState, type ChartTeeth } from './odontogram/chartAdapter'
 import { OdontogramView } from './odontogram/OdontogramView'
 import { downloadPatient, downloadPlan } from './download'
 import { createPlan, deletePlan } from './plans'
@@ -26,6 +26,16 @@ export function App() {
   const [costPlanError, setCostPlanError] = useState<string>()
   const [checking, setChecking] = useState(false)
   const [error, setError] = useState<string>()
+  const [saveErrors, setSaveErrors] = useState<{ patientId: string; tooth: string; message: string }[]>([])
+  const saveAttempts = useRef({ count: 0, latest: new Map<string, number>() })
+  // Tooth states being written. A page unload cancels these requests, so it resends them as
+  // keepalive requests: a duplicate Observation if the first one also arrives, never a lost one.
+  const pendingWrites = useRef(new Set<Omit<Observation, 'id'>>())
+  useEffect(() => {
+    const resend = () => { for (const observation of pendingWrites.current) create(observation, { keepalive: true }).catch(() => {}) }
+    window.addEventListener('beforeunload', resend)
+    return () => window.removeEventListener('beforeunload', resend)
+  }, [])
   // The FHIR panel: what the app reads and writes, live from Aidbox.
   const [panelOpen, setPanelOpen] = useState(false)
   const [inspected, setInspected] = useState<Resource>()
@@ -112,7 +122,7 @@ export function App() {
 
   const status = useMemo(() => (record ? toChartStatus(record.toothStates) : undefined), [record])
   const plan = useMemo(
-    () => (record && status && selectedPlan ? toPlanChart(status, selectedPlan, record.toothStates) : undefined),
+    () => (record && status && selectedPlan ? toPlanChart(status, selectedPlan, record.toothStateHistory) : undefined),
     [record, status, selectedPlan],
   )
   const costPlanOf = useMemo(() => {
@@ -127,7 +137,54 @@ export function App() {
   }, [record, costPlans])
 
   const patient = record?.patient
-  const chartDate = record?.toothStates[0]?.effectiveDateTime ?? ''
+  // The date of the latest tooth state: saved chart changes carry a full timestamp.
+  const chartDate = (record?.toothStates ?? []).reduce((latest, o) => ((o.effectiveDateTime ?? '') > latest ? (o.effectiveDateTime ?? '') : latest), '').slice(0, 10)
+
+  // Chart to FHIR: every changed tooth becomes a new tooth-state Observation; the previous one
+  // stays as history, and the record keeps the latest per tooth.
+  // The view saves one tooth per call, so an error belongs to its patient and tooth until that
+  // tooth saves or the patient's next save round starts (a call with no teeth, see OdontogramView).
+  // Only the latest save of a tooth settles its error: an older answer arriving late is stale.
+  async function saveChart(changed: ChartTeeth, options: { keepalive?: boolean } = {}) {
+    if (!record) return
+    const patientId = record.patient.id
+    const teeth = Object.keys(changed)
+    if (teeth.length === 0) {
+      setSaveErrors((current) => (current.some((e) => e.patientId === patientId) ? current.filter((e) => e.patientId !== patientId) : current))
+      return
+    }
+    const attempt = ++saveAttempts.current.count
+    for (const tooth of teeth) saveAttempts.current.latest.set(`${patientId}/${tooth}`, attempt)
+    const settle = (message?: string) => {
+      const current = teeth.filter((tooth) => saveAttempts.current.latest.get(`${patientId}/${tooth}`) === attempt)
+      setSaveErrors((errors) => [
+        ...errors.filter((e) => e.patientId !== patientId || !current.includes(e.tooth)),
+        ...(message ? current.map((tooth) => ({ patientId, tooth, message })) : []),
+      ])
+    }
+    const effective = new Date().toISOString()
+    const previous = (tooth: string) => record.toothStates.find((o) => toothOf(o.bodySite) === tooth)
+    let observations: Omit<Observation, 'id'>[] = []
+    try {
+      // Throws for a tooth state the profile cannot carry; the error names the gap.
+      observations = Object.entries(changed).map(([tooth, t]) => toToothState(record.patient, tooth, t, effective, previous(tooth)))
+      // Saves started as the page unloads are keepalive requests already.
+      if (!options.keepalive) for (const o of observations) pendingWrites.current.add(o)
+      const created = await Promise.all(observations.map((o) => create<Observation>(o, options)))
+      setRecord((r) => {
+        if (r?.patient.id !== record.patient.id) return r
+        const toothStateHistory = [...r.toothStateHistory, ...created]
+        return { ...r, toothStates: latestPerTooth(toothStateHistory), toothStateHistory }
+      })
+      follow(created[0])
+      settle()
+    } catch (e) {
+      settle((e as Error).message)
+      throw e
+    } finally {
+      for (const o of observations) pendingWrites.current.delete(o)
+    }
+  }
 
   return (
     <div className={panelOpen ? 'app-page with-fhir-panel' : 'app-page'}>
@@ -154,6 +211,9 @@ export function App() {
 
       <main className="content">
         {error && <p className="error">{error}</p>}
+        {saveErrors.map(({ patientId, tooth, message }) => (
+          <p key={`${patientId}/${tooth}`} className="error">{t('chartSaveError', { patient: patientId, tooth, message })}</p>
+        ))}
 
         {patient && <PatientCard patient={patient} mode={mode} onMode={setMode} onInspect={inspect} />}
 
@@ -228,7 +288,9 @@ export function App() {
                     plan={plan}
                     mode={plan ? 'plan' : 'status'}
                     onToothSelect={(tooth) => follow(record.toothStates.find((o) => toothOf(o.bodySite) === tooth))}
+                    onStatusChange={saveChart}
                   />
+
                 </div>
               </>
             )}

@@ -66,6 +66,7 @@ export interface ChargeItem extends Resource {
   bodysite?: CodeableConcept[]
   quantity?: { value?: number }
   factorOverride?: number
+  reason?: CodeableConcept[]
   supportingInformation?: Reference[]
   account?: Reference[]
 }

@@ -174,11 +174,12 @@ justification), totals 549.26, 428.44 and 673.59 EUR.
 The **FHIR** button at the top right of the starter app opens a side panel that shows what
 happens underneath, live from Aidbox:
 
-- **Ressource**: click a patient ("Patient als FHIR"), a finding, a treatment alternative
-  ("CarePlan als FHIR"), a planned charge, or a tooth in the chart, and the panel shows that
-  resource as FHIR JSON with its profiles. `$validate` checks it against its `meta.profile` in
-  Aidbox and shows the OperationOutcome; "In Aidbox öffnen" opens the same resource in the
-  Aidbox UI.
+- **Resource**: click "View FHIR" on the patient, a treatment alternative tab, a GOZ code in a
+  plan, or a tooth in the chart, and the panel shows that resource as FHIR JSON with its
+  profiles. `$validate` checks it against its `meta.profile` in Aidbox and shows the
+  OperationOutcome; "Open in Aidbox" opens the same resource in the Aidbox UI.
+- **Profile**: the profile the resource claims, as the element tree the Aidbox UI shows
+  (cardinality, types, bindings, must-support).
 - **Requests**: every FHIR request the app sent, with status, duration and response. Send your
   own requests through `fhirRequest` in `app/src/fhir.ts`, and they appear here too.
 

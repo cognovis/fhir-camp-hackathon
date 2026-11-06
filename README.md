@@ -126,7 +126,10 @@ The development license allows no real patient data, which suits this kit.
 Basic auth with client `root`, secret `hackathon`, for example
 `curl -u root:hackathon http://localhost:8080/fhir/Patient`. These are local throw-away
 credentials; do not reuse them. Port 8080 or 5173 taken? Set `AIDBOX_PORT` or `APP_PORT` in
-`.env`.
+`.env`. `AIDBOX_PORT` controls the published host port and public Aidbox URLs;
+the container port and Compose-internal connections remain on `8080`.
+For access from other devices, set `AIDBOX_HOST` to this machine's LAN hostname.
+Aidbox and PostgreSQL restart automatically with Docker unless explicitly stopped.
 
 ### Working on the host instead
 

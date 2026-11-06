@@ -14,3 +14,7 @@ h2 { font-size: 15px; margin: 8px 0; }
 .meta, .note { font-size: 12px; color: #52606d; }
 table { border-collapse: collapse; width: 100%; font-size: 12px; margin-top: 6px; }
 th, td { text-align: left; padding: 2px 4px; border-bottom: 1px solid #eef1f4; }
+/* The odontogram repeats the active "Plan" tab as a "PLAN" badge inside the same toggle, which
+   reads as a third button. The active tab, the chart's plan-mode border and the dashed legend
+   already show the mode. */
+#chartModePlanBadge { display: none; }

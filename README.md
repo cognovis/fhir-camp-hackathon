@@ -65,7 +65,8 @@ npx -p @cognovis/fhir-billing-sdk fhir-billing-check --help
 
 | Resource | Link |
 |---|---|
-| React Advanced Odontogram by Zoltán Dul (MIT), the upstream project | https://github.com/ZoliQua/React-Odontogram-Modul |
+| React Advanced Odontogram by Zoltán Dul (MIT), the upstream project the starter app uses | https://github.com/ZoliQua/React-Advanced-Odontogram |
+| The same, as npm package `react-advanced-odontogram` | https://www.npmjs.com/package/react-advanced-odontogram |
 
 ### Fee catalog
 
@@ -78,18 +79,91 @@ npx -p @cognovis/fhir-billing-sdk fhir-billing-check --help
 | Resource | Link |
 |---|---|
 | Aidbox, free dev instance or local Docker | https://aidbox.app |
+| Aidbox user portal (free development license) | https://aidbox.app/ui/portal |
+| Run Aidbox locally | https://www.health-samurai.io/docs/aidbox/getting-started/run-aidbox-locally |
 | Aidbox documentation | https://www.health-samurai.io/docs/aidbox |
 
-## Available when the session starts
+## Getting started
 
-- The cognovis fork of the odontogram with FHIR mapping, bridges and plan
-  alternatives (MIT)
-- A Docker Compose setup: Aidbox with the dental and billing packages and a few
-  synthetic dental patients, including a complete example from findings to
-  planned charges
-- The GOZ fee catalog as FHIR `ChargeItemDefinition` resources
-- A starter app showing the odontogram on FHIR data from the local Aidbox
-- A short list of ready-to-pick tasks
+You need Docker (with Compose), Node.js 20 or newer, and a free Aidbox account.
+Everything runs on your machine; all data is synthetic.
+
+```sh
+git clone https://github.com/cognovis/fhir-camp-hackathon.git
+cd fhir-camp-hackathon
+
+# 1. Aidbox license (optional here, see below)
+cp .env.example .env          # then paste your key into BOX_LICENSE, or skip it
+
+# 2. Start Aidbox and its database (the first start pulls about 1.1 GB of images)
+docker compose up -d
+
+# 3. Install the Node dependencies (the starter app and the billing tools)
+npm install
+
+# 4. Install the dental FHIR packages, load catalog and patients, validate
+npm run setup
+
+# 5. The starter app: odontogram on FHIR data from your Aidbox
+npm run app                   # http://localhost:5173
+```
+
+**Aidbox license.** Aidbox needs a license; a development license is free. Either:
+
+- create a free account in the [Aidbox user portal](https://aidbox.app/ui/portal), create a
+  *Development* license for a *self-hosted* instance, and put the key into `.env` as
+  `BOX_LICENSE=...` before `docker compose up -d`, or
+- leave `BOX_LICENSE` out, run `docker compose up -d`, open <http://localhost:8080> and log in
+  with your Aidbox account to activate. `npm run setup` tells you if this step is missing.
+
+The development license allows no real patient data, which suits this kit.
+
+`npm run setup` takes about a minute on a fresh instance and ends with
+`Validation: 141 profile checks passed, 0 errors.` It can be run again at any time; it
+reloads the data and keeps your own resources.
+
+**Aidbox UI:** <http://localhost:8080>, user `admin`, password `hackathon`. The REST API takes
+Basic auth with client `root`, secret `hackathon`, for example
+`curl -u root:hackathon http://localhost:8080/fhir/Patient`. These are local throw-away
+credentials; do not reuse them. Port 8080 taken? Set `AIDBOX_PORT` in `.env`.
+
+### Billing check and cost plan
+
+```sh
+npm run billing:check            # Billing SDK decision per cost plan of the example patient
+npm run billing:check:blocked    # a cost plan that breaks all three hackathon rules
+npm run cost-plan                # line prices and totals per treatment alternative
+```
+
+Expected: alternatives A and B `allow`, C `unavailable` (multiplier 3.0 without a
+justification), totals 549.26, 428.44 and 673.59 EUR.
+
+## What is in the kit
+
+| Folder | What it is |
+|---|---|
+| `docker-compose.yml` | Aidbox 2610 (latest stable) and PostgreSQL 18 |
+| `scripts/setup.mjs` | Installs `de.cognovis.fhir.dental.core#0.10.2` and `de.cognovis.fhir.dental#0.57.2` with their public dependencies, loads catalog and patients, validates against the installed profiles |
+| `data/` | Four synthetic dental patients. **Greta Palmried (`dent-051`)** has the complete chain: chart, finding, three treatment alternatives as `CarePlan`, 25 planned `ChargeItem`s, one cost plan `Account` per alternative. See [data/README.md](data/README.md) |
+| `catalog/` | The GOZ fee catalog as 215 FHIR `ChargeItemDefinition`s, generated from the official BMJV XML. Generated for the hackathon, not a billing-grade catalog. See [catalog/README.md](catalog/README.md) |
+| `billing/` | A synthetic GOZ rule set as a FHIR `Library`, the billing check with `@cognovis/fhir-billing-sdk` 0.35.0, and the cost plan calculation. See [billing/README.md](billing/README.md) |
+| `app/` | The starter app: Vite, React and TypeScript, with the MIT odontogram `react-advanced-odontogram`. Shows the chart of a seeded patient, findings and treatment alternatives, and the planned chart of each alternative. The chart code sits behind one integration point (`app/src/odontogram/`), so another chart component can replace it |
+| [TASKS.md](TASKS.md) | Seven ready-to-pick tasks along the chain |
+
+## Known gaps
+
+- **Billing FHIR package not published.** `de.cognovis.fhir.dental#0.57.2` depends on
+  `de.cognovis.fhir.billing#0.5.3` and `de.cognovis.terminology.dental.dpf-kuerzel#1.1.0`,
+  which are on no public registry yet. The setup installs the dental package without them.
+  Everything the kit uses works, but the IG's German ChargeItem and invoice profiles
+  (`goz-charge-item` and others) cannot be validated: they require an extension from the
+  billing package. The planned ChargeItems are therefore plain FHIR R4. The Billing SDK does
+  not need the package.
+- **The cognovis fork of the odontogram** (FHIR mapping, bridges, plan alternatives) is not
+  published. The starter app uses the public upstream and maps FHIR to the chart itself.
+- **GOZ catalog prices**: a single fee per number, rounded to cents, with points and point value
+  kept alongside; numbers priced as a share of another have no price. See
+  [catalog/README.md](catalog/README.md).
 
 ## License
 

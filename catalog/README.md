@@ -5,7 +5,7 @@ patients. Check every number against the statutory text before relying on it.
 
 | File | What it is |
 |---|---|
-| `goz-catalog.bundle.json` | The catalog the kit loads: a FHIR R4 transaction Bundle with 215 GOZ `ChargeItemDefinition`s, the GOZ `CodeSystem`, the hackathon rule set and the catalog edition (both `Library`). `npm run setup` loads it into Aidbox; the billing check reads it as a file. |
+| `goz-catalog.bundle.json` | The catalog the kit loads: a FHIR R4 transaction Bundle with 215 GOZ `ChargeItemDefinition`s, the GOZ `CodeSystem`, the native rule set, contextual GOZ rule set and catalog edition (three `Library` resources). `npm run setup` loads it into Aidbox; the billing check reads it as a file. |
 | `source/goz-adapter-output.json` | The output of one run of the cognovis GOZ converter, wrapped in a collection Bundle; only the internal `meta.source` and tag system identifiers were renamed to `urn:cognovis:*`. Kept so the conversion step below can be followed and repeated. |
 
 ## Where the data comes from
@@ -71,6 +71,18 @@ informational components, which the SDK ignores.
   the catalog edition (`DIGEST_MISMATCH` without it).
 - The converter's catalog-edition and per-number multiplier-bound `Library` resources are
   replaced by one edition (`Library/goz-hackathon-edition`) that lists every definition plus
-  the hand-written rule set (`Library/goz-hackathon-rules`, see `billing/README.md`). The
-  multiplier bounds (1.0 to 3.5, justification above 2.3) are one rule of that rule set.
+  the hand-written rule set (`Library/goz-hackathon-rules`, see `billing/README.md`). Contextual GOZ rules, including individual agreement handling and anatomical scopes, live in a separate `Library/goz-context-rules`; the native SDK does not execute it. Use the combined billing commands documented in `billing/README.md`.
 - Every resource carries the meta tag `HTEST` (test health data).
+
+## Contextual GOZ Library
+
+`billing/goz-context-rules.json` is the readable source of the additional rules. The
+builder stores it as canonical JSON/Base64 with its own digest, and binds it to the
+exact native edition and its digest. `billing/evaluate-goz.mjs` verifies and executes
+this required Library alongside the native SDK. It is deliberately not advertised
+as a native Billing Core rule set. Missing or mismatched context rules cause review.
+
+The local setup seeds all three Libraries and the valid, invalid and individual-agreement
+example cases. The runtime command still reads its catalog locally; matching server
+Libraries are available for inspection in Aidbox. See the billing README for exact
+seed IDs, verification commands and the full-Patient preservation rule.

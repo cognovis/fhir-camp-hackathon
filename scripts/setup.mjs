@@ -123,12 +123,43 @@ async function installPackages() {
 
 function bundleFiles() {
   const data = readdirSync(new URL('data/', root)).filter((f) => f.endsWith('.json')).sort().map((f) => `data/${f}`)
-  return ['catalog/goz-catalog.bundle.json', ...data]
+  return ['catalog/goz-catalog.bundle.json', ...data, 'billing/examples/goz-real-valid.json', 'billing/examples/goz-real-invalid.json', 'billing/examples/goz-real-agreement.json']
+}
+
+function seedBundle(file) {
+  const bundle = JSON.parse(readFileSync(new URL(file, root), 'utf8'))
+  if (!file.startsWith('billing/examples/')) return bundle
+  // Standalone examples include Greta; the full Patient is owned by data/, never replaced here.
+  const entry = bundle.entry.filter(({ resource }) => !(resource.resourceType === 'Patient' && resource.id === 'dent-051'))
+  for (const { resource } of entry) {
+    if (!resource.id.startsWith('goz-real-') || !resource.meta?.tag?.some((t) => t.code === 'HTEST')) throw new Error(`Unsafe example seed ${resource.resourceType}/${resource.id}`)
+  }
+  return { resourceType: 'Bundle', type: 'transaction', entry: entry.map(({ resource }) => ({ resource, request: { method: 'PUT', url: `${resource.resourceType}/${resource.id}` } })) }
+}
+
+if (process.argv.includes('--check-seed')) {
+  const entries = bundleFiles().flatMap((file) => seedBundle(file).entry)
+  const resources = new Map()
+  for (const { resource } of entries) {
+    const key = `${resource.resourceType}/${resource.id}`
+    if (resources.has(key)) throw new Error(`Duplicate seed resource ${key}`)
+    resources.set(key, resource)
+  }
+  function checkReferences(value) {
+    if (!value || typeof value !== 'object') return
+    if (typeof value.reference === 'string' && /^[A-Z][A-Za-z]+\/[A-Za-z0-9.-]+$/.test(value.reference) && !resources.has(value.reference)) throw new Error(`Missing seed reference ${value.reference}`)
+    Object.values(value).forEach(checkReferences)
+  }
+  resources.forEach(checkReferences)
+  const patient = resources.get('Patient/dent-051')
+  if (!patient?.birthDate || !patient.identifier?.length) throw new Error('Full Greta seed was replaced by an example')
+  console.log(JSON.stringify({ files: bundleFiles(), resources: resources.size, patientPreserved: true, referencesComplete: true }))
+  process.exit(0)
 }
 
 async function loadBundles() {
   for (const file of bundleFiles()) {
-    const bundle = JSON.parse(readFileSync(new URL(file, root), 'utf8'))
+    const bundle = seedBundle(file)
     const result = await fhir('POST', '/fhir', bundle)
     if (result.status >= 300) fail(`loading ${file} (HTTP ${result.status}): ${JSON.stringify(result.json).slice(0, 1500)}`)
     console.log(`Loaded ${file}: ${bundle.entry.length} resources.`)
@@ -137,17 +168,20 @@ async function loadBundles() {
 
 async function validate() {
   let checked = 0
+  let baseChecked = 0
   const problems = []
   for (const file of bundleFiles()) {
-    const bundle = JSON.parse(readFileSync(new URL(file, root), 'utf8'))
+    const bundle = seedBundle(file)
     for (const { resource } of bundle.entry) {
-      const profiles = resource.meta?.profile ?? []
+      const baseProfile = file.startsWith('billing/examples/') || resource.resourceType === 'Library'
+      const profiles = resource.meta?.profile ?? (baseProfile ? [`http://hl7.org/fhir/StructureDefinition/${resource.resourceType}`] : [])
       if (profiles.length === 0) continue
       const stored = await fhir('GET', `/fhir/${resource.resourceType}/${resource.id}`)
       if (stored.status !== 200) { problems.push(`${resource.resourceType}/${resource.id}: not found in Aidbox (HTTP ${stored.status})`); continue }
       for (const profile of profiles) {
         const result = await fhir('POST', `/fhir/${resource.resourceType}/$validate?profile=${encodeURIComponent(profile)}`, stored.json)
-        checked += 1
+        if (baseProfile) baseChecked += 1
+        else checked += 1
         const errors = (result.json?.issue ?? []).filter((issue) => issue.severity === 'error' || issue.severity === 'fatal')
         if (result.status >= 300 && errors.length === 0) problems.push(`${resource.resourceType}/${resource.id} against ${profile}: HTTP ${result.status}`)
         for (const issue of errors) problems.push(`${resource.resourceType}/${resource.id} against ${profile}: ${issue.diagnostics ?? issue.details?.text ?? issue.code} (${(issue.expression ?? []).join(', ')})`)
@@ -159,7 +193,7 @@ async function validate() {
     for (const problem of problems) console.error(`  - ${problem}`)
     process.exit(1)
   }
-  console.log(`Validation: ${checked} profile checks passed, 0 errors.`)
+  console.log(`Validation: ${checked} profile checks passed, 0 errors; ${baseChecked} base-R4 checks passed.`)
 }
 
 await waitForAidbox()

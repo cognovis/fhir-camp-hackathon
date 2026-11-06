@@ -4,8 +4,8 @@
   "id": "fhir-camp-goz-hackathon-rules",
   "rules": [
     {
-      "id": "goz-multiplier-bounds",
-      "class": "bounded-multiplier",
+      "id": "goz-5010-supportKind",
+      "class": "accompanying-information-required",
       "mustUnderstand": true,
       "effect": "reject",
       "priority": 1,
@@ -13,34 +13,36 @@
         "selector": {
           "system": "http://fhir.de/CodeSystem/bzaek/goz",
           "codes": [
-            "*"
+            "5010"
           ]
         },
-        "minimum": 1,
-        "maximum": 3.5,
-        "standardThreshold": 2.3,
-        "aboveThresholdEffect": "needs-review",
-        "justificationWaivesThreshold": true
+        "information": {
+          "kind": "supportKind",
+          "fact": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence|supportKind",
+          "valueIn": [
+            "natural-tooth"
+          ]
+        }
       },
       "provenance": {
         "sources": [
           {
             "kind": "fee-schedule",
-            "citation": "GOZ § 5 (multiplier range 1.0 to 3.5, justification above 2.3), simplified for the FHIR Camp hackathon",
-            "uri": "https://www.gesetze-im-internet.de/goz_1987/__5.html"
+            "citation": "GOZ Anlage 1 F, note following 5040: 5010/5020 not on implants",
+            "uri": "https://www.gesetze-im-internet.de/goz_1987/anlage_1.html"
           }
         ],
         "evidenceLevel": {
           "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/evidence-level",
-          "code": "statutory-text-simplified",
-          "display": "Statutory text, simplified"
+          "code": "statutory-text-with-explicit-context",
+          "display": "Statutory text with explicit clinical context"
         },
-        "note": "Hand-written hackathon rule. Not a complete or billing-grade reading of GOZ § 5."
+        "note": "Bounded automated check; clinical findings and legal validity of documents require confirmed evidence."
       }
     },
     {
-      "id": "goz-0030-once-per-cost-plan",
-      "class": "quantity-limit",
+      "id": "goz-9040-implantSystem",
+      "class": "accompanying-information-required",
       "mustUnderstand": true,
       "effect": "reject",
       "priority": 2,
@@ -48,44 +50,14 @@
         "selector": {
           "system": "http://fhir.de/CodeSystem/bzaek/goz",
           "codes": [
-            "0030"
-          ]
-        },
-        "maximum": 1
-      },
-      "provenance": {
-        "sources": [
-          {
-            "kind": "author-assessment",
-            "citation": "FHIR Camp hackathon example: one written treatment and cost plan per cost plan Account"
-          }
-        ],
-        "evidenceLevel": {
-          "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/evidence-level",
-          "code": "invented",
-          "display": "Invented for the hackathon"
-        },
-        "note": "Invented for the hackathon to show a quantity limit."
-      }
-    },
-    {
-      "id": "goz-9050-not-with-9010-9040",
-      "class": "mutual-exclusion",
-      "mustUnderstand": true,
-      "effect": "reject",
-      "priority": 3,
-      "parameters": {
-        "selector": {
-          "system": "http://fhir.de/CodeSystem/bzaek/goz",
-          "codes": [
-            "9050"
-          ]
-        },
-        "excluded": {
-          "system": "http://fhir.de/CodeSystem/bzaek/goz",
-          "codes": [
-            "9010",
             "9040"
+          ]
+        },
+        "information": {
+          "kind": "implantSystem",
+          "fact": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence|implantSystem",
+          "valueIn": [
+            "two-phase"
           ]
         }
       },
@@ -93,53 +65,16 @@
         "sources": [
           {
             "kind": "fee-schedule",
-            "citation": "GOZ Anlage 1, Anmerkung 1 to number 9050",
+            "citation": "GOZ Anlage 1 K, 9040: two-phase implant system",
             "uri": "https://www.gesetze-im-internet.de/goz_1987/anlage_1.html"
           }
         ],
         "evidenceLevel": {
           "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/evidence-level",
-          "code": "statutory-text",
-          "display": "Statutory text"
+          "code": "statutory-text-with-explicit-context",
+          "display": "Statutory text with explicit clinical context"
         },
-        "note": "Hand-written hackathon rule taken from the statutory text."
-      }
-    },
-    {
-      "id": "goz-5120-requires-5000-or-5010",
-      "class": "companion-required",
-      "mustUnderstand": true,
-      "effect": "reject",
-      "priority": 4,
-      "parameters": {
-        "selector": {
-          "system": "http://fhir.de/CodeSystem/bzaek/goz",
-          "codes": [
-            "5120"
-          ]
-        },
-        "required": {
-          "system": "http://fhir.de/CodeSystem/bzaek/goz",
-          "codes": [
-            "5000",
-            "5010"
-          ]
-        }
-      },
-      "provenance": {
-        "sources": [
-          {
-            "kind": "author-assessment",
-            "citation": "Invented companion rule for the FHIR Camp hackathon, suggested in issue #8",
-            "uri": "https://github.com/cognovis/fhir-camp-hackathon/issues/8"
-          }
-        ],
-        "evidenceLevel": {
-          "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/evidence-level",
-          "code": "invented",
-          "display": "Invented for the hackathon"
-        },
-        "note": "Demonstration only: GOZ 5120 requires 5000 or 5010 in the same Account. Not a generally applicable GOZ billing requirement."
+        "note": "Bounded automated check; clinical findings and legal validity of documents require confirmed evidence."
       }
     }
   ]

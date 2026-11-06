@@ -1,0 +1,4282 @@
+{
+ "resourceType": "Bundle",
+ "id": "goz-real-examples",
+ "meta": {
+  "tag": [
+   {
+    "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+    "code": "HTEST"
+   }
+  ]
+ },
+ "type": "collection",
+ "entry": [
+  {
+   "resource": {
+    "resourceType": "Patient",
+    "id": "dent-051",
+    "name": [
+     {
+      "family": "Palmried",
+      "given": [
+       "Greta"
+      ]
+     }
+    ],
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Contract",
+    "id": "goz-real-contract",
+    "status": "executed",
+    "url": "https://github.com/cognovis/fhir-camp-hackathon/Contract/goz-private-treatment",
+    "subject": [
+     {
+      "reference": "Patient/dent-051"
+     }
+    ],
+    "applies": {
+     "start": "2026-01-01"
+    },
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Coverage",
+    "id": "goz-real-coverage",
+    "status": "active",
+    "beneficiary": {
+     "reference": "Patient/dent-051"
+    },
+    "payor": [
+     {
+      "display": "Synthetic insurer"
+     }
+    ],
+    "contract": [
+     {
+      "reference": "Contract/goz-real-contract"
+     }
+    ],
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Account",
+    "id": "goz-real-plan",
+    "status": "active",
+    "name": "Synthetic complete GOZ rule examples (not a clinical treatment proposal)",
+    "subject": [
+     {
+      "reference": "Patient/dent-051"
+     }
+    ],
+    "coverage": [
+     {
+      "coverage": {
+       "reference": "Coverage/goz-real-coverage"
+      },
+      "priority": 1
+     }
+    ],
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Observation",
+    "id": "goz-real-common-episodeId",
+    "status": "final",
+    "code": {
+     "coding": [
+      {
+       "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+       "code": "episodeId"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-11-16T08:00:00+01:00",
+    "performer": [
+     {
+      "display": "Synthetic test author"
+     }
+    ],
+    "valueString": "goz-real-episode",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Observation",
+    "id": "goz-real-common-scopeComplete",
+    "status": "final",
+    "code": {
+     "coding": [
+      {
+       "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+       "code": "scopeComplete"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-11-16T08:00:00+01:00",
+    "performer": [
+     {
+      "display": "Synthetic test author"
+     }
+    ],
+    "valueBoolean": true,
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Observation",
+    "id": "goz-real-common-historyComplete",
+    "status": "final",
+    "code": {
+     "coding": [
+      {
+       "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+       "code": "historyComplete"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-11-16T08:00:00+01:00",
+    "performer": [
+     {
+      "display": "Synthetic test author"
+     }
+    ],
+    "valueBoolean": true,
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Observation",
+    "id": "goz-real-common-agreementStatus",
+    "status": "final",
+    "code": {
+     "coding": [
+      {
+       "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+       "code": "agreementStatus"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-11-16T08:00:00+01:00",
+    "performer": [
+     {
+      "display": "Synthetic test author"
+     }
+    ],
+    "valueString": "none",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Observation",
+    "id": "goz-real-common-ownServiceConfirmed",
+    "status": "final",
+    "code": {
+     "coding": [
+      {
+       "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+       "code": "ownServiceConfirmed"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-11-16T08:00:00+01:00",
+    "performer": [
+     {
+      "display": "Synthetic test author"
+     }
+    ],
+    "valueBoolean": true,
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Observation",
+    "id": "goz-real-common-contentConfirmed",
+    "status": "final",
+    "code": {
+     "coding": [
+      {
+       "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+       "code": "contentConfirmed"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-11-16T08:00:00+01:00",
+    "performer": [
+     {
+      "display": "Synthetic test author"
+     }
+    ],
+    "valueBoolean": true,
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Observation",
+    "id": "goz-real-common-indication",
+    "status": "final",
+    "code": {
+     "coding": [
+      {
+       "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+       "code": "indication"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-11-16T08:00:00+01:00",
+    "performer": [
+     {
+      "display": "Synthetic test author"
+     }
+    ],
+    "valueString": "necessary",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Encounter",
+    "id": "goz-real-session-0030",
+    "status": "planned",
+    "class": {
+     "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+     "code": "AMB"
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Observation",
+    "id": "goz-real-0030-eventId",
+    "status": "final",
+    "code": {
+     "coding": [
+      {
+       "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+       "code": "eventId"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-11-16T08:00:00+01:00",
+    "performer": [
+     {
+      "display": "Synthetic test author"
+     }
+    ],
+    "valueString": "goz-real-0030-event",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Observation",
+    "id": "goz-real-0030-targetId",
+    "status": "final",
+    "code": {
+     "coding": [
+      {
+       "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+       "code": "targetId"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-11-16T08:00:00+01:00",
+    "performer": [
+     {
+      "display": "Synthetic test author"
+     }
+    ],
+    "valueString": "goz-real-0030-target",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Observation",
+    "id": "goz-real-0030-sessionId",
+    "status": "final",
+    "code": {
+     "coding": [
+      {
+       "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+       "code": "sessionId"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-11-16T08:00:00+01:00",
+    "performer": [
+     {
+      "display": "Synthetic test author"
+     }
+    ],
+    "valueString": "Encounter/goz-real-session-0030",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Observation",
+    "id": "goz-real-0030-findingsRecorded",
+    "status": "final",
+    "code": {
+     "coding": [
+      {
+       "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+       "code": "findingsRecorded"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-11-16T08:00:00+01:00",
+    "performer": [
+     {
+      "display": "Synthetic test author"
+     }
+    ],
+    "valueBoolean": true,
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Observation",
+    "id": "goz-real-0030-writtenPlan",
+    "status": "final",
+    "code": {
+     "coding": [
+      {
+       "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+       "code": "writtenPlan"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-11-16T08:00:00+01:00",
+    "performer": [
+     {
+      "display": "Synthetic test author"
+     }
+    ],
+    "valueBoolean": true,
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Observation",
+    "id": "goz-real-0030-planningObjectId",
+    "status": "final",
+    "code": {
+     "coding": [
+      {
+       "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+       "code": "planningObjectId"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-11-16T08:00:00+01:00",
+    "performer": [
+     {
+      "display": "Synthetic test author"
+     }
+    ],
+    "valueString": "goz-real-0030-planning",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "ChargeItem",
+    "id": "goz-real-0030",
+    "status": "planned",
+    "code": {
+     "coding": [
+      {
+       "system": "http://fhir.de/CodeSystem/bzaek/goz",
+       "code": "0030"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "context": {
+     "reference": "Encounter/goz-real-session-0030"
+    },
+    "occurrenceDateTime": "2026-11-16",
+    "quantity": {
+     "value": 1
+    },
+    "factorOverride": 2.3,
+    "account": [
+     {
+      "reference": "Account/goz-real-plan"
+     }
+    ],
+    "supportingInformation": [
+     {
+      "reference": "Observation/goz-real-common-episodeId"
+     },
+     {
+      "reference": "Observation/goz-real-common-scopeComplete"
+     },
+     {
+      "reference": "Observation/goz-real-common-historyComplete"
+     },
+     {
+      "reference": "Observation/goz-real-common-agreementStatus"
+     },
+     {
+      "reference": "Observation/goz-real-common-ownServiceConfirmed"
+     },
+     {
+      "reference": "Observation/goz-real-common-contentConfirmed"
+     },
+     {
+      "reference": "Observation/goz-real-common-indication"
+     },
+     {
+      "reference": "Observation/goz-real-0030-eventId"
+     },
+     {
+      "reference": "Observation/goz-real-0030-targetId"
+     },
+     {
+      "reference": "Observation/goz-real-0030-sessionId"
+     },
+     {
+      "reference": "Observation/goz-real-0030-findingsRecorded"
+     },
+     {
+      "reference": "Observation/goz-real-0030-writtenPlan"
+     },
+     {
+      "reference": "Observation/goz-real-0030-planningObjectId"
+     }
+    ],
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Encounter",
+    "id": "goz-real-session-0090",
+    "status": "planned",
+    "class": {
+     "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+     "code": "AMB"
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Observation",
+    "id": "goz-real-0090-eventId",
+    "status": "final",
+    "code": {
+     "coding": [
+      {
+       "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+       "code": "eventId"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-11-16T08:00:00+01:00",
+    "performer": [
+     {
+      "display": "Synthetic test author"
+     }
+    ],
+    "valueString": "goz-real-0090-event",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Observation",
+    "id": "goz-real-0090-targetId",
+    "status": "final",
+    "code": {
+     "coding": [
+      {
+       "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+       "code": "targetId"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-11-16T08:00:00+01:00",
+    "performer": [
+     {
+      "display": "Synthetic test author"
+     }
+    ],
+    "valueString": "tooth-35",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Observation",
+    "id": "goz-real-0090-sessionId",
+    "status": "final",
+    "code": {
+     "coding": [
+      {
+       "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+       "code": "sessionId"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-11-16T08:00:00+01:00",
+    "performer": [
+     {
+      "display": "Synthetic test author"
+     }
+    ],
+    "valueString": "Encounter/goz-real-session-0090",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "ChargeItem",
+    "id": "goz-real-0090",
+    "status": "planned",
+    "code": {
+     "coding": [
+      {
+       "system": "http://fhir.de/CodeSystem/bzaek/goz",
+       "code": "0090"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "context": {
+     "reference": "Encounter/goz-real-session-0090"
+    },
+    "occurrenceDateTime": "2026-11-16",
+    "quantity": {
+     "value": 1
+    },
+    "factorOverride": 2.3,
+    "account": [
+     {
+      "reference": "Account/goz-real-plan"
+     }
+    ],
+    "supportingInformation": [
+     {
+      "reference": "Observation/goz-real-common-episodeId"
+     },
+     {
+      "reference": "Observation/goz-real-common-scopeComplete"
+     },
+     {
+      "reference": "Observation/goz-real-common-historyComplete"
+     },
+     {
+      "reference": "Observation/goz-real-common-agreementStatus"
+     },
+     {
+      "reference": "Observation/goz-real-common-ownServiceConfirmed"
+     },
+     {
+      "reference": "Observation/goz-real-common-contentConfirmed"
+     },
+     {
+      "reference": "Observation/goz-real-common-indication"
+     },
+     {
+      "reference": "Observation/goz-real-0090-eventId"
+     },
+     {
+      "reference": "Observation/goz-real-0090-targetId"
+     },
+     {
+      "reference": "Observation/goz-real-0090-sessionId"
+     }
+    ],
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Encounter",
+    "id": "goz-real-session-2200",
+    "status": "planned",
+    "class": {
+     "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+     "code": "AMB"
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Observation",
+    "id": "goz-real-2200-eventId",
+    "status": "final",
+    "code": {
+     "coding": [
+      {
+       "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+       "code": "eventId"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-11-16T08:00:00+01:00",
+    "performer": [
+     {
+      "display": "Synthetic test author"
+     }
+    ],
+    "valueString": "goz-real-2200-event",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Observation",
+    "id": "goz-real-2200-targetId",
+    "status": "final",
+    "code": {
+     "coding": [
+      {
+       "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+       "code": "targetId"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-11-16T08:00:00+01:00",
+    "performer": [
+     {
+      "display": "Synthetic test author"
+     }
+    ],
+    "valueString": "goz-real-2200-target",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Observation",
+    "id": "goz-real-2200-sessionId",
+    "status": "final",
+    "code": {
+     "coding": [
+      {
+       "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+       "code": "sessionId"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-11-16T08:00:00+01:00",
+    "performer": [
+     {
+      "display": "Synthetic test author"
+     }
+    ],
+    "valueString": "Encounter/goz-real-session-2200",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Observation",
+    "id": "goz-real-2200-unitKind",
+    "status": "final",
+    "code": {
+     "coding": [
+      {
+       "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+       "code": "unitKind"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-11-16T08:00:00+01:00",
+    "performer": [
+     {
+      "display": "Synthetic test author"
+     }
+    ],
+    "valueString": "tooth",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Observation",
+    "id": "goz-real-2200-unitIds",
+    "status": "final",
+    "code": {
+     "coding": [
+      {
+       "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+       "code": "unitIds"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-11-16T08:00:00+01:00",
+    "performer": [
+     {
+      "display": "Synthetic test author"
+     }
+    ],
+    "component": [
+     {
+      "code": {
+       "coding": [
+        {
+         "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+         "code": "unitId"
+        }
+       ]
+      },
+      "valueString": "goz-real-2200-tooth"
+     }
+    ],
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    },
+    "valueString": "Identified billing units (see components)"
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Observation",
+    "id": "goz-real-2200-supportKind",
+    "status": "final",
+    "code": {
+     "coding": [
+      {
+       "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+       "code": "supportKind"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-11-16T08:00:00+01:00",
+    "performer": [
+     {
+      "display": "Synthetic test author"
+     }
+    ],
+    "valueString": "natural-tooth",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Observation",
+    "id": "goz-real-2200-restorationId",
+    "status": "final",
+    "code": {
+     "coding": [
+      {
+       "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+       "code": "restorationId"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-11-16T08:00:00+01:00",
+    "performer": [
+     {
+      "display": "Synthetic test author"
+     }
+    ],
+    "valueString": "goz-real-2200-restoration",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "ChargeItem",
+    "id": "goz-real-2200",
+    "status": "planned",
+    "code": {
+     "coding": [
+      {
+       "system": "http://fhir.de/CodeSystem/bzaek/goz",
+       "code": "2200"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "context": {
+     "reference": "Encounter/goz-real-session-2200"
+    },
+    "occurrenceDateTime": "2026-11-16",
+    "quantity": {
+     "value": 1
+    },
+    "factorOverride": 2.3,
+    "account": [
+     {
+      "reference": "Account/goz-real-plan"
+     }
+    ],
+    "supportingInformation": [
+     {
+      "reference": "Observation/goz-real-common-episodeId"
+     },
+     {
+      "reference": "Observation/goz-real-common-scopeComplete"
+     },
+     {
+      "reference": "Observation/goz-real-common-historyComplete"
+     },
+     {
+      "reference": "Observation/goz-real-common-agreementStatus"
+     },
+     {
+      "reference": "Observation/goz-real-common-ownServiceConfirmed"
+     },
+     {
+      "reference": "Observation/goz-real-common-contentConfirmed"
+     },
+     {
+      "reference": "Observation/goz-real-common-indication"
+     },
+     {
+      "reference": "Observation/goz-real-2200-eventId"
+     },
+     {
+      "reference": "Observation/goz-real-2200-targetId"
+     },
+     {
+      "reference": "Observation/goz-real-2200-sessionId"
+     },
+     {
+      "reference": "Observation/goz-real-2200-unitKind"
+     },
+     {
+      "reference": "Observation/goz-real-2200-unitIds"
+     },
+     {
+      "reference": "Observation/goz-real-2200-supportKind"
+     },
+     {
+      "reference": "Observation/goz-real-2200-restorationId"
+     }
+    ],
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Encounter",
+    "id": "goz-real-session-5000",
+    "status": "planned",
+    "class": {
+     "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+     "code": "AMB"
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Observation",
+    "id": "goz-real-5000-eventId",
+    "status": "final",
+    "code": {
+     "coding": [
+      {
+       "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+       "code": "eventId"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-11-16T08:00:00+01:00",
+    "performer": [
+     {
+      "display": "Synthetic test author"
+     }
+    ],
+    "valueString": "goz-real-5000-event",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Observation",
+    "id": "goz-real-5000-targetId",
+    "status": "final",
+    "code": {
+     "coding": [
+      {
+       "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+       "code": "targetId"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-11-16T08:00:00+01:00",
+    "performer": [
+     {
+      "display": "Synthetic test author"
+     }
+    ],
+    "valueString": "goz-real-5000-target",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Observation",
+    "id": "goz-real-5000-sessionId",
+    "status": "final",
+    "code": {
+     "coding": [
+      {
+       "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+       "code": "sessionId"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-11-16T08:00:00+01:00",
+    "performer": [
+     {
+      "display": "Synthetic test author"
+     }
+    ],
+    "valueString": "Encounter/goz-real-session-5000",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Observation",
+    "id": "goz-real-5000-unitKind",
+    "status": "final",
+    "code": {
+     "coding": [
+      {
+       "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+       "code": "unitKind"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-11-16T08:00:00+01:00",
+    "performer": [
+     {
+      "display": "Synthetic test author"
+     }
+    ],
+    "valueString": "tooth",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Observation",
+    "id": "goz-real-5000-unitIds",
+    "status": "final",
+    "code": {
+     "coding": [
+      {
+       "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+       "code": "unitIds"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-11-16T08:00:00+01:00",
+    "performer": [
+     {
+      "display": "Synthetic test author"
+     }
+    ],
+    "component": [
+     {
+      "code": {
+       "coding": [
+        {
+         "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+         "code": "unitId"
+        }
+       ]
+      },
+      "valueString": "goz-real-5000-tooth"
+     }
+    ],
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    },
+    "valueString": "Identified billing units (see components)"
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Observation",
+    "id": "goz-real-5000-supportKind",
+    "status": "final",
+    "code": {
+     "coding": [
+      {
+       "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+       "code": "supportKind"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-11-16T08:00:00+01:00",
+    "performer": [
+     {
+      "display": "Synthetic test author"
+     }
+    ],
+    "valueString": "natural-tooth",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Observation",
+    "id": "goz-real-5000-restorationId",
+    "status": "final",
+    "code": {
+     "coding": [
+      {
+       "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+       "code": "restorationId"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-11-16T08:00:00+01:00",
+    "performer": [
+     {
+      "display": "Synthetic test author"
+     }
+    ],
+    "valueString": "goz-real-5000-restoration",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "ChargeItem",
+    "id": "goz-real-5000",
+    "status": "planned",
+    "code": {
+     "coding": [
+      {
+       "system": "http://fhir.de/CodeSystem/bzaek/goz",
+       "code": "5000"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "context": {
+     "reference": "Encounter/goz-real-session-5000"
+    },
+    "occurrenceDateTime": "2026-11-16",
+    "quantity": {
+     "value": 1
+    },
+    "factorOverride": 2.3,
+    "account": [
+     {
+      "reference": "Account/goz-real-plan"
+     }
+    ],
+    "supportingInformation": [
+     {
+      "reference": "Observation/goz-real-common-episodeId"
+     },
+     {
+      "reference": "Observation/goz-real-common-scopeComplete"
+     },
+     {
+      "reference": "Observation/goz-real-common-historyComplete"
+     },
+     {
+      "reference": "Observation/goz-real-common-agreementStatus"
+     },
+     {
+      "reference": "Observation/goz-real-common-ownServiceConfirmed"
+     },
+     {
+      "reference": "Observation/goz-real-common-contentConfirmed"
+     },
+     {
+      "reference": "Observation/goz-real-common-indication"
+     },
+     {
+      "reference": "Observation/goz-real-5000-eventId"
+     },
+     {
+      "reference": "Observation/goz-real-5000-targetId"
+     },
+     {
+      "reference": "Observation/goz-real-5000-sessionId"
+     },
+     {
+      "reference": "Observation/goz-real-5000-unitKind"
+     },
+     {
+      "reference": "Observation/goz-real-5000-unitIds"
+     },
+     {
+      "reference": "Observation/goz-real-5000-supportKind"
+     },
+     {
+      "reference": "Observation/goz-real-5000-restorationId"
+     }
+    ],
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Encounter",
+    "id": "goz-real-session-5010",
+    "status": "planned",
+    "class": {
+     "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+     "code": "AMB"
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Observation",
+    "id": "goz-real-5010-eventId",
+    "status": "final",
+    "code": {
+     "coding": [
+      {
+       "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+       "code": "eventId"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-11-16T08:00:00+01:00",
+    "performer": [
+     {
+      "display": "Synthetic test author"
+     }
+    ],
+    "valueString": "goz-real-5010-event",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Observation",
+    "id": "goz-real-5010-targetId",
+    "status": "final",
+    "code": {
+     "coding": [
+      {
+       "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+       "code": "targetId"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-11-16T08:00:00+01:00",
+    "performer": [
+     {
+      "display": "Synthetic test author"
+     }
+    ],
+    "valueString": "goz-real-5010-target",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Observation",
+    "id": "goz-real-5010-sessionId",
+    "status": "final",
+    "code": {
+     "coding": [
+      {
+       "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+       "code": "sessionId"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-11-16T08:00:00+01:00",
+    "performer": [
+     {
+      "display": "Synthetic test author"
+     }
+    ],
+    "valueString": "Encounter/goz-real-session-5010",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Observation",
+    "id": "goz-real-5010-unitKind",
+    "status": "final",
+    "code": {
+     "coding": [
+      {
+       "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+       "code": "unitKind"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-11-16T08:00:00+01:00",
+    "performer": [
+     {
+      "display": "Synthetic test author"
+     }
+    ],
+    "valueString": "tooth",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Observation",
+    "id": "goz-real-5010-unitIds",
+    "status": "final",
+    "code": {
+     "coding": [
+      {
+       "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+       "code": "unitIds"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-11-16T08:00:00+01:00",
+    "performer": [
+     {
+      "display": "Synthetic test author"
+     }
+    ],
+    "component": [
+     {
+      "code": {
+       "coding": [
+        {
+         "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+         "code": "unitId"
+        }
+       ]
+      },
+      "valueString": "goz-real-5010-tooth"
+     }
+    ],
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    },
+    "valueString": "Identified billing units (see components)"
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Observation",
+    "id": "goz-real-5010-supportKind",
+    "status": "final",
+    "code": {
+     "coding": [
+      {
+       "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+       "code": "supportKind"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-11-16T08:00:00+01:00",
+    "performer": [
+     {
+      "display": "Synthetic test author"
+     }
+    ],
+    "valueString": "natural-tooth",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Observation",
+    "id": "goz-real-5010-restorationId",
+    "status": "final",
+    "code": {
+     "coding": [
+      {
+       "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+       "code": "restorationId"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-11-16T08:00:00+01:00",
+    "performer": [
+     {
+      "display": "Synthetic test author"
+     }
+    ],
+    "valueString": "goz-real-5010-restoration",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "ChargeItem",
+    "id": "goz-real-5010",
+    "status": "planned",
+    "code": {
+     "coding": [
+      {
+       "system": "http://fhir.de/CodeSystem/bzaek/goz",
+       "code": "5010"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "context": {
+     "reference": "Encounter/goz-real-session-5010"
+    },
+    "occurrenceDateTime": "2026-11-16",
+    "quantity": {
+     "value": 1
+    },
+    "factorOverride": 2.3,
+    "account": [
+     {
+      "reference": "Account/goz-real-plan"
+     }
+    ],
+    "supportingInformation": [
+     {
+      "reference": "Observation/goz-real-common-episodeId"
+     },
+     {
+      "reference": "Observation/goz-real-common-scopeComplete"
+     },
+     {
+      "reference": "Observation/goz-real-common-historyComplete"
+     },
+     {
+      "reference": "Observation/goz-real-common-agreementStatus"
+     },
+     {
+      "reference": "Observation/goz-real-common-ownServiceConfirmed"
+     },
+     {
+      "reference": "Observation/goz-real-common-contentConfirmed"
+     },
+     {
+      "reference": "Observation/goz-real-common-indication"
+     },
+     {
+      "reference": "Observation/goz-real-5010-eventId"
+     },
+     {
+      "reference": "Observation/goz-real-5010-targetId"
+     },
+     {
+      "reference": "Observation/goz-real-5010-sessionId"
+     },
+     {
+      "reference": "Observation/goz-real-5010-unitKind"
+     },
+     {
+      "reference": "Observation/goz-real-5010-unitIds"
+     },
+     {
+      "reference": "Observation/goz-real-5010-supportKind"
+     },
+     {
+      "reference": "Observation/goz-real-5010-restorationId"
+     }
+    ],
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Encounter",
+    "id": "goz-real-session-5070",
+    "status": "planned",
+    "class": {
+     "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+     "code": "AMB"
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Observation",
+    "id": "goz-real-5070-eventId",
+    "status": "final",
+    "code": {
+     "coding": [
+      {
+       "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+       "code": "eventId"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-11-16T08:00:00+01:00",
+    "performer": [
+     {
+      "display": "Synthetic test author"
+     }
+    ],
+    "valueString": "goz-real-5070-event",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Observation",
+    "id": "goz-real-5070-targetId",
+    "status": "final",
+    "code": {
+     "coding": [
+      {
+       "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+       "code": "targetId"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-11-16T08:00:00+01:00",
+    "performer": [
+     {
+      "display": "Synthetic test author"
+     }
+    ],
+    "valueString": "goz-real-5070-target",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Observation",
+    "id": "goz-real-5070-sessionId",
+    "status": "final",
+    "code": {
+     "coding": [
+      {
+       "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+       "code": "sessionId"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-11-16T08:00:00+01:00",
+    "performer": [
+     {
+      "display": "Synthetic test author"
+     }
+    ],
+    "valueString": "Encounter/goz-real-session-5070",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Observation",
+    "id": "goz-real-5070-unitKind",
+    "status": "final",
+    "code": {
+     "coding": [
+      {
+       "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+       "code": "unitKind"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-11-16T08:00:00+01:00",
+    "performer": [
+     {
+      "display": "Synthetic test author"
+     }
+    ],
+    "valueString": "span",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Observation",
+    "id": "goz-real-5070-unitIds",
+    "status": "final",
+    "code": {
+     "coding": [
+      {
+       "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+       "code": "unitIds"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-11-16T08:00:00+01:00",
+    "performer": [
+     {
+      "display": "Synthetic test author"
+     }
+    ],
+    "component": [
+     {
+      "code": {
+       "coding": [
+        {
+         "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+         "code": "unitId"
+        }
+       ]
+      },
+      "valueString": "goz-real-5070-span"
+     }
+    ],
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    },
+    "valueString": "Identified billing units (see components)"
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "ChargeItem",
+    "id": "goz-real-5070",
+    "status": "planned",
+    "code": {
+     "coding": [
+      {
+       "system": "http://fhir.de/CodeSystem/bzaek/goz",
+       "code": "5070"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "context": {
+     "reference": "Encounter/goz-real-session-5070"
+    },
+    "occurrenceDateTime": "2026-11-16",
+    "quantity": {
+     "value": 1
+    },
+    "factorOverride": 2.3,
+    "account": [
+     {
+      "reference": "Account/goz-real-plan"
+     }
+    ],
+    "supportingInformation": [
+     {
+      "reference": "Observation/goz-real-common-episodeId"
+     },
+     {
+      "reference": "Observation/goz-real-common-scopeComplete"
+     },
+     {
+      "reference": "Observation/goz-real-common-historyComplete"
+     },
+     {
+      "reference": "Observation/goz-real-common-agreementStatus"
+     },
+     {
+      "reference": "Observation/goz-real-common-ownServiceConfirmed"
+     },
+     {
+      "reference": "Observation/goz-real-common-contentConfirmed"
+     },
+     {
+      "reference": "Observation/goz-real-common-indication"
+     },
+     {
+      "reference": "Observation/goz-real-5070-eventId"
+     },
+     {
+      "reference": "Observation/goz-real-5070-targetId"
+     },
+     {
+      "reference": "Observation/goz-real-5070-sessionId"
+     },
+     {
+      "reference": "Observation/goz-real-5070-unitKind"
+     },
+     {
+      "reference": "Observation/goz-real-5070-unitIds"
+     }
+    ],
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Encounter",
+    "id": "goz-real-session-5120",
+    "status": "planned",
+    "class": {
+     "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+     "code": "AMB"
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Observation",
+    "id": "goz-real-5120-eventId",
+    "status": "final",
+    "code": {
+     "coding": [
+      {
+       "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+       "code": "eventId"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-11-16T08:00:00+01:00",
+    "performer": [
+     {
+      "display": "Synthetic test author"
+     }
+    ],
+    "valueString": "goz-real-5120-event",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Observation",
+    "id": "goz-real-5120-targetId",
+    "status": "final",
+    "code": {
+     "coding": [
+      {
+       "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+       "code": "targetId"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-11-16T08:00:00+01:00",
+    "performer": [
+     {
+      "display": "Synthetic test author"
+     }
+    ],
+    "valueString": "goz-real-5120-target",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Observation",
+    "id": "goz-real-5120-sessionId",
+    "status": "final",
+    "code": {
+     "coding": [
+      {
+       "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+       "code": "sessionId"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-11-16T08:00:00+01:00",
+    "performer": [
+     {
+      "display": "Synthetic test author"
+     }
+    ],
+    "valueString": "Encounter/goz-real-session-5120",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Observation",
+    "id": "goz-real-5120-provisionalId",
+    "status": "final",
+    "code": {
+     "coding": [
+      {
+       "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+       "code": "provisionalId"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-11-16T08:00:00+01:00",
+    "performer": [
+     {
+      "display": "Synthetic test author"
+     }
+    ],
+    "valueString": "goz-real-5120-provisional",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Observation",
+    "id": "goz-real-5120-provisionalAction",
+    "status": "final",
+    "code": {
+     "coding": [
+      {
+       "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+       "code": "provisionalAction"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-11-16T08:00:00+01:00",
+    "performer": [
+     {
+      "display": "Synthetic test author"
+     }
+    ],
+    "valueString": "initial-direct",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Observation",
+    "id": "goz-real-5120-provisionalOrigin",
+    "status": "final",
+    "code": {
+     "coding": [
+      {
+       "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+       "code": "provisionalOrigin"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-11-16T08:00:00+01:00",
+    "performer": [
+     {
+      "display": "Synthetic test author"
+     }
+    ],
+    "valueString": "same-provider",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Observation",
+    "id": "goz-real-5120-impressionTaken",
+    "status": "final",
+    "code": {
+     "coding": [
+      {
+       "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+       "code": "impressionTaken"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-11-16T08:00:00+01:00",
+    "performer": [
+     {
+      "display": "Synthetic test author"
+     }
+    ],
+    "valueBoolean": true,
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Observation",
+    "id": "goz-real-5120-unitKind",
+    "status": "final",
+    "code": {
+     "coding": [
+      {
+       "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+       "code": "unitKind"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-11-16T08:00:00+01:00",
+    "performer": [
+     {
+      "display": "Synthetic test author"
+     }
+    ],
+    "valueString": "tooth",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Observation",
+    "id": "goz-real-5120-unitIds",
+    "status": "final",
+    "code": {
+     "coding": [
+      {
+       "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+       "code": "unitIds"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-11-16T08:00:00+01:00",
+    "performer": [
+     {
+      "display": "Synthetic test author"
+     }
+    ],
+    "component": [
+     {
+      "code": {
+       "coding": [
+        {
+         "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+         "code": "unitId"
+        }
+       ]
+      },
+      "valueString": "goz-real-5120-tooth"
+     }
+    ],
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    },
+    "valueString": "Identified billing units (see components)"
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "ChargeItem",
+    "id": "goz-real-5120",
+    "status": "planned",
+    "code": {
+     "coding": [
+      {
+       "system": "http://fhir.de/CodeSystem/bzaek/goz",
+       "code": "5120"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "context": {
+     "reference": "Encounter/goz-real-session-5120"
+    },
+    "occurrenceDateTime": "2026-11-16",
+    "quantity": {
+     "value": 1
+    },
+    "factorOverride": 2.3,
+    "account": [
+     {
+      "reference": "Account/goz-real-plan"
+     }
+    ],
+    "supportingInformation": [
+     {
+      "reference": "Observation/goz-real-common-episodeId"
+     },
+     {
+      "reference": "Observation/goz-real-common-scopeComplete"
+     },
+     {
+      "reference": "Observation/goz-real-common-historyComplete"
+     },
+     {
+      "reference": "Observation/goz-real-common-agreementStatus"
+     },
+     {
+      "reference": "Observation/goz-real-common-ownServiceConfirmed"
+     },
+     {
+      "reference": "Observation/goz-real-common-contentConfirmed"
+     },
+     {
+      "reference": "Observation/goz-real-common-indication"
+     },
+     {
+      "reference": "Observation/goz-real-5120-eventId"
+     },
+     {
+      "reference": "Observation/goz-real-5120-targetId"
+     },
+     {
+      "reference": "Observation/goz-real-5120-sessionId"
+     },
+     {
+      "reference": "Observation/goz-real-5120-provisionalId"
+     },
+     {
+      "reference": "Observation/goz-real-5120-provisionalAction"
+     },
+     {
+      "reference": "Observation/goz-real-5120-provisionalOrigin"
+     },
+     {
+      "reference": "Observation/goz-real-5120-impressionTaken"
+     },
+     {
+      "reference": "Observation/goz-real-5120-unitKind"
+     },
+     {
+      "reference": "Observation/goz-real-5120-unitIds"
+     }
+    ],
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Encounter",
+    "id": "goz-real-session-5140",
+    "status": "planned",
+    "class": {
+     "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+     "code": "AMB"
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Observation",
+    "id": "goz-real-5140-eventId",
+    "status": "final",
+    "code": {
+     "coding": [
+      {
+       "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+       "code": "eventId"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-11-16T08:00:00+01:00",
+    "performer": [
+     {
+      "display": "Synthetic test author"
+     }
+    ],
+    "valueString": "goz-real-5140-event",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Observation",
+    "id": "goz-real-5140-targetId",
+    "status": "final",
+    "code": {
+     "coding": [
+      {
+       "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+       "code": "targetId"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-11-16T08:00:00+01:00",
+    "performer": [
+     {
+      "display": "Synthetic test author"
+     }
+    ],
+    "valueString": "goz-real-5140-target",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Observation",
+    "id": "goz-real-5140-sessionId",
+    "status": "final",
+    "code": {
+     "coding": [
+      {
+       "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+       "code": "sessionId"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-11-16T08:00:00+01:00",
+    "performer": [
+     {
+      "display": "Synthetic test author"
+     }
+    ],
+    "valueString": "Encounter/goz-real-session-5140",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Observation",
+    "id": "goz-real-5140-unitKind",
+    "status": "final",
+    "code": {
+     "coding": [
+      {
+       "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+       "code": "unitKind"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-11-16T08:00:00+01:00",
+    "performer": [
+     {
+      "display": "Synthetic test author"
+     }
+    ],
+    "valueString": "span",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Observation",
+    "id": "goz-real-5140-unitIds",
+    "status": "final",
+    "code": {
+     "coding": [
+      {
+       "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+       "code": "unitIds"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-11-16T08:00:00+01:00",
+    "performer": [
+     {
+      "display": "Synthetic test author"
+     }
+    ],
+    "component": [
+     {
+      "code": {
+       "coding": [
+        {
+         "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+         "code": "unitId"
+        }
+       ]
+      },
+      "valueString": "goz-real-5140-span"
+     }
+    ],
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    },
+    "valueString": "Identified billing units (see components)"
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Observation",
+    "id": "goz-real-5140-provisionalId",
+    "status": "final",
+    "code": {
+     "coding": [
+      {
+       "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+       "code": "provisionalId"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-11-16T08:00:00+01:00",
+    "performer": [
+     {
+      "display": "Synthetic test author"
+     }
+    ],
+    "valueString": "goz-real-5140-provisional",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Observation",
+    "id": "goz-real-5140-provisionalAction",
+    "status": "final",
+    "code": {
+     "coding": [
+      {
+       "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+       "code": "provisionalAction"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-11-16T08:00:00+01:00",
+    "performer": [
+     {
+      "display": "Synthetic test author"
+     }
+    ],
+    "valueString": "initial-direct",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Observation",
+    "id": "goz-real-5140-provisionalOrigin",
+    "status": "final",
+    "code": {
+     "coding": [
+      {
+       "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+       "code": "provisionalOrigin"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-11-16T08:00:00+01:00",
+    "performer": [
+     {
+      "display": "Synthetic test author"
+     }
+    ],
+    "valueString": "same-provider",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Observation",
+    "id": "goz-real-5140-impressionTaken",
+    "status": "final",
+    "code": {
+     "coding": [
+      {
+       "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+       "code": "impressionTaken"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-11-16T08:00:00+01:00",
+    "performer": [
+     {
+      "display": "Synthetic test author"
+     }
+    ],
+    "valueBoolean": true,
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "ChargeItem",
+    "id": "goz-real-5140",
+    "status": "planned",
+    "code": {
+     "coding": [
+      {
+       "system": "http://fhir.de/CodeSystem/bzaek/goz",
+       "code": "5140"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "context": {
+     "reference": "Encounter/goz-real-session-5140"
+    },
+    "occurrenceDateTime": "2026-11-16",
+    "quantity": {
+     "value": 1
+    },
+    "factorOverride": 2.3,
+    "account": [
+     {
+      "reference": "Account/goz-real-plan"
+     }
+    ],
+    "supportingInformation": [
+     {
+      "reference": "Observation/goz-real-common-episodeId"
+     },
+     {
+      "reference": "Observation/goz-real-common-scopeComplete"
+     },
+     {
+      "reference": "Observation/goz-real-common-historyComplete"
+     },
+     {
+      "reference": "Observation/goz-real-common-agreementStatus"
+     },
+     {
+      "reference": "Observation/goz-real-common-ownServiceConfirmed"
+     },
+     {
+      "reference": "Observation/goz-real-common-contentConfirmed"
+     },
+     {
+      "reference": "Observation/goz-real-common-indication"
+     },
+     {
+      "reference": "Observation/goz-real-5140-eventId"
+     },
+     {
+      "reference": "Observation/goz-real-5140-targetId"
+     },
+     {
+      "reference": "Observation/goz-real-5140-sessionId"
+     },
+     {
+      "reference": "Observation/goz-real-5140-unitKind"
+     },
+     {
+      "reference": "Observation/goz-real-5140-unitIds"
+     },
+     {
+      "reference": "Observation/goz-real-5140-provisionalId"
+     },
+     {
+      "reference": "Observation/goz-real-5140-provisionalAction"
+     },
+     {
+      "reference": "Observation/goz-real-5140-provisionalOrigin"
+     },
+     {
+      "reference": "Observation/goz-real-5140-impressionTaken"
+     }
+    ],
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Encounter",
+    "id": "goz-real-session-9000",
+    "status": "planned",
+    "class": {
+     "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+     "code": "AMB"
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Observation",
+    "id": "goz-real-9000-eventId",
+    "status": "final",
+    "code": {
+     "coding": [
+      {
+       "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+       "code": "eventId"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-11-16T08:00:00+01:00",
+    "performer": [
+     {
+      "display": "Synthetic test author"
+     }
+    ],
+    "valueString": "goz-real-9000-event",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Observation",
+    "id": "goz-real-9000-targetId",
+    "status": "final",
+    "code": {
+     "coding": [
+      {
+       "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+       "code": "targetId"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-11-16T08:00:00+01:00",
+    "performer": [
+     {
+      "display": "Synthetic test author"
+     }
+    ],
+    "valueString": "goz-real-9000-target",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Observation",
+    "id": "goz-real-9000-sessionId",
+    "status": "final",
+    "code": {
+     "coding": [
+      {
+       "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+       "code": "sessionId"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-11-16T08:00:00+01:00",
+    "performer": [
+     {
+      "display": "Synthetic test author"
+     }
+    ],
+    "valueString": "Encounter/goz-real-session-9000",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Observation",
+    "id": "goz-real-9000-unitKind",
+    "status": "final",
+    "code": {
+     "coding": [
+      {
+       "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+       "code": "unitKind"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-11-16T08:00:00+01:00",
+    "performer": [
+     {
+      "display": "Synthetic test author"
+     }
+    ],
+    "valueString": "jaw",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Observation",
+    "id": "goz-real-9000-unitIds",
+    "status": "final",
+    "code": {
+     "coding": [
+      {
+       "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+       "code": "unitIds"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-11-16T08:00:00+01:00",
+    "performer": [
+     {
+      "display": "Synthetic test author"
+     }
+    ],
+    "component": [
+     {
+      "code": {
+       "coding": [
+        {
+         "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+         "code": "unitId"
+        }
+       ]
+      },
+      "valueString": "lower-jaw"
+     }
+    ],
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    },
+    "valueString": "Identified billing units (see components)"
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Observation",
+    "id": "goz-real-9000-implantAnalysisConfirmed",
+    "status": "final",
+    "code": {
+     "coding": [
+      {
+       "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+       "code": "implantAnalysisConfirmed"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-11-16T08:00:00+01:00",
+    "performer": [
+     {
+      "display": "Synthetic test author"
+     }
+    ],
+    "valueBoolean": true,
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "ChargeItem",
+    "id": "goz-real-9000",
+    "status": "planned",
+    "code": {
+     "coding": [
+      {
+       "system": "http://fhir.de/CodeSystem/bzaek/goz",
+       "code": "9000"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "context": {
+     "reference": "Encounter/goz-real-session-9000"
+    },
+    "occurrenceDateTime": "2026-11-16",
+    "quantity": {
+     "value": 1
+    },
+    "factorOverride": 2.3,
+    "account": [
+     {
+      "reference": "Account/goz-real-plan"
+     }
+    ],
+    "supportingInformation": [
+     {
+      "reference": "Observation/goz-real-common-episodeId"
+     },
+     {
+      "reference": "Observation/goz-real-common-scopeComplete"
+     },
+     {
+      "reference": "Observation/goz-real-common-historyComplete"
+     },
+     {
+      "reference": "Observation/goz-real-common-agreementStatus"
+     },
+     {
+      "reference": "Observation/goz-real-common-ownServiceConfirmed"
+     },
+     {
+      "reference": "Observation/goz-real-common-contentConfirmed"
+     },
+     {
+      "reference": "Observation/goz-real-common-indication"
+     },
+     {
+      "reference": "Observation/goz-real-9000-eventId"
+     },
+     {
+      "reference": "Observation/goz-real-9000-targetId"
+     },
+     {
+      "reference": "Observation/goz-real-9000-sessionId"
+     },
+     {
+      "reference": "Observation/goz-real-9000-unitKind"
+     },
+     {
+      "reference": "Observation/goz-real-9000-unitIds"
+     },
+     {
+      "reference": "Observation/goz-real-9000-implantAnalysisConfirmed"
+     }
+    ],
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Encounter",
+    "id": "goz-real-session-9003",
+    "status": "planned",
+    "class": {
+     "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+     "code": "AMB"
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Observation",
+    "id": "goz-real-9003-eventId",
+    "status": "final",
+    "code": {
+     "coding": [
+      {
+       "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+       "code": "eventId"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-11-16T08:00:00+01:00",
+    "performer": [
+     {
+      "display": "Synthetic test author"
+     }
+    ],
+    "valueString": "goz-real-9003-event",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Observation",
+    "id": "goz-real-9003-targetId",
+    "status": "final",
+    "code": {
+     "coding": [
+      {
+       "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+       "code": "targetId"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-11-16T08:00:00+01:00",
+    "performer": [
+     {
+      "display": "Synthetic test author"
+     }
+    ],
+    "valueString": "goz-real-9003-target",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Observation",
+    "id": "goz-real-9003-sessionId",
+    "status": "final",
+    "code": {
+     "coding": [
+      {
+       "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+       "code": "sessionId"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-11-16T08:00:00+01:00",
+    "performer": [
+     {
+      "display": "Synthetic test author"
+     }
+    ],
+    "valueString": "Encounter/goz-real-session-9003",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Observation",
+    "id": "goz-real-9003-unitKind",
+    "status": "final",
+    "code": {
+     "coding": [
+      {
+       "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+       "code": "unitKind"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-11-16T08:00:00+01:00",
+    "performer": [
+     {
+      "display": "Synthetic test author"
+     }
+    ],
+    "valueString": "jaw",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Observation",
+    "id": "goz-real-9003-unitIds",
+    "status": "final",
+    "code": {
+     "coding": [
+      {
+       "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+       "code": "unitIds"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-11-16T08:00:00+01:00",
+    "performer": [
+     {
+      "display": "Synthetic test author"
+     }
+    ],
+    "component": [
+     {
+      "code": {
+       "coding": [
+        {
+         "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+         "code": "unitId"
+        }
+       ]
+      },
+      "valueString": "lower-jaw"
+     }
+    ],
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    },
+    "valueString": "Identified billing units (see components)"
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Observation",
+    "id": "goz-real-9003-orientationTemplateUsed",
+    "status": "final",
+    "code": {
+     "coding": [
+      {
+       "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+       "code": "orientationTemplateUsed"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-11-16T08:00:00+01:00",
+    "performer": [
+     {
+      "display": "Synthetic test author"
+     }
+    ],
+    "valueBoolean": true,
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "ChargeItem",
+    "id": "goz-real-9003",
+    "status": "planned",
+    "code": {
+     "coding": [
+      {
+       "system": "http://fhir.de/CodeSystem/bzaek/goz",
+       "code": "9003"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "context": {
+     "reference": "Encounter/goz-real-session-9003"
+    },
+    "occurrenceDateTime": "2026-11-16",
+    "quantity": {
+     "value": 1
+    },
+    "factorOverride": 2.3,
+    "account": [
+     {
+      "reference": "Account/goz-real-plan"
+     }
+    ],
+    "supportingInformation": [
+     {
+      "reference": "Observation/goz-real-common-episodeId"
+     },
+     {
+      "reference": "Observation/goz-real-common-scopeComplete"
+     },
+     {
+      "reference": "Observation/goz-real-common-historyComplete"
+     },
+     {
+      "reference": "Observation/goz-real-common-agreementStatus"
+     },
+     {
+      "reference": "Observation/goz-real-common-ownServiceConfirmed"
+     },
+     {
+      "reference": "Observation/goz-real-common-contentConfirmed"
+     },
+     {
+      "reference": "Observation/goz-real-common-indication"
+     },
+     {
+      "reference": "Observation/goz-real-9003-eventId"
+     },
+     {
+      "reference": "Observation/goz-real-9003-targetId"
+     },
+     {
+      "reference": "Observation/goz-real-9003-sessionId"
+     },
+     {
+      "reference": "Observation/goz-real-9003-unitKind"
+     },
+     {
+      "reference": "Observation/goz-real-9003-unitIds"
+     },
+     {
+      "reference": "Observation/goz-real-9003-orientationTemplateUsed"
+     }
+    ],
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Encounter",
+    "id": "goz-real-session-9010",
+    "status": "planned",
+    "class": {
+     "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+     "code": "AMB"
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Observation",
+    "id": "goz-real-9010-eventId",
+    "status": "final",
+    "code": {
+     "coding": [
+      {
+       "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+       "code": "eventId"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-11-16T08:00:00+01:00",
+    "performer": [
+     {
+      "display": "Synthetic test author"
+     }
+    ],
+    "valueString": "goz-real-9010-event",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Observation",
+    "id": "goz-real-9010-targetId",
+    "status": "final",
+    "code": {
+     "coding": [
+      {
+       "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+       "code": "targetId"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-11-16T08:00:00+01:00",
+    "performer": [
+     {
+      "display": "Synthetic test author"
+     }
+    ],
+    "valueString": "goz-real-9010-target",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Observation",
+    "id": "goz-real-9010-sessionId",
+    "status": "final",
+    "code": {
+     "coding": [
+      {
+       "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+       "code": "sessionId"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-11-16T08:00:00+01:00",
+    "performer": [
+     {
+      "display": "Synthetic test author"
+     }
+    ],
+    "valueString": "Encounter/goz-real-session-9010",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Observation",
+    "id": "goz-real-9010-unitKind",
+    "status": "final",
+    "code": {
+     "coding": [
+      {
+       "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+       "code": "unitKind"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-11-16T08:00:00+01:00",
+    "performer": [
+     {
+      "display": "Synthetic test author"
+     }
+    ],
+    "valueString": "implant",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Observation",
+    "id": "goz-real-9010-unitIds",
+    "status": "final",
+    "code": {
+     "coding": [
+      {
+       "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+       "code": "unitIds"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-11-16T08:00:00+01:00",
+    "performer": [
+     {
+      "display": "Synthetic test author"
+     }
+    ],
+    "component": [
+     {
+      "code": {
+       "coding": [
+        {
+         "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+         "code": "unitId"
+        }
+       ]
+      },
+      "valueString": "implant-36"
+     }
+    ],
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    },
+    "valueString": "Identified billing units (see components)"
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Observation",
+    "id": "goz-real-9010-implantId",
+    "status": "final",
+    "code": {
+     "coding": [
+      {
+       "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+       "code": "implantId"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-11-16T08:00:00+01:00",
+    "performer": [
+     {
+      "display": "Synthetic test author"
+     }
+    ],
+    "valueString": "implant-36",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "ChargeItem",
+    "id": "goz-real-9010",
+    "status": "planned",
+    "code": {
+     "coding": [
+      {
+       "system": "http://fhir.de/CodeSystem/bzaek/goz",
+       "code": "9010"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "context": {
+     "reference": "Encounter/goz-real-session-9010"
+    },
+    "occurrenceDateTime": "2026-11-16",
+    "quantity": {
+     "value": 1
+    },
+    "factorOverride": 2.3,
+    "account": [
+     {
+      "reference": "Account/goz-real-plan"
+     }
+    ],
+    "supportingInformation": [
+     {
+      "reference": "Observation/goz-real-common-episodeId"
+     },
+     {
+      "reference": "Observation/goz-real-common-scopeComplete"
+     },
+     {
+      "reference": "Observation/goz-real-common-historyComplete"
+     },
+     {
+      "reference": "Observation/goz-real-common-agreementStatus"
+     },
+     {
+      "reference": "Observation/goz-real-common-ownServiceConfirmed"
+     },
+     {
+      "reference": "Observation/goz-real-common-contentConfirmed"
+     },
+     {
+      "reference": "Observation/goz-real-common-indication"
+     },
+     {
+      "reference": "Observation/goz-real-9010-eventId"
+     },
+     {
+      "reference": "Observation/goz-real-9010-targetId"
+     },
+     {
+      "reference": "Observation/goz-real-9010-sessionId"
+     },
+     {
+      "reference": "Observation/goz-real-9010-unitKind"
+     },
+     {
+      "reference": "Observation/goz-real-9010-unitIds"
+     },
+     {
+      "reference": "Observation/goz-real-9010-implantId"
+     }
+    ],
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Encounter",
+    "id": "goz-real-session-9040",
+    "status": "planned",
+    "class": {
+     "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+     "code": "AMB"
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Observation",
+    "id": "goz-real-9040-eventId",
+    "status": "final",
+    "code": {
+     "coding": [
+      {
+       "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+       "code": "eventId"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-11-16T08:00:00+01:00",
+    "performer": [
+     {
+      "display": "Synthetic test author"
+     }
+    ],
+    "valueString": "goz-real-9040-event",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Observation",
+    "id": "goz-real-9040-targetId",
+    "status": "final",
+    "code": {
+     "coding": [
+      {
+       "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+       "code": "targetId"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-11-16T08:00:00+01:00",
+    "performer": [
+     {
+      "display": "Synthetic test author"
+     }
+    ],
+    "valueString": "goz-real-9040-target",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Observation",
+    "id": "goz-real-9040-sessionId",
+    "status": "final",
+    "code": {
+     "coding": [
+      {
+       "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+       "code": "sessionId"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-11-16T08:00:00+01:00",
+    "performer": [
+     {
+      "display": "Synthetic test author"
+     }
+    ],
+    "valueString": "Encounter/goz-real-session-9040",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Observation",
+    "id": "goz-real-9040-implantId",
+    "status": "final",
+    "code": {
+     "coding": [
+      {
+       "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+       "code": "implantId"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-11-16T08:00:00+01:00",
+    "performer": [
+     {
+      "display": "Synthetic test author"
+     }
+    ],
+    "valueString": "implant-36",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Observation",
+    "id": "goz-real-9040-implantSystem",
+    "status": "final",
+    "code": {
+     "coding": [
+      {
+       "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+       "code": "implantSystem"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-11-16T08:00:00+01:00",
+    "performer": [
+     {
+      "display": "Synthetic test author"
+     }
+    ],
+    "valueString": "two-phase",
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Observation",
+    "id": "goz-real-9040-implantExposureConfirmed",
+    "status": "final",
+    "code": {
+     "coding": [
+      {
+       "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+       "code": "implantExposureConfirmed"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-11-16T08:00:00+01:00",
+    "performer": [
+     {
+      "display": "Synthetic test author"
+     }
+    ],
+    "valueBoolean": true,
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "Observation",
+    "id": "goz-real-9040-abutmentInsertionConfirmed",
+    "status": "final",
+    "code": {
+     "coding": [
+      {
+       "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+       "code": "abutmentInsertionConfirmed"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "effectiveDateTime": "2026-11-16T08:00:00+01:00",
+    "performer": [
+     {
+      "display": "Synthetic test author"
+     }
+    ],
+    "valueBoolean": true,
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "resource": {
+    "resourceType": "ChargeItem",
+    "id": "goz-real-9040",
+    "status": "planned",
+    "code": {
+     "coding": [
+      {
+       "system": "http://fhir.de/CodeSystem/bzaek/goz",
+       "code": "9040"
+      }
+     ]
+    },
+    "subject": {
+     "reference": "Patient/dent-051"
+    },
+    "context": {
+     "reference": "Encounter/goz-real-session-9040"
+    },
+    "occurrenceDateTime": "2026-11-16",
+    "quantity": {
+     "value": 1
+    },
+    "factorOverride": 2.3,
+    "account": [
+     {
+      "reference": "Account/goz-real-plan"
+     }
+    ],
+    "supportingInformation": [
+     {
+      "reference": "Observation/goz-real-common-episodeId"
+     },
+     {
+      "reference": "Observation/goz-real-common-scopeComplete"
+     },
+     {
+      "reference": "Observation/goz-real-common-historyComplete"
+     },
+     {
+      "reference": "Observation/goz-real-common-agreementStatus"
+     },
+     {
+      "reference": "Observation/goz-real-common-ownServiceConfirmed"
+     },
+     {
+      "reference": "Observation/goz-real-common-contentConfirmed"
+     },
+     {
+      "reference": "Observation/goz-real-common-indication"
+     },
+     {
+      "reference": "Observation/goz-real-9040-eventId"
+     },
+     {
+      "reference": "Observation/goz-real-9040-targetId"
+     },
+     {
+      "reference": "Observation/goz-real-9040-sessionId"
+     },
+     {
+      "reference": "Observation/goz-real-9040-implantId"
+     },
+     {
+      "reference": "Observation/goz-real-9040-implantSystem"
+     },
+     {
+      "reference": "Observation/goz-real-9040-implantExposureConfirmed"
+     },
+     {
+      "reference": "Observation/goz-real-9040-abutmentInsertionConfirmed"
+     }
+    ],
+    "meta": {
+     "tag": [
+      {
+       "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+       "code": "HTEST"
+      }
+     ]
+    }
+   }
+  }
+ ]
+}

@@ -1,139 +1,155 @@
-# Billing check with the cognovis Billing SDK
+# Source-based GOZ checks
 
-**Synthetic rules, generated for the hackathon, not billing-grade.**
+These checks cover the twelve GOZ codes in Greta Palmried's alternatives, plus the
+counter-codes needed for their exclusions. They are a bounded demonstration, not a
+complete clinical, legal, invoice or insurance assessment. Clinical conclusions and
+agreement validity must be supported by explicit evidence; they are not inferred from
+a fee number or arbitrary text. All example resources are synthetic and carry `HTEST`.
 
-This folder evaluates planned `ChargeItem`s against the GOZ catalog (`../catalog`) and a
-small hand-written rule set, with `@cognovis/fhir-billing-sdk` 0.42.1 (Apache-2.0). It runs
-offline on FHIR bundles; no server is needed.
-
-```sh
-npm run billing:check            # the three cost plans of the example patient (dent-051)
-npm run billing:check:blocked    # a cost plan that breaks all three rules
-npm run cost-plan                # the same plans with line prices and totals
-npm run cost-plan -- --aidbox dent-051   # read the plans from the local Aidbox instead
-npm run cost-plan -- --json      # machine-readable
-```
-
-The SDK packages come from the cognovis npm registry; `../.npmrc` points the `@cognovis`
-scope there, so `npm install` in the repository root fetches them without a login.
-
-## What the check needs
-
-Per cost plan the SDK evaluates one `Account`:
-
-- `Account` with `coverage` pointing to a `Coverage`,
-- `Coverage.contract` pointing to a `Contract` with `status = executed` and a `url`,
-- the `ChargeItem`s whose `account` points to the Account (`status = planned` for a cost plan),
-- the catalog edition `Library`, its `ChargeItemDefinition`s and the rule-set `Library`
-  (all in `../catalog/goz-catalog.bundle.json`).
-
-A `ChargeItem` carries the GOZ number in `code`, the tooth in `bodysite`, the multiplier in
-`factorOverride` and a justification for a multiplier above 2.3 in `reason[].text`.
-
-`data/dent-051-palmried.json` has three cost plans (Accounts `dent-051-cost-plan-a/-b/-c`),
-one per treatment alternative (`CarePlan` `dent-051-hkp-alt-a/-b/-c`). Each planned
-ChargeItem points to its CarePlan in `supportingInformation`.
-
-## Results
-
-| Case | Decision | Why |
-|---|---|---|
-| `dent-051-cost-plan-a` (bridge, veneered) | `allow` | |
-| `dent-051-cost-plan-b` (bridge, full cast) | `allow` | |
-| `dent-051-cost-plan-c` (implant) | `unavailable` | GOZ 9010 at multiplier 3.0 without a justification: `MULTIPLIER_JUSTIFICATION_REQUIRED` (needs review). Add a `reason` text to `dent-051-alt-c-05` and it becomes `allow`. |
-| `example-blocked` | `block` | `QUANTITY_CAP_EXCEEDED`, `MUTUALLY_EXCLUSIVE_CODE_PRESENT`, `MULTIPLIER_OUT_OF_BOUNDS` |
-
-The CLI calls a needs-review finding `unavailable`. `CATALOG_PARTIAL` is an advisory: the
-edition does not claim to be the complete GOZ.
-
-## The rule set
-
-`goz-hackathon-rules.json` is the rule payload; `build-catalog.mjs` wraps it into the
-rule-set `Library` (`https://github.com/cognovis/fhir-camp-hackathon/Library/goz-hackathon-rules`).
-The rules are written for this kit and are deliberately simplified:
-
-| Rule | Class | What it checks | Basis |
-|---|---|---|---|
-| `goz-multiplier-bounds` | `bounded-multiplier` | Multiplier between 1.0 and 3.5; above 2.3 only with a justification | GOZ § 5 and § 10, simplified |
-| `goz-0030-once-per-cost-plan` | `quantity-limit` | GOZ 0030 (written cost plan) at most once per cost plan | invented for the exercise |
-| `goz-9050-not-with-9010-9040` | `mutual-exclusion` | GOZ 9050 not together with 9010 or 9040 | GOZ Anlage 1, text of 9050 |
-| `goz-5120-requires-5000-or-5010` | `companion-required` | GOZ 5120 requires at least one 5000 **or** 5010 in the same Account | invented for the exercise; issue #8 |
-
-Each rule records its basis as `provenance.evidenceLevel`. After editing the payload, run
-`npm run build-catalog`. To reload Aidbox, `npm run setup` overwrites seed resources with
-fixed IDs; check for local edits first. The offline demo below needs no reload.
-
-## Companion-rule demo (issue #8)
+## Run the complete check
 
 From the repository root, with the pinned dependencies installed:
 
 ```sh
 npm run build-catalog
-npm --workspace billing run check:companion
-node billing/cost-plan.mjs --bundle billing/examples/companion-cost-plans.json --json
-npm --workspace billing test
 npm run billing:check
+npm run billing:check:blocked
+node billing/check-goz.mjs --bundle billing/examples/goz-real-valid.json
+node billing/cost-plan.mjs --bundle billing/examples/goz-real-valid.json --json
+npm --workspace billing test
+npm --workspace app run typecheck
 ```
 
-The fixture uses synthetic Greta Palmried (`Patient/dent-051`) and six independent
-Accounts. Every fixture resource carries `HTEST`. Expected results:
+- `goz-real-valid.json`: explicit synthetic evidence for all twelve codes; `allow`.
+- `goz-real-invalid.json`: a 5010 on an implant; `block`, rule
+  `goz-5010-supportKind`, finding `ACCOMPANYING_INFORMATION_REQUIRED` on
+  `goz-real-invalid-5010`.
+- `goz-real-agreement.json`: explicit prior individual agreement for 0030 at factor 4; `allow`.
+- Original A/B/C: `unavailable` because the additional clinical evidence is absent.
+  Their calculated fees remain **549.26 / 428.44 / 673.59 EUR**.
+- `companion-cost-plans.json` and `blocked-cost-plan.json` are older test inputs.
+  The invented 5120-companion and 0030-quantity rules are no longer loaded; these
+  files are not authoritative examples of real GOZ restrictions. The former
+  `check:companion` command now uses the complete evaluator on that legacy input.
 
-| Account suffix (`example-companion-…`) | Codes | Decision |
+`allow` means the covered checks found no problem on the supplied evidence. It does
+not certify all German billing rules. `block` requires a demonstrated violation;
+missing, conflicting or incomplete evidence produces `unavailable` (review required).
+Rule IDs, affected lines, source links and explanations are included in JSON output.
+
+## Where the rules live
+
+| Editable source | Generated FHIR carrier | Evaluator |
 |---|---|---|
-| `missing` | 5120 | `block` |
-| `5000` | 5120, 5000 | `allow` |
-| `5010` | 5120, 5010 | `allow` |
-| `no-5120` | 0030 | `allow` |
-| `other-account` | 5120 | `block` |
-| `donor` | 5000 | `allow` |
+| `goz-hackathon-rules.json` | `Library/goz-hackathon-rules` | Pinned Billing SDK: 5010 requires a natural tooth, 9040 a two-phase implant system |
+| `goz-context-rules.json` | `Library/goz-context-rules` | Local, bounded contextual checks in `goz-context.mjs` |
 
-Both blocked cases report `COMPANION_CODE_REQUIRED`, rule
-`goz-5120-requires-5000-or-5010`, and their own `…-5120` ChargeItem. The `donor`
-Account's 5000 cannot satisfy another Account's requirement, even for the same patient.
-The test asserts those exact findings, the generated Library and edition link, and the
-unchanged A/B/C decisions and totals (549.26 / 428.44 / 673.59 EUR).
+Both Libraries are in `../catalog/goz-catalog.bundle.json`. The native catalog edition
+still references the native rule-set Library. The additional Library has a separate
+artifact-kind, an exact edition/version dependency and the edition digest. Its payload
+is canonical JSON in one Base64 attachment with its own SHA-256. Missing, corrupt,
+duplicate or mismatched contextual Libraries withhold the overall result.
 
-The installed rules/engine 0.40.0 use an OR search over `required.codes`. The SDK 0.42.1
-selects ChargeItems per Account, so this rule deliberately has no `countingScope`.
-This is an **invented hackathon rule**, not a generally applicable GOZ requirement;
-the issue suggestion is its provenance, not a clinical or statutory authority.
-`cost-plan.mjs --aidbox` still reads the catalog from the local file: changing only
-the server's Library does not change that CLI's rules. The example bundle is not
-imported by `npm run setup`, and `npm run validate` does not validate these fixtures.
+`evaluate-goz.mjs` combines `evaluateBillingAccount` with those additional checks.
+A native rejection is never weakened. The installed native `fhir-billing-check` CLI
+alone **does not execute the additional Library**. Use the commands above for the
+complete demo. No npm dependency or Core source change is required.
 
-What the rule classes cannot express today: a limit per tooth (the SDK counts per cost plan,
-not per tooth), and the price of the six GOZ numbers that are a share of another number. See
-`../TASKS.md`.
+## Covered rules and sources
 
-## Line prices from `evaluateBillingAccount`
+The rule JSON contains a citation and source URL for every rule. The reviewed source
+snapshot is **2026-11-06**; the deliberately bounded demonstration evaluation window
+is **2026-11-06 through 2026-11-16**, inclusive. This window is an implementation review
+boundary, not the effective lifetime of the legislation. Dates outside it require a
+source review and produce `GOZ_LEGAL_SNAPSHOT_UNREVIEWED`.
 
-The CLI prints decisions only. For prices, call the SDK directly, as `cost-plan.mjs` does:
+| Scope | Check | Primary source |
+|---|---|---|
+| All twelve codes | Statutory fee range, individual agreement exceptions and factor/amount consistency | GOZ §§ 2, 5 |
+| All twelve codes | Individual justification above 2.3, with the distinct § 2 agreement case | GOZ § 5(2), § 10(3) |
+| All twelve codes | Exact points × point value × factor; round only the resulting unit fee | GOZ § 5(1) |
+| All twelve codes | Confirmed own/complete service or planned content, indication or documented requested treatment | GOZ §§ 1(2), 2(3), 4(2) |
+| 0030 | Findings and written plan; exclusion of 0040 for the same planning subject | Anlage 1 A, 0030/0040 |
+| 0090 | Sum split positions for the same tooth/target and session; repeated use needs its own justification | Anlage 1 A, note at 0100 |
+| 2200 | Exclusion of 2050–2130 in the same restoration context; included component services | Anlage 1 C, notes at 2220 |
+| 5000/5010 | Anchor identities, included component services; 5010 not on implants | Anlage 1 F, notes at 5040 |
+| 5070 | Explicit span/free-end identities and quantities | Anlage 1 F, 5070 |
+| 5120/5140 | Direct manufacture with impression, correct units, included reinsertion/removal of the same already billed provisional | Anlage 1 F, 5120/5140 |
+| 9000/9003 | Jaw identities, documented implant analysis / actual use of orientation template | Anlage 1 K, 9000/9003 |
+| 9010 | Implant/insertion identities and included component services | Anlage 1 K, 9010 and general provision 1 |
+| 9040 | Two-phase system, exposure and insertion of abutment elements | Anlage 1 K, 9040 |
+| 9050 counter-code | Same-implant/session exclusion with 9010/9040; at most once/session and three times/reconstructive phase | Anlage 1 K, 9050 |
 
-```js
-import { bundleAdmissionRecords, createBundleFhirClient, evaluateBillingAccount } from '@cognovis/fhir-billing-sdk'
+Official texts: [GOZ Anlage 1](https://www.gesetze-im-internet.de/goz_1987/anlage_1.html),
+[§ 2](https://www.gesetze-im-internet.de/goz_1987/__2.html),
+[§ 4](https://www.gesetze-im-internet.de/goz_1987/__4.html),
+[§ 5](https://www.gesetze-im-internet.de/goz_1987/__5.html),
+[§ 10](https://www.gesetze-im-internet.de/goz_1987/__10.html).
+BZÄK commentary on 0030, 0090, 5120 and 9050 is identified separately in provenance
+as interpretation, not legislation. A replacement provisional after loss/defect is
+not the same event as reinsertion. Other-provider and analog situations require
+individual review; the evaluator does not choose an analog fee number.
 
-const bundles = [catalog, caseBundle]
-const admissions = bundleAdmissionRecords(bundles, { tenant: 'standalone' })
-const client = createBundleFhirClient([...bundles, { resourceType: 'Bundle', type: 'collection', entry: admissions.map((resource) => ({ resource })) }])
-const result = await evaluateBillingAccount({ client, profiles, tenant: 'standalone', asOf: '2026-11-16', account: 'dent-051-cost-plan-a' })
+## Evidence supplied as FHIR
 
-for (const line of result.case.lines) {
-  // line.unitPrice      { value, currency }: the single fee from the ChargeItemDefinition
-  // line.actualMultiplier  ChargeItem.factorOverride
-  // line.quantity, line.code, line.id (the ChargeItem id)
-}
+The working examples show the full shape. Each ChargeItem references Observations in
+`supportingInformation`; the code system is
+`https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence`.
+Accepted Observations are final/amended/corrected, name the same patient, have an
+`effectiveDateTime` and a `performer` or `derivedFrom` source. Conflicting statements
+remain unknown. The examples explicitly state synthetic evidence; they do not amend
+Greta's original clinical history.
+
+- Text/identity facts use `valueString`: `episodeId`, `eventId`, `targetId`,
+  `planningObjectId`, `restorationId`, `provisionalId`, `implantId`, `phaseId`,
+  `unitKind`, `supportKind`, `implantSystem`, `phase`, `indication` and event actions.
+- Confirmed facts use `valueBoolean`, including `scopeComplete`, `historyComplete`,
+  `ownServiceConfirmed`, `contentConfirmed`, `justificationConfirmed` and
+  `repeatJustificationConfirmed`. False is distinct from missing.
+- `unitIds` uses one `component` per unit, each coded `unitId` with a `valueString`.
+  A descriptive parent `valueString` also keeps these Observations readable by the
+  native SDK; the contextual evaluator uses the components, not that description.
+- Fee facts (`agreementFactor`, `agreementFee`, `claimedUnitFee`) use a decimal
+  `valueString`. The latter two are EUR. The explicit representation preserves
+  compatibility with the pinned SDK's primitive Observation reader.
+- Session identity comes from `ChargeItem.context` referencing a same-patient
+  `Encounter`. An optional `sessionId` assertion must agree. A calendar day is not
+  automatically a session. Two implants or provisionals at one tooth need different IDs.
+- Agreement evidence includes `agreementStatus` (`none`, `valid`, `invalid`), a
+  same-patient current `DocumentReference`, `agreementSignedAt`, matching factor/fee
+  and `agreementConfirmed`. Same-day timing needs time-of-day evidence. Validity and
+  clinical appropriateness require a responsible person's assessment, not this code.
+
+The contextual evaluator needs a complete explicitly confirmed scope to establish
+absence or aggregate quantities. Billed history of the same episode/object can count
+for 9050; parallel *planned* alternative Accounts cannot. `includedIn` explicitly
+links a separately charged component to its parent ChargeItem. It does not infer
+that an independent service is included merely because its code looks related.
+
+## Aidbox and verification boundaries
+
+```sh
+npm run cost-plan -- --aidbox dent-051 --json
 ```
 
-`profiles` maps each resource kind the SDK reads to a profile binding; `cost-plan.mjs` uses
-base R4 bindings built with `defineProfile` from `@cognovis/fhir-sdk/client`.
+This reads cases and linked evidence from local Aidbox, including paginated searches,
+while **both rule Libraries still come from the local catalog file**. The graph loader
+rejects incomplete/cyclic searches and external pagination URLs. It supports loopback addresses and the local Compose service name `aidbox`. Missing referenced
+evidence leads to review. It does not write data.
 
-The SDK does not multiply. The fee of a line is
-`round(points x point value x multiplier, 2) x quantity`, with the points and point value
-from the informational price components of the `ChargeItemDefinition`
-(see `../catalog/README.md`).
+`npm run setup` loads the catalog and ordinary data, then the three real-GOZ example
+bundles (valid, invalid, individual agreement). Their IDs are disjoint. The example
+Patient entry is skipped so it cannot replace Greta's full `data/` Patient resource.
+Old artificial examples are not part of the seed.
 
-## Profiles
+```sh
+node scripts/setup.mjs --check-seed  # offline: distinct IDs, complete references, full Patient
+npm run setup                      # reload declared seeds; first preserve any local seed edits
+npm run validate                   # existing profiles and example/Library base-R4 checks
+```
 
-The planned ChargeItems are plain FHIR R4 ChargeItems without a profile. The dental IG's
-`goz-charge-item` profile requires the `taxCategory` extension from the billing package
-`de.cognovis.fhir.billing`, which is not published yet. See the main README, "Known gaps".
+The current seed contains 561 unique resources. Validation runs 141 existing profile
+checks and 159 base-R4 checks (156 example resources and three Libraries). Re-running
+setup overwrites the declared seed IDs; it does not reset the database or remove other
+resources. Check local edits before reloading. The original A/B/C data remain present
+and intentionally lack the new clinical evidence.

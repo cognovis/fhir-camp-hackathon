@@ -1,0 +1,826 @@
+{
+  "schemaVersion": 1,
+  "id": "goz-context-rules",
+  "version": "2026.11.1",
+  "reviewedOn": "2026-11-06",
+  "evaluationWindow": {
+    "start": "2026-11-06",
+    "end": "2026-11-16"
+  },
+  "factSystem": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/goz-evidence",
+  "gozSystem": "http://fhir.de/CodeSystem/bzaek/goz",
+  "rules": [
+    {
+      "id": "GOZ-G01",
+      "operation": "fee-range",
+      "codes": [
+        "0030",
+        "0090",
+        "2200",
+        "5000",
+        "5010",
+        "5070",
+        "5120",
+        "5140",
+        "9000",
+        "9003",
+        "9010",
+        "9040"
+      ],
+      "parameters": {
+        "minimum": 1,
+        "maximum": 3.5
+      },
+      "provenance": {
+        "sources": [
+          {
+            "kind": "fee-schedule",
+            "citation": "GOZ §§ 2, 5: fee range and individual written agreement",
+            "uri": "https://www.gesetze-im-internet.de/goz_1987/__2.html"
+          },
+          {
+            "kind": "fee-schedule",
+            "citation": "GOZ § 5: statutory fee range",
+            "uri": "https://www.gesetze-im-internet.de/goz_1987/__5.html"
+          }
+        ],
+        "evidenceLevel": {
+          "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/evidence-level",
+          "code": "statutory-text-with-explicit-context",
+          "display": "Statutory text with explicit clinical context"
+        },
+        "note": "Bounded automated check; clinical findings and legal validity of documents require confirmed evidence."
+      }
+    },
+    {
+      "id": "GOZ-G02",
+      "operation": "justification",
+      "codes": [
+        "0030",
+        "0090",
+        "2200",
+        "5000",
+        "5010",
+        "5070",
+        "5120",
+        "5140",
+        "9000",
+        "9003",
+        "9010",
+        "9040"
+      ],
+      "parameters": {
+        "threshold": 2.3
+      },
+      "provenance": {
+        "sources": [
+          {
+            "kind": "fee-schedule",
+            "citation": "GOZ § 5(2) and § 10(3): individual justification",
+            "uri": "https://www.gesetze-im-internet.de/goz_1987/__10.html"
+          },
+          {
+            "kind": "fee-schedule",
+            "citation": "GOZ § 5(2): individual circumstances above 2.3",
+            "uri": "https://www.gesetze-im-internet.de/goz_1987/__5.html"
+          }
+        ],
+        "evidenceLevel": {
+          "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/evidence-level",
+          "code": "statutory-text-with-explicit-context",
+          "display": "Statutory text with explicit clinical context"
+        },
+        "note": "Bounded automated check; clinical findings and legal validity of documents require confirmed evidence."
+      }
+    },
+    {
+      "id": "GOZ-G03",
+      "operation": "price",
+      "codes": [
+        "0030",
+        "0090",
+        "2200",
+        "5000",
+        "5010",
+        "5070",
+        "5120",
+        "5140",
+        "9000",
+        "9003",
+        "9010",
+        "9040"
+      ],
+      "parameters": {},
+      "provenance": {
+        "sources": [
+          {
+            "kind": "fee-schedule",
+            "citation": "GOZ § 5(1): points, point value and rounding after multiplication",
+            "uri": "https://www.gesetze-im-internet.de/goz_1987/__5.html"
+          }
+        ],
+        "evidenceLevel": {
+          "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/evidence-level",
+          "code": "statutory-text-with-explicit-context",
+          "display": "Statutory text with explicit clinical context"
+        },
+        "note": "Bounded automated check; clinical findings and legal validity of documents require confirmed evidence."
+      }
+    },
+    {
+      "id": "GOZ-G04",
+      "operation": "clinical",
+      "codes": [
+        "0030",
+        "0090",
+        "2200",
+        "5000",
+        "5010",
+        "5070",
+        "5120",
+        "5140",
+        "9000",
+        "9003",
+        "9010",
+        "9040"
+      ],
+      "parameters": {},
+      "provenance": {
+        "sources": [
+          {
+            "kind": "fee-schedule",
+            "citation": "GOZ §§ 1(2), 2(3), 4(2): clinical indication, requested services and complete own service",
+            "uri": "https://www.gesetze-im-internet.de/goz_1987/__4.html"
+          },
+          {
+            "kind": "fee-schedule",
+            "citation": "GOZ § 1(2): necessary or requested services",
+            "uri": "https://www.gesetze-im-internet.de/goz_1987/__1.html"
+          },
+          {
+            "kind": "fee-schedule",
+            "citation": "GOZ § 2(3): prior written plan for requested services",
+            "uri": "https://www.gesetze-im-internet.de/goz_1987/__2.html"
+          }
+        ],
+        "evidenceLevel": {
+          "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/evidence-level",
+          "code": "statutory-text-with-explicit-context",
+          "display": "Statutory text with explicit clinical context"
+        },
+        "note": "Bounded automated check; clinical findings and legal validity of documents require confirmed evidence."
+      }
+    },
+    {
+      "id": "GOZ-0030-content",
+      "operation": "facts",
+      "codes": [
+        "0030"
+      ],
+      "parameters": {
+        "trueFacts": [
+          "findingsRecorded",
+          "writtenPlan"
+        ]
+      },
+      "provenance": {
+        "sources": [
+          {
+            "kind": "fee-schedule",
+            "citation": "GOZ Anlage 1 A, 0030: findings and written treatment/cost plan",
+            "uri": "https://www.gesetze-im-internet.de/goz_1987/anlage_1.html"
+          }
+        ],
+        "evidenceLevel": {
+          "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/evidence-level",
+          "code": "statutory-text-with-explicit-context",
+          "display": "Statutory text with explicit clinical context"
+        },
+        "note": "Bounded automated check; clinical findings and legal validity of documents require confirmed evidence."
+      }
+    },
+    {
+      "id": "GOZ-0030-exclusion",
+      "operation": "exclude",
+      "codes": [
+        "0030"
+      ],
+      "parameters": {
+        "excluded": [
+          "0040"
+        ],
+        "scope": [
+          "episodeId",
+          "planningObjectId"
+        ]
+      },
+      "provenance": {
+        "sources": [
+          {
+            "kind": "fee-schedule",
+            "citation": "GOZ Anlage 1 A, note at 0040: 0030 and 0040",
+            "uri": "https://www.gesetze-im-internet.de/goz_1987/anlage_1.html"
+          },
+          {
+            "kind": "commentary",
+            "citation": "BZÄK GOZ commentary (interpretation, not legislation)",
+            "uri": "https://www.bzaek.de/goz/goz-kommentar/allgemeine-zahnaerztliche-leistungen/goz-nr-0030.html"
+          }
+        ],
+        "evidenceLevel": {
+          "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/evidence-level",
+          "code": "statutory-text-with-explicit-context",
+          "display": "Statutory text with explicit clinical context"
+        },
+        "note": "Bounded automated check; clinical findings and legal validity of documents require confirmed evidence."
+      }
+    },
+    {
+      "id": "GOZ-0090-repeat",
+      "operation": "repeat",
+      "codes": [
+        "0090"
+      ],
+      "parameters": {
+        "maximumWithoutReason": 1,
+        "scope": [
+          "episodeId",
+          "sessionId",
+          "targetId"
+        ]
+      },
+      "provenance": {
+        "sources": [
+          {
+            "kind": "fee-schedule",
+            "citation": "GOZ Anlage 1 A, note at 0100: repeated 0090 per tooth needs justification",
+            "uri": "https://www.gesetze-im-internet.de/goz_1987/anlage_1.html"
+          },
+          {
+            "kind": "commentary",
+            "citation": "BZÄK GOZ commentary (interpretation, not legislation)",
+            "uri": "https://www.bzaek.de/goz/goz-kommentar/allgemeine-zahnaerztliche-leistungen/goz-nr-0090.html"
+          }
+        ],
+        "evidenceLevel": {
+          "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/evidence-level",
+          "code": "statutory-text-with-explicit-context",
+          "display": "Statutory text with explicit clinical context"
+        },
+        "note": "Bounded automated check; clinical findings and legal validity of documents require confirmed evidence."
+      }
+    },
+    {
+      "id": "GOZ-2200-exclusion",
+      "operation": "exclude",
+      "codes": [
+        "2200"
+      ],
+      "parameters": {
+        "excluded": [
+          "2050",
+          "2060",
+          "2070",
+          "2080",
+          "2090",
+          "2100",
+          "2110",
+          "2120",
+          "2130"
+        ],
+        "scope": [
+          "episodeId",
+          "targetId",
+          "restorationId"
+        ]
+      },
+      "provenance": {
+        "sources": [
+          {
+            "kind": "fee-schedule",
+            "citation": "GOZ Anlage 1 C, notes at 2220: exclusion of 2050–2130",
+            "uri": "https://www.gesetze-im-internet.de/goz_1987/anlage_1.html"
+          }
+        ],
+        "evidenceLevel": {
+          "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/evidence-level",
+          "code": "statutory-text-with-explicit-context",
+          "display": "Statutory text with explicit clinical context"
+        },
+        "note": "Bounded automated check; clinical findings and legal validity of documents require confirmed evidence."
+      }
+    },
+    {
+      "id": "GOZ-2200-included",
+      "operation": "included",
+      "codes": [
+        "2200"
+      ],
+      "parameters": {
+        "components": [
+          "preparation",
+          "relations",
+          "impression",
+          "try-in",
+          "provisional-insertion",
+          "definitive-insertion",
+          "follow-up",
+          "correction",
+          "screw-cover"
+        ]
+      },
+      "provenance": {
+        "sources": [
+          {
+            "kind": "fee-schedule",
+            "citation": "GOZ Anlage 1 C, notes at 2220: included crown services",
+            "uri": "https://www.gesetze-im-internet.de/goz_1987/anlage_1.html"
+          }
+        ],
+        "evidenceLevel": {
+          "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/evidence-level",
+          "code": "statutory-text-with-explicit-context",
+          "display": "Statutory text with explicit clinical context"
+        },
+        "note": "Bounded automated check; clinical findings and legal validity of documents require confirmed evidence."
+      }
+    },
+    {
+      "id": "GOZ-5000-included",
+      "operation": "included",
+      "codes": [
+        "5000"
+      ],
+      "parameters": {
+        "components": [
+          "preparation",
+          "relations",
+          "impression",
+          "try-in",
+          "provisional-insertion",
+          "definitive-insertion",
+          "follow-up",
+          "correction",
+          "screw-cover"
+        ]
+      },
+      "provenance": {
+        "sources": [
+          {
+            "kind": "fee-schedule",
+            "citation": "GOZ Anlage 1 F, notes at 5040: included anchor services",
+            "uri": "https://www.gesetze-im-internet.de/goz_1987/anlage_1.html"
+          }
+        ],
+        "evidenceLevel": {
+          "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/evidence-level",
+          "code": "statutory-text-with-explicit-context",
+          "display": "Statutory text with explicit clinical context"
+        },
+        "note": "Bounded automated check; clinical findings and legal validity of documents require confirmed evidence."
+      }
+    },
+    {
+      "id": "GOZ-5010-included",
+      "operation": "included",
+      "codes": [
+        "5010"
+      ],
+      "parameters": {
+        "components": [
+          "preparation",
+          "relations",
+          "impression",
+          "try-in",
+          "provisional-insertion",
+          "definitive-insertion",
+          "follow-up",
+          "correction"
+        ]
+      },
+      "provenance": {
+        "sources": [
+          {
+            "kind": "fee-schedule",
+            "citation": "GOZ Anlage 1 F, notes at 5040: included anchor services",
+            "uri": "https://www.gesetze-im-internet.de/goz_1987/anlage_1.html"
+          }
+        ],
+        "evidenceLevel": {
+          "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/evidence-level",
+          "code": "statutory-text-with-explicit-context",
+          "display": "Statutory text with explicit clinical context"
+        },
+        "note": "Bounded automated check; clinical findings and legal validity of documents require confirmed evidence."
+      }
+    },
+    {
+      "id": "GOZ-9010-included",
+      "operation": "included",
+      "codes": [
+        "9010"
+      ],
+      "parameters": {
+        "components": [
+          "cavity-preparation",
+          "implant-insertion",
+          "primary-wound-care",
+          "bone-condensation",
+          "bone-smoothing"
+        ]
+      },
+      "provenance": {
+        "sources": [
+          {
+            "kind": "fee-schedule",
+            "citation": "GOZ Anlage 1 K, 9010 and general provision 1: included implantation services",
+            "uri": "https://www.gesetze-im-internet.de/goz_1987/anlage_1.html"
+          }
+        ],
+        "evidenceLevel": {
+          "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/evidence-level",
+          "code": "statutory-text-with-explicit-context",
+          "display": "Statutory text with explicit clinical context"
+        },
+        "note": "Bounded automated check; clinical findings and legal validity of documents require confirmed evidence."
+      }
+    },
+    {
+      "id": "GOZ-2200-units",
+      "operation": "units",
+      "codes": [
+        "2200"
+      ],
+      "parameters": {
+        "unitKinds": [
+          "tooth",
+          "implant"
+        ],
+        "scope": [
+          "episodeId",
+          "eventId"
+        ],
+        "combineCodes": false
+      },
+      "provenance": {
+        "sources": [
+          {
+            "kind": "fee-schedule",
+            "citation": "GOZ Anlage 1: billing unit in the selected service descriptions",
+            "uri": "https://www.gesetze-im-internet.de/goz_1987/anlage_1.html"
+          }
+        ],
+        "evidenceLevel": {
+          "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/evidence-level",
+          "code": "statutory-text-with-explicit-context",
+          "display": "Statutory text with explicit clinical context"
+        },
+        "note": "Bounded automated check; clinical findings and legal validity of documents require confirmed evidence."
+      }
+    },
+    {
+      "id": "GOZ-anchor-units",
+      "operation": "units",
+      "codes": [
+        "5000",
+        "5010"
+      ],
+      "parameters": {
+        "unitKinds": [
+          "tooth",
+          "implant"
+        ],
+        "scope": [
+          "episodeId",
+          "eventId"
+        ],
+        "combineCodes": true
+      },
+      "provenance": {
+        "sources": [
+          {
+            "kind": "fee-schedule",
+            "citation": "GOZ Anlage 1: billing unit in the selected service descriptions",
+            "uri": "https://www.gesetze-im-internet.de/goz_1987/anlage_1.html"
+          }
+        ],
+        "evidenceLevel": {
+          "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/evidence-level",
+          "code": "statutory-text-with-explicit-context",
+          "display": "Statutory text with explicit clinical context"
+        },
+        "note": "Bounded automated check; clinical findings and legal validity of documents require confirmed evidence."
+      }
+    },
+    {
+      "id": "GOZ-5070-units",
+      "operation": "units",
+      "codes": [
+        "5070"
+      ],
+      "parameters": {
+        "unitKinds": [
+          "span",
+          "free-end"
+        ],
+        "scope": [
+          "episodeId",
+          "eventId"
+        ],
+        "combineCodes": false
+      },
+      "provenance": {
+        "sources": [
+          {
+            "kind": "fee-schedule",
+            "citation": "GOZ Anlage 1: billing unit in the selected service descriptions",
+            "uri": "https://www.gesetze-im-internet.de/goz_1987/anlage_1.html"
+          }
+        ],
+        "evidenceLevel": {
+          "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/evidence-level",
+          "code": "statutory-text-with-explicit-context",
+          "display": "Statutory text with explicit clinical context"
+        },
+        "note": "Bounded automated check; clinical findings and legal validity of documents require confirmed evidence."
+      }
+    },
+    {
+      "id": "GOZ-5120-units",
+      "operation": "units",
+      "codes": [
+        "5120"
+      ],
+      "parameters": {
+        "unitKinds": [
+          "tooth",
+          "implant"
+        ],
+        "scope": [
+          "episodeId",
+          "eventId"
+        ],
+        "combineCodes": false
+      },
+      "provenance": {
+        "sources": [
+          {
+            "kind": "fee-schedule",
+            "citation": "GOZ Anlage 1: billing unit in the selected service descriptions",
+            "uri": "https://www.gesetze-im-internet.de/goz_1987/anlage_1.html"
+          }
+        ],
+        "evidenceLevel": {
+          "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/evidence-level",
+          "code": "statutory-text-with-explicit-context",
+          "display": "Statutory text with explicit clinical context"
+        },
+        "note": "Bounded automated check; clinical findings and legal validity of documents require confirmed evidence."
+      }
+    },
+    {
+      "id": "GOZ-5140-units",
+      "operation": "units",
+      "codes": [
+        "5140"
+      ],
+      "parameters": {
+        "unitKinds": [
+          "span",
+          "free-end"
+        ],
+        "scope": [
+          "episodeId",
+          "eventId"
+        ],
+        "combineCodes": false
+      },
+      "provenance": {
+        "sources": [
+          {
+            "kind": "fee-schedule",
+            "citation": "GOZ Anlage 1: billing unit in the selected service descriptions",
+            "uri": "https://www.gesetze-im-internet.de/goz_1987/anlage_1.html"
+          }
+        ],
+        "evidenceLevel": {
+          "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/evidence-level",
+          "code": "statutory-text-with-explicit-context",
+          "display": "Statutory text with explicit clinical context"
+        },
+        "note": "Bounded automated check; clinical findings and legal validity of documents require confirmed evidence."
+      }
+    },
+    {
+      "id": "GOZ-jaw-units",
+      "operation": "units",
+      "codes": [
+        "9000",
+        "9003"
+      ],
+      "parameters": {
+        "unitKinds": [
+          "jaw"
+        ],
+        "scope": [
+          "episodeId",
+          "eventId"
+        ],
+        "combineCodes": false
+      },
+      "provenance": {
+        "sources": [
+          {
+            "kind": "fee-schedule",
+            "citation": "GOZ Anlage 1: billing unit in the selected service descriptions",
+            "uri": "https://www.gesetze-im-internet.de/goz_1987/anlage_1.html"
+          }
+        ],
+        "evidenceLevel": {
+          "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/evidence-level",
+          "code": "statutory-text-with-explicit-context",
+          "display": "Statutory text with explicit clinical context"
+        },
+        "note": "Bounded automated check; clinical findings and legal validity of documents require confirmed evidence."
+      }
+    },
+    {
+      "id": "GOZ-9010-units",
+      "operation": "units",
+      "codes": [
+        "9010"
+      ],
+      "parameters": {
+        "unitKinds": [
+          "implant"
+        ],
+        "scope": [
+          "episodeId",
+          "eventId"
+        ],
+        "combineCodes": false
+      },
+      "provenance": {
+        "sources": [
+          {
+            "kind": "fee-schedule",
+            "citation": "GOZ Anlage 1: billing unit in the selected service descriptions",
+            "uri": "https://www.gesetze-im-internet.de/goz_1987/anlage_1.html"
+          }
+        ],
+        "evidenceLevel": {
+          "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/evidence-level",
+          "code": "statutory-text-with-explicit-context",
+          "display": "Statutory text with explicit clinical context"
+        },
+        "note": "Bounded automated check; clinical findings and legal validity of documents require confirmed evidence."
+      }
+    },
+    {
+      "id": "GOZ-provisional",
+      "operation": "provisional",
+      "codes": [
+        "5120",
+        "5140"
+      ],
+      "parameters": {},
+      "provenance": {
+        "sources": [
+          {
+            "kind": "fee-schedule",
+            "citation": "GOZ Anlage 1 F, 5120/5140: direct procedure with impression; reinsertion/removal included",
+            "uri": "https://www.gesetze-im-internet.de/goz_1987/anlage_1.html"
+          },
+          {
+            "kind": "commentary",
+            "citation": "BZÄK GOZ commentary (interpretation, not legislation)",
+            "uri": "https://www.bzaek.de/goz/goz-kommentar/prothetische-leistungen/goz-nr-5120.html"
+          }
+        ],
+        "evidenceLevel": {
+          "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/evidence-level",
+          "code": "statutory-text-with-explicit-context",
+          "display": "Statutory text with explicit clinical context"
+        },
+        "note": "Bounded automated check; clinical findings and legal validity of documents require confirmed evidence."
+      }
+    },
+    {
+      "id": "GOZ-9000-content",
+      "operation": "facts",
+      "codes": [
+        "9000"
+      ],
+      "parameters": {
+        "trueFacts": [
+          "implantAnalysisConfirmed"
+        ]
+      },
+      "provenance": {
+        "sources": [
+          {
+            "kind": "fee-schedule",
+            "citation": "GOZ Anlage 1 K, 9000: documented analysis including metric evaluation",
+            "uri": "https://www.gesetze-im-internet.de/goz_1987/anlage_1.html"
+          }
+        ],
+        "evidenceLevel": {
+          "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/evidence-level",
+          "code": "statutory-text-with-explicit-context",
+          "display": "Statutory text with explicit clinical context"
+        },
+        "note": "Bounded automated check; clinical findings and legal validity of documents require confirmed evidence."
+      }
+    },
+    {
+      "id": "GOZ-9003-content",
+      "operation": "facts",
+      "codes": [
+        "9003"
+      ],
+      "parameters": {
+        "trueFacts": [
+          "orientationTemplateUsed"
+        ]
+      },
+      "provenance": {
+        "sources": [
+          {
+            "kind": "fee-schedule",
+            "citation": "GOZ Anlage 1 K, 9003: use of an orientation/positioning template",
+            "uri": "https://www.gesetze-im-internet.de/goz_1987/anlage_1.html"
+          }
+        ],
+        "evidenceLevel": {
+          "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/evidence-level",
+          "code": "statutory-text-with-explicit-context",
+          "display": "Statutory text with explicit clinical context"
+        },
+        "note": "Bounded automated check; clinical findings and legal validity of documents require confirmed evidence."
+      }
+    },
+    {
+      "id": "GOZ-9040-content",
+      "operation": "facts",
+      "codes": [
+        "9040"
+      ],
+      "parameters": {
+        "trueFacts": [
+          "implantExposureConfirmed",
+          "abutmentInsertionConfirmed"
+        ]
+      },
+      "provenance": {
+        "sources": [
+          {
+            "kind": "fee-schedule",
+            "citation": "GOZ Anlage 1 K, 9040: exposure and insertion of abutment elements",
+            "uri": "https://www.gesetze-im-internet.de/goz_1987/anlage_1.html"
+          }
+        ],
+        "evidenceLevel": {
+          "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/evidence-level",
+          "code": "statutory-text-with-explicit-context",
+          "display": "Statutory text with explicit clinical context"
+        },
+        "note": "Bounded automated check; clinical findings and legal validity of documents require confirmed evidence."
+      }
+    },
+    {
+      "id": "GOZ-9050-context",
+      "operation": "implant",
+      "codes": [
+        "9050"
+      ],
+      "parameters": {
+        "maximumPerSession": 1,
+        "maximumPerPhase": 3,
+        "excluded": [
+          "9010",
+          "9040"
+        ]
+      },
+      "provenance": {
+        "sources": [
+          {
+            "kind": "fee-schedule",
+            "citation": "GOZ Anlage 1 K, 9050: exclusion, once per session and three times per implant",
+            "uri": "https://www.gesetze-im-internet.de/goz_1987/anlage_1.html"
+          },
+          {
+            "kind": "commentary",
+            "citation": "BZÄK GOZ commentary (interpretation, not legislation)",
+            "uri": "https://www.bzaek.de/goz/goz-kommentar/implantologische-leistungen/goz-nr-9050.html"
+          }
+        ],
+        "evidenceLevel": {
+          "system": "https://github.com/cognovis/fhir-camp-hackathon/CodeSystem/evidence-level",
+          "code": "statutory-text-with-explicit-context",
+          "display": "Statutory text with explicit clinical context"
+        },
+        "note": "Bounded automated check; clinical findings and legal validity of documents require confirmed evidence."
+      }
+    }
+  ]
+}

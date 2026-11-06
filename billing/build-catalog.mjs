@@ -16,13 +16,14 @@
 // - Ids and versions: ids become `goz-<code>`, and the version gets a `-hackathon.1` suffix,
 //   because the content is no longer the converter's.
 // - Libraries: the converter's catalog-edition and per-code factor-bound Libraries are replaced
-//   by one hackathon edition that also contains the hand-written rule set. The factor bounds
-//   (1.0 to 3.5, justification above 2.3) are one rule of that rule set.
+//   by one edition with the native source-based rules. A separately bound contextual Library
+//   carries the GOZ checks the pinned SDK cannot execute itself.
 //
 // Generated for the hackathon, not a billing-grade catalog.
 
 import { readFileSync, writeFileSync } from 'node:fs'
 import { buildBillingLibrary, billingCatalogDefinitionDigest } from '@cognovis/fhir-billing-rules'
+import { buildContextLibrary } from './goz-context.mjs'
 
 const POINT_VALUE_EUR = 0.0562421
 const GOZ_SYSTEM = 'http://fhir.de/CodeSystem/bzaek/goz'
@@ -99,9 +100,9 @@ const ruleSet = buildBillingLibrary({
   kind: 'rule-set',
   id: 'goz-hackathon-rules',
   url: `${KIT_BASE}/Library/goz-hackathon-rules`,
-  version: '2026.11.0',
+  version: '2026.11.1',
   status: 'active',
-  publisher: 'FHIR Camp hackathon (synthetic rules)',
+  publisher: 'FHIR Camp: source-based GOZ checks',
   effectivePeriod: period,
   payload: rulePayload,
   relatedArtifacts: [],
@@ -123,7 +124,9 @@ const edition = buildBillingLibrary({
   ],
 })
 
-const out = [hackathonCodeSystem, { ...ruleSet, meta: hackathonMeta(), description: `Hand-written GOZ rules for the hackathon. ${NOT_BILLING_GRADE}` }, { ...edition, meta: hackathonMeta(), description: NOT_BILLING_GRADE }, ...definitions]
+const contextPayload = JSON.parse(readFileSync(new URL('billing/goz-context-rules.json', root), 'utf8'))
+const contextLibrary = buildContextLibrary(contextPayload, edition, hackathonMeta())
+const out = [contextLibrary, hackathonCodeSystem, { ...ruleSet, meta: hackathonMeta(), description: `Source-based native GOZ checks. ${NOT_BILLING_GRADE}` }, { ...edition, meta: hackathonMeta(), description: NOT_BILLING_GRADE }, ...definitions]
 const bundle = {
   resourceType: 'Bundle',
   id: 'goz-hackathon-catalog',
@@ -135,4 +138,4 @@ const bundle = {
   })),
 }
 writeFileSync(new URL('catalog/goz-catalog.bundle.json', root), `${JSON.stringify(bundle, null, 1)}\n`)
-console.log(`catalog/goz-catalog.bundle.json: ${definitions.length} ChargeItemDefinitions, 1 CodeSystem, rule set ${ruleSet.version}, edition ${edition.version}`)
+console.log(`catalog/goz-catalog.bundle.json: ${definitions.length} ChargeItemDefinitions, 1 CodeSystem, native rule set ${ruleSet.version}, context rules ${contextPayload.version}, edition ${edition.version}`)

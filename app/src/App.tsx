@@ -50,7 +50,7 @@ export function App() {
             ))}
           </select>
         </label>
-        <span className="note">Synthetic data. Chart: react-advanced-odontogram (MIT).</span>
+        <span className="note">Synthetic data. Chart: react-advanced-odontogram (MIT). Chart changes are not saved yet (task 1).</span>
       </header>
 
       {error && <p className="error">{error}</p>}

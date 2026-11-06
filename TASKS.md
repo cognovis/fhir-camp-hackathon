@@ -14,7 +14,7 @@ Size: **S** fits in an hour or two, **M** half a day, **L** the whole day.
 
 ## 1. Chart to FHIR: write findings back from the odontogram (M)
 
-Today the starter app only reads the chart. Make it write: when a tooth is changed in the
+Today you can click and change teeth in the starter app, but nothing is saved. Make it write: when a tooth is changed in the
 odontogram, save it as a dental-core tooth-state `Observation` in Aidbox.
 
 - Start: `app/src/odontogram/chartAdapter.ts` maps FHIR to the chart (`toToothRecord`).
@@ -22,7 +22,7 @@ odontogram, save it as a dental-core tooth-state `Observation` in Aidbox.
   (`tooth-presence`, `restoration-type`, `restoration-material`, surfaces as the
   `tooth-surface` extension).
 - Listen with `onStateChange` and read the chart with `getStatusChart()` from
-  `react-advanced-odontogram`; switch off `readOnly` in `OdontogramView.tsx`.
+  `react-advanced-odontogram` (the chart is already editable in `OdontogramView.tsx`).
 - Write a new Observation per changed tooth (new `effectiveDateTime`) rather than overwriting:
   the old chart is history.
 - Done when: you mark tooth 46 as missing in the app, reload, and it is still missing; the new
